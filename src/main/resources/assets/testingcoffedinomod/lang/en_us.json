@@ -1,0 +1,14 @@
+{
+  "item.testingcoffedinomod.cummingtonite": "Cummingtonite",
+  "item.testingcoffedinomod.cummingtonite_ingot": "Cummingtonite Ingot",
+  "item.testingcoffedinomod.the_wand": "The Wand",
+  "item.testingcoffedinomod.special_wand": "Special Wand",
+  "item.testingcoffedinomod.stack_star": "Stack Star",
+  "item.testingcoffedinomod.storage_gem": "Storage gem",
+  "block.testingcoffedinomod.cummingtonite_block": "Cummingtonite Block",
+  "block.testingcoffedinomod.cummingtonite_ingot_block": "Cummingtonite Ingot Block",
+
+  "creativetab.testingcoffedinomod.cummingtonite_items": "Cummingtonite Items",
+  "creativetab.testingcoffedinomod.cummingtonite_blocks": "Cummingtonite Blocks",
+  "creativetab.testingcoffedinomod.special_tools": "Special Tools"
+}

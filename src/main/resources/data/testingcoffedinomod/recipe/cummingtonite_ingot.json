@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "testingcoffedinomod:cummingtonite_ingot_block"
+    }
+  ],
+  "result": {
+    "count": 9,
+    "id": "testingcoffedinomod:cummingtonite_ingot"
+  }
+}
