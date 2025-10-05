@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "minecraft:gold_ingot"
+    },
+    "C": {
+      "item": "testingcoffedinomod:cummingtonite_ingot"
+    },
+    "N": {
+      "item": "minecraft:emerald"
+    },
+    "S": {
+      "item": "minecraft:diamond"
+    }
+  },
+  "pattern": [
+    " C ",
+    "NSA",
+    "   "
+  ],
+  "result": {
+    "count": 1,
+    "id": "testingcoffedinomod:storage_gem"
+  }
+}

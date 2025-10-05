@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "minecraft:gold_ingot"
+    },
+    "C": {
+      "item": "testingcoffedinomod:cummingtonite_ingot"
+    },
+    "N": {
+      "item": "minecraft:netherite_ingot"
+    },
+    "S": {
+      "item": "minecraft:stick"
+    }
+  },
+  "pattern": [
+    "NNC",
+    "NSN",
+    "ANN"
+  ],
+  "result": {
+    "count": 1,
+    "id": "testingcoffedinomod:special_wand"
+  }
+}

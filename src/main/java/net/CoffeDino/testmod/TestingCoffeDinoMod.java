@@ -59,10 +59,10 @@ public class TestingCoffeDinoMod
             event.accept(ModItems.STORAGE_GEM);
         }
 
-        if(event.getTabKey() == CreativeModeTabs.TOOLS_AND_UTILITIES){
-            event.accept(ModItems.THE_WAND);
-            event.accept(ModItems.SPECIAL_WAND);
-        }
+        //if(event.getTabKey() == CreativeModeTabs.TOOLS_AND_UTILITIES){
+         //   event.accept(ModItems.THE_WAND);
+         //   event.accept(ModItems.SPECIAL_WAND);
+       // }
 
         if(event.getTabKey() == CreativeModeTabs.BUILDING_BLOCKS){
             event.accept(ModBlocks.CUMMINGTONITE_BLOCK);

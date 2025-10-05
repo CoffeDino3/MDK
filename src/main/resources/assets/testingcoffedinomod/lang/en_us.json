@@ -1,8 +1,8 @@
 {
   "item.testingcoffedinomod.cummingtonite": "Cummingtonite",
   "item.testingcoffedinomod.cummingtonite_ingot": "Cummingtonite Ingot",
-  "item.testingcoffedinomod.the_wand": "The Wand",
-  "item.testingcoffedinomod.special_wand": "Special Wand",
+  "item.testingcoffedinomod.the_wand": "§8The Wand§r",
+  "item.testingcoffedinomod.special_wand": "§6Special Wand§r",
   "item.testingcoffedinomod.stack_star": "Stack Star",
   "item.testingcoffedinomod.storage_gem": "Storage gem",
   "block.testingcoffedinomod.cummingtonite_block": "Cummingtonite Block",
@@ -10,5 +10,8 @@
 
   "creativetab.testingcoffedinomod.cummingtonite_items": "Cummingtonite Items",
   "creativetab.testingcoffedinomod.cummingtonite_blocks": "Cummingtonite Blocks",
-  "creativetab.testingcoffedinomod.special_tools": "Special Tools"
+  "creativetab.testingcoffedinomod.special_tools": "Special Tools",
+
+  "tooltip.testingcoffedinomod.special_wand.tooltip": "Right click with this item on §5any§r block to change it to another!",
+  "tooltip.testingcoffedinomod.the_wand.tooltip": "Right click a mineral block with this item to §4magically§r change it to another mineral!"
 }
