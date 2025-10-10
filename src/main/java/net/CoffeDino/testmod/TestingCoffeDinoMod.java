@@ -4,6 +4,7 @@ import com.mojang.logging.LogUtils;
 import net.CoffeDino.testmod.block.ModBlocks;
 import net.CoffeDino.testmod.item.ModCreativeModeTabs;
 import net.CoffeDino.testmod.item.ModItems;
+import net.CoffeDino.testmod.network.NetworkHandler;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
@@ -46,7 +47,7 @@ public class TestingCoffeDinoMod
 
     private void commonSetup(final FMLCommonSetupEvent event)
     {
-
+        event.enqueueWork(NetworkHandler::register);
     }
 
     // Add the example block item to the building blocks tab
