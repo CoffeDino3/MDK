@@ -30,8 +30,6 @@ public class races {
             return displayName;
         }
     }
-
-    // Reset client race when joining new world
     public static void resetClientRace() {
         clientRace = null;
         System.out.println("DEBUG: Reset client race for new world");
@@ -41,11 +39,8 @@ public class races {
         if (player == null) return;
 
         if (!player.level().isClientSide() && player instanceof ServerPlayer serverPlayer) {
-            // On server: save to world-specific data
             RaceDataManager dataManager = RaceDataManager.get(serverPlayer);
             dataManager.setPlayerRace(player.getUUID(), race != null ? race.getId() : "");
-
-            // Sync to client
             syncRaceToClient(serverPlayer, race);
             System.out.println("DEBUG: Race set on server for " + player.getName().getString() + ": " + (race != null ? race.getDisplayName() : "null"));
 
@@ -55,7 +50,6 @@ public class races {
                 clearRaceEffects(player);
             }
         } else {
-            // On client: just set locally
             clientRace = race;
             System.out.println("DEBUG: Race set on client: " + (race != null ? race.getDisplayName() : "null"));
         }
@@ -70,10 +64,8 @@ public class races {
         if (player == null) return null;
 
         if (player.level().isClientSide()) {
-            // On client: use local cache ONLY
             return clientRace;
         } else if (player instanceof ServerPlayer serverPlayer) {
-            // On server: get from world-specific data
             RaceDataManager dataManager = RaceDataManager.get(serverPlayer);
             String raceId = dataManager.getPlayerRace(player.getUUID());
 
@@ -95,10 +87,8 @@ public class races {
         if (player == null) return false;
 
         if (player.level().isClientSide()) {
-            // On client: check local cache ONLY - don't check player NBT
             return clientRace != null;
         } else if (player instanceof ServerPlayer serverPlayer) {
-            // On server: check world-specific data
             RaceDataManager dataManager = RaceDataManager.get(serverPlayer);
             return dataManager.hasRace(player.getUUID());
         }
@@ -115,7 +105,7 @@ public class races {
         System.out.println("DEBUG: Cleared race for player: " + player.getName().getString());
     }
 
-    // Apply race effects when player joins world
+
     public static void onPlayerJoinWorld(Player player) {
         if (!player.level().isClientSide()) {
             Race race = getPlayerRace(player);
@@ -126,7 +116,7 @@ public class races {
         }
     }
 
-    // Clear effects when player leaves world
+
     public static void onPlayerLeaveWorld(Player player) {
         if (!player.level().isClientSide()) {
             clearRaceEffects(player);
@@ -145,23 +135,23 @@ public class races {
     }
 
     private static void clearRaceEffects(Player player) {
-        // Implement effect clearing logic here
+
         System.out.println("DEBUG: Clearing race effects for " + player.getName().getString());
     }
 
     private static void applyEnderTraits(Player player) {
-        // Implement Ender traits
+
     }
 
     private static void applySculkTraits(Player player) {
-        // Implement Sculk traits
+
     }
 
     private static void applyWarderTraits(Player player) {
-        // Implement Warder traits
+
     }
 
     private static void applyPhantomTraits(Player player) {
-        // Implement Phantom traits
+
     }
 }
