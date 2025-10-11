@@ -1,6 +1,7 @@
 package net.CoffeDino.testmod.network;
 
 import net.CoffeDino.testmod.TestingCoffeDinoMod;
+import net.CoffeDino.testmod.races.races;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
@@ -22,6 +23,12 @@ public class NetworkHandler {
                 .decoder(RaceSelectionPacket::new)
                 .consumerMainThread(RaceSelectionPacket::handle)
                 .add();
+
+        INSTANCE.messageBuilder(SyncRacePacket.class, 2, NetworkDirection.PLAY_TO_CLIENT)
+                .encoder(SyncRacePacket::encode)
+                .decoder(SyncRacePacket::new)
+                .consumerMainThread(SyncRacePacket::handle)
+                .add();
     }
 
     public static <T extends CustomPacketPayload> void sendToServer(T message) {
@@ -30,5 +37,10 @@ public class NetworkHandler {
 
     public static <T extends CustomPacketPayload> void sendToPlayer(T message, ServerPlayer player) {
         INSTANCE.send(message, PacketDistributor.PLAYER.with(player));
+    }
+
+    public static void syncRaceToClient(ServerPlayer player, races.Race race) {
+        String raceId = race != null ? race.getId() : "";
+        sendToPlayer(new SyncRacePacket(raceId), player);
     }
 }

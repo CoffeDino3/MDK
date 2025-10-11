@@ -3,6 +3,7 @@ package net.CoffeDino.testmod.client.gui;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.math.Axis;
 import net.CoffeDino.testmod.TestingCoffeDinoMod;
+import net.CoffeDino.testmod.client.gui.components.ColoredButton;
 import net.CoffeDino.testmod.network.NetworkHandler;
 import net.CoffeDino.testmod.network.RaceSelectionPacket;
 import net.CoffeDino.testmod.races.races;
@@ -15,7 +16,6 @@ import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.client.renderer.PostChain;
 
 
 import java.util.List;
@@ -55,19 +55,29 @@ public class RaceSelectionScreen extends Screen {
         int cardTop = centerY - uiCardHeight / 2;
         int cardBottom = centerY + uiCardHeight / 2;
 
-        leftArrow = Button.builder(Component.literal("<"), b -> switchRace(-1))
-                .bounds(cardLeft -30, centerY - 110, 30, 20)  // 40 pixels left of card
-                .build();
+        leftArrow = new ColoredButton(
+                cardLeft - 30, centerY-110, 30, 20,
+                Component.literal("<"),
+                b -> switchRace(-1),
+                0xA69678FF,
+                0xE07020FF
+        );
         addRenderableWidget(leftArrow);
-
-        rightArrow = Button.builder(Component.literal(">"), b -> switchRace(1))
-                .bounds(cardRight , centerY - 110, 30, 20)  // 10 pixels right of card
-                .build();
+        rightArrow = new ColoredButton(
+                cardRight,centerY-110, 30, 20,
+                Component.literal(">"),
+                b-> switchRace(1),
+                0xA69678FF,
+                0xE07020FF
+        );
         addRenderableWidget(rightArrow);
-
-        selectButton = Button.builder(Component.literal("Select"), b -> selectRace())
-                .bounds(centerX - 95, cardBottom -30, 190, 20)  // 20 pixels below card
-                .build();
+        selectButton = new ColoredButton(
+                centerX-95, cardBottom -30, 190, 20,
+                Component.literal("Select"),
+                b -> selectRace(),
+                0xA6000000,
+                0xCC000000
+        );
         addRenderableWidget(selectButton);
     }
 

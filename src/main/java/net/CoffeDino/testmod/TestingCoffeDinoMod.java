@@ -2,6 +2,7 @@ package net.CoffeDino.testmod;
 
 import com.mojang.logging.LogUtils;
 import net.CoffeDino.testmod.block.ModBlocks;
+import net.CoffeDino.testmod.commands.RaceCommand;
 import net.CoffeDino.testmod.item.ModCreativeModeTabs;
 import net.CoffeDino.testmod.item.ModItems;
 import net.CoffeDino.testmod.network.NetworkHandler;
@@ -74,7 +75,7 @@ public class TestingCoffeDinoMod
     @SubscribeEvent
     public void onServerStarting(ServerStartingEvent event)
     {
-
+        RaceCommand.register(event.getServer().getCommands().getDispatcher());
     }
 
     @Mod.EventBusSubscriber(modid = MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)

@@ -2,82 +2,131 @@ package net.CoffeDino.testmod.events;
 
 import net.CoffeDino.testmod.TestingCoffeDinoMod;
 import net.CoffeDino.testmod.client.gui.RaceSelectionScreen;
+import net.CoffeDino.testmod.network.NetworkHandler;
 import net.CoffeDino.testmod.races.races;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.event.entity.EntityJoinLevelEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
+import net.minecraftforge.event.level.LevelEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
-@Mod.EventBusSubscriber(modid = TestingCoffeDinoMod.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE, value = Dist.CLIENT)
+@Mod.EventBusSubscriber(modid = TestingCoffeDinoMod.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class ModEvents {
 
-    @SubscribeEvent
-    public static void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent event) {
-        Player player = event.getEntity();
-        System.out.println("DEBUG: Player logged in event - " + player.getName().getString());
+    // Server-side events - REMOVE the Dist.DEDICATED_SERVER restriction for integrated server
+    @Mod.EventBusSubscriber(modid = TestingCoffeDinoMod.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
+    public static class ServerEvents {
+        @SubscribeEvent
+        public static void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent event) {
+            if (event.getEntity() instanceof net.minecraft.server.level.ServerPlayer serverPlayer) {
+                System.out.println("DEBUG: ===== SERVER PLAYER LOGIN START =====");
+                System.out.println("DEBUG: Player logged in on server - " + serverPlayer.getName().getString() + " UUID: " + serverPlayer.getUUID());
 
-        // Only check on client side
-        if (player.level().isClientSide()) {
-            System.out.println("DEBUG: Client side, checking race...");
+                // Apply race effects when player joins - this should load from saved data
+                races.onPlayerJoinWorld(serverPlayer);
 
-            // Small delay to ensure everything is loaded
-            Minecraft.getInstance().execute(() -> {
-                Minecraft.getInstance().tell(() -> {
-                    checkAndShowRaceScreen(player, "login");
-                });
-            });
+                // Sync to client - this should send the race data to client
+                races.Race race = races.getPlayerRace(serverPlayer);
+                NetworkHandler.syncRaceToClient(serverPlayer, race);
+                System.out.println("DEBUG: Synced race to client on login: " + (race != null ? race.getDisplayName() : "null"));
+                System.out.println("DEBUG: ===== SERVER PLAYER LOGIN END =====");
+            }
+        }
+
+        @SubscribeEvent
+        public static void onPlayerRespawn(PlayerEvent.PlayerRespawnEvent event) {
+            Player player = event.getEntity();
+            System.out.println("DEBUG: Player respawned on server - " + player.getName().getString());
+
+            // Re-apply race effects on respawn
+            races.onPlayerJoinWorld(player);
+        }
+
+        @SubscribeEvent
+        public static void onPlayerChangedDimension(PlayerEvent.PlayerChangedDimensionEvent event) {
+            Player player = event.getEntity();
+            System.out.println("DEBUG: Player changed dimension - " + player.getName().getString());
+
+            // Re-apply race effects when changing dimensions
+            races.onPlayerJoinWorld(player);
         }
     }
 
     @SubscribeEvent
-    public static void onPlayerRespawn(PlayerEvent.PlayerRespawnEvent event) {
-        Player player = event.getEntity();
-        System.out.println("DEBUG: Player respawn event - " + player.getName().getString());
-
-        // Only check on client side
-        if (player.level().isClientSide()) {
-            System.out.println("DEBUG: Client side respawn, checking race...");
-
-            // Longer delay for respawn
-            Minecraft.getInstance().execute(() -> {
-                Minecraft.getInstance().tell(() -> {
-                    Minecraft.getInstance().tell(() -> {
-                        checkAndShowRaceScreen(player, "respawn");
-                    });
-                });
-            });
+    public static void onWorldUnload(LevelEvent.Unload event) {
+        if (event.getLevel().isClientSide()) {
+            races.resetClientRace();
         }
     }
 
-    @SubscribeEvent
-    public static void onPlayerJoinWorld(EntityJoinLevelEvent event) {
-        if (event.getEntity() instanceof Player player && event.getLevel().isClientSide()) {
-            System.out.println("DEBUG: Player joined world - " + player.getName().getString());
+    // Client-side events
+    @Mod.EventBusSubscriber(modid = TestingCoffeDinoMod.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE, value = Dist.CLIENT)
+    public static class ClientEvents {
+        private static boolean hasCheckedRace = false;
 
-            // Only show if this is the main player (not other players)
+        @SubscribeEvent
+        public static void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent event) {
+            Player player = event.getEntity();
+            System.out.println("DEBUG: Client received login event for: " + player.getName().getString());
+            hasCheckedRace = false;
+
             if (player == Minecraft.getInstance().player) {
-                System.out.println("DEBUG: Main player joined world, checking race...");
-
+                // Wait a bit for server sync to complete
                 Minecraft.getInstance().execute(() -> {
-                    checkAndShowRaceScreen(player, "join world");
+                    try {
+                        Thread.sleep(1000); // Wait 1 second for sync
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    Minecraft.getInstance().tell(() -> {
+                        checkAndShowRaceScreen(player, "login");
+                    });
                 });
             }
         }
-    }
 
-    private static void checkAndShowRaceScreen(Player player, String context) {
-        boolean hasChosenRace = races.hasChosenRace(player);
-        System.out.println("DEBUG: " + context + " - Has chosen race: " + hasChosenRace);
-        System.out.println("DEBUG: " + context + " - Player persistent data: " + player.getPersistentData());
+        @SubscribeEvent
+        public static void onEntityJoinWorld(EntityJoinLevelEvent event) {
+            if (event.getEntity() instanceof Player player && player == Minecraft.getInstance().player) {
+                System.out.println("DEBUG: Client entity join world for: " + player.getName().getString());
 
-        if (!hasChosenRace) {
-            System.out.println("DEBUG: Showing race selection screen from " + context);
-            Minecraft.getInstance().setScreen(new RaceSelectionScreen());
-        } else {
-            System.out.println("DEBUG: Race already chosen: " + races.getPlayerRace(player));
+                if (!hasCheckedRace) {
+                    Minecraft.getInstance().execute(() -> {
+                        try {
+                            Thread.sleep(1000); // Wait 1 second for sync
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        Minecraft.getInstance().tell(() -> {
+                            checkAndShowRaceScreen(player, "join world");
+                        });
+                    });
+                }
+            }
+        }
+
+        private static void checkAndShowRaceScreen(Player player, String context) {
+            hasCheckedRace = true;
+
+            System.out.println("DEBUG: ===== CLIENT RACE CHECK =====");
+            System.out.println("DEBUG: Context: " + context);
+
+            boolean hasChosenRace = races.hasChosenRace(player);
+            races.Race currentRace = races.getPlayerRace(player);
+
+            System.out.println("DEBUG: Client - Has chosen race: " + hasChosenRace);
+            System.out.println("DEBUG: Client - Current race: " + (currentRace != null ? currentRace.getDisplayName() : "null"));
+
+            if (!hasChosenRace) {
+                System.out.println("DEBUG: Showing race selection screen from " + context);
+                Minecraft.getInstance().setScreen(new RaceSelectionScreen());
+            } else {
+                System.out.println("DEBUG: Race already chosen and synced: " + currentRace);
+            }
+            System.out.println("DEBUG: ===== CLIENT RACE CHECK END =====");
         }
     }
 }
