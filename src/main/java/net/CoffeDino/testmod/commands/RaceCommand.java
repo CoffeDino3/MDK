@@ -16,11 +16,11 @@ public class RaceCommand {
 
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
         dispatcher.register(Commands.literal("race")
-                .requires(source -> source.hasPermission(2)) // Requires creative/op permission
+                .requires(source -> source.hasPermission(0))
                 .then(Commands.literal("set")
+                        .requires(source -> source.hasPermission(2))
                         .then(Commands.argument("race", StringArgumentType.word())
                                 .suggests((context, builder) -> {
-                                    // Tab completion for race names
                                     for (races.Race race : races.Race.values()) {
                                         builder.suggest(race.getId());
                                     }
@@ -33,12 +33,14 @@ public class RaceCommand {
                         )
                 )
                 .then(Commands.literal("get")
+                        .requires(source -> source.hasPermission(0))
                         .executes(context -> getOwnRace(context))
                         .then(Commands.argument("target", EntityArgument.player())
                                 .executes(context -> getOtherRace(context, EntityArgument.getPlayer(context, "target")))
                         )
                 )
                 .then(Commands.literal("clear")
+                        .requires(source -> source.hasPermission(2))
                         .executes(context -> clearOwnRace(context))
                         .then(Commands.argument("target", EntityArgument.player())
                                 .executes(context -> clearOtherRace(context, EntityArgument.getPlayer(context, "target")))

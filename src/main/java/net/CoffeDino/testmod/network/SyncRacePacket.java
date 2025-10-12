@@ -26,7 +26,6 @@ public record SyncRacePacket(String raceId) implements CustomPacketPayload {
             if (Minecraft.getInstance().player != null) {
                 String raceId = packet.raceId();
                 if (raceId.isEmpty()) {
-                    // Clear the race if empty string
                     races.setClientRace(null);
                     System.out.println("DEBUG: Cleared race on client");
                 } else {

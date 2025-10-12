@@ -16,7 +16,7 @@ import net.minecraftforge.fml.common.Mod;
 @Mod.EventBusSubscriber(modid = TestingCoffeDinoMod.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class ModEvents {
 
-    // Server-side events - REMOVE the Dist.DEDICATED_SERVER restriction for integrated server
+    // Server-side events
     @Mod.EventBusSubscriber(modid = TestingCoffeDinoMod.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
     public static class ServerEvents {
         @SubscribeEvent
@@ -24,11 +24,7 @@ public class ModEvents {
             if (event.getEntity() instanceof net.minecraft.server.level.ServerPlayer serverPlayer) {
                 System.out.println("DEBUG: ===== SERVER PLAYER LOGIN START =====");
                 System.out.println("DEBUG: Player logged in on server - " + serverPlayer.getName().getString() + " UUID: " + serverPlayer.getUUID());
-
-                // Apply race effects when player joins - this should load from saved data
                 races.onPlayerJoinWorld(serverPlayer);
-
-                // Sync to client - this should send the race data to client
                 races.Race race = races.getPlayerRace(serverPlayer);
                 NetworkHandler.syncRaceToClient(serverPlayer, race);
                 System.out.println("DEBUG: Synced race to client on login: " + (race != null ? race.getDisplayName() : "null"));
@@ -40,8 +36,6 @@ public class ModEvents {
         public static void onPlayerRespawn(PlayerEvent.PlayerRespawnEvent event) {
             Player player = event.getEntity();
             System.out.println("DEBUG: Player respawned on server - " + player.getName().getString());
-
-            // Re-apply race effects on respawn
             races.onPlayerJoinWorld(player);
         }
 
@@ -49,8 +43,6 @@ public class ModEvents {
         public static void onPlayerChangedDimension(PlayerEvent.PlayerChangedDimensionEvent event) {
             Player player = event.getEntity();
             System.out.println("DEBUG: Player changed dimension - " + player.getName().getString());
-
-            // Re-apply race effects when changing dimensions
             races.onPlayerJoinWorld(player);
         }
     }
@@ -74,10 +66,10 @@ public class ModEvents {
             hasCheckedRace = false;
 
             if (player == Minecraft.getInstance().player) {
-                // Wait a bit for server sync to complete
+
                 Minecraft.getInstance().execute(() -> {
                     try {
-                        Thread.sleep(1000); // Wait 1 second for sync
+                        Thread.sleep(1000);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
@@ -96,7 +88,7 @@ public class ModEvents {
                 if (!hasCheckedRace) {
                     Minecraft.getInstance().execute(() -> {
                         try {
-                            Thread.sleep(1000); // Wait 1 second for sync
+                            Thread.sleep(1000);
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }
