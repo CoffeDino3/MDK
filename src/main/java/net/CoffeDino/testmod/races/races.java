@@ -1,6 +1,9 @@
 package net.CoffeDino.testmod.races;
 
 import net.CoffeDino.testmod.TestingCoffeDinoMod;
+import net.CoffeDino.testmod.capability.IRaceSize;
+import net.CoffeDino.testmod.capability.RaceSizeProvider;
+import net.CoffeDino.testmod.network.NetworkHandler;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -27,23 +30,22 @@ public class races {
     private static float enderHealthBonus = 0.0f;
     private static float phantomHealthBonus = 5.0f;
     public enum Race {
-        SCULK("sculk", "Sculk", 1.8f, 0.6f, 1.62f),
-        WARDER("warder", "Warder", 2.2f, 0.9f, 2.0f),
-        ENDER("ender", "Ender", 1.9f, 0.6f, 1.7f),
-        PHANTOM("phantom", "Phantom", 1.6f, 0.5f, 1.4f);
+        SCULK("sculk", "Sculk", 1.8f, 0.6f),
+        WARDER("warder", "Warder", 2.2f, 0.8f),
+        ENDER("ender", "Ender", 1.9f, 0.6f),
+        PHANTOM("phantom", "Phantom", 1.6f, 0.5f);
 
         private final String id;
         private final String displayName;
         private final float height;
         private final float width;
-        private final float eyeHeight;
 
-        Race(String id, String displayName, float height, float width, float eyeHeight) {
+
+        Race(String id, String displayName, float height, float width) {
             this.id = id;
             this.displayName = displayName;
             this.height = height;
             this.width = width;
-            this.eyeHeight = eyeHeight;
         }
 
         public String getId() {
@@ -62,15 +64,12 @@ public class races {
             return width;
         }
 
-
-        public float getEyeHeight() {
-            return eyeHeight;
-        }
     }
     public static void resetClientRace() {
         clientRace = null;
         System.out.println("DEBUG: Reset client race for new world");
     }
+
 
     public static void setPlayerRace(Player player, Race race) {
         if (player == null) return;
@@ -91,6 +90,7 @@ public class races {
             clientRace = race;
             System.out.println("DEBUG: Race set on client: " + (race != null ? race.getDisplayName() : "null"));
         }
+
     }
 
     public static void setClientRace(Race race) {
@@ -173,8 +173,6 @@ public class races {
 
 
 
-
-
     public static void applyRaceEffects(Player player, Race race) {
         clearRaceEffects(player);
         switch (race) {
@@ -184,7 +182,7 @@ public class races {
             case PHANTOM -> applyPhantomTraits(player);
         }
         applyHealthBonus(player, race);
-
+        applySizeModifiers(player, race);
     }
 
 
@@ -198,6 +196,7 @@ public class races {
         }
 
         clearHealthModifier(player);
+        clearSizeModifiers(player);
 
         System.out.println("DEBUG: Clearing race effects for " + player.getName().getString());
     }
@@ -240,6 +239,35 @@ public class races {
                 player.setHealth(player.getMaxHealth());
             }
         }
+    }
+    // In your races.java file, replace the size methods:
+
+    private static void applySizeModifiers(Player player, Race race) {
+        if (player instanceof ServerPlayer serverPlayer) {
+            player.getCapability(RaceSizeProvider.RACE_SIZE).ifPresent(raceSize -> {
+                raceSize.setRaceSize(race.getHeight(), race.getWidth());
+            });
+
+            System.out.println("DEBUG: Applied size modifiers for " + race.getDisplayName() +
+                    " - Height: " + race.getHeight() + ", Width: " + race.getWidth());
+
+            // Force refresh on server
+            player.refreshDimensions();
+
+            // Sync to client
+            NetworkHandler.syncSizeToClient(serverPlayer, race.getHeight(), race.getWidth());
+
+            // Schedule another refresh for next tick to ensure it applies
+            serverPlayer.server.execute(() -> {
+                player.refreshDimensions();
+            });
+        }
+    }
+
+    private static void clearSizeModifiers(Player player) {
+        player.getCapability(RaceSizeProvider.RACE_SIZE).ifPresent(IRaceSize::resetRaceSize);
+        player.refreshDimensions();
+        System.out.println("DEBUG: Cleared size modifiers for " + player.getName().getString());
     }
 
 
@@ -292,4 +320,5 @@ public class races {
             ));
         }
     }
+
 }

@@ -2,6 +2,7 @@ package net.CoffeDino.testmod;
 
 import com.mojang.logging.LogUtils;
 import net.CoffeDino.testmod.block.ModBlocks;
+import net.CoffeDino.testmod.capability.IRaceSize;
 import net.CoffeDino.testmod.commands.RaceCommand;
 import net.CoffeDino.testmod.item.ModCreativeModeTabs;
 import net.CoffeDino.testmod.item.ModItems;
@@ -20,6 +21,8 @@ import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.slf4j.Logger;
+import org.spongepowered.asm.launch.MixinBootstrap;
+import org.spongepowered.asm.mixin.Mixin;
 
 
 @Mod(TestingCoffeDinoMod.MOD_ID)
@@ -34,6 +37,7 @@ public class TestingCoffeDinoMod
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
         modEventBus.addListener(this::commonSetup);
         MinecraftForge.EVENT_BUS.register(this);
+        MixinBootstrap.init();
 
         ModCreativeModeTabs.register(modEventBus);
 
@@ -50,6 +54,9 @@ public class TestingCoffeDinoMod
     {
         event.enqueueWork(NetworkHandler::register);
     }
+
+
+
 
     // Add the example block item to the building blocks tab
     private void addCreative(BuildCreativeModeTabContentsEvent event)
@@ -86,4 +93,5 @@ public class TestingCoffeDinoMod
 
         }
     }
+
 }

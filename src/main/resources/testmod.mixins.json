@@ -1,0 +1,13 @@
+{
+  "required": true,
+  "package": "net.CoffeDino.testmod.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "refmap": "testmod.refmap.json",
+  "mixins": [
+    "LivingEntitySizeMixin",
+    "CameraMixin",
+    "CameraAccessor",
+    "PlayerRendererMixin"
+  ],
+  "injectors": { "defaultRequire": 1 }
+}

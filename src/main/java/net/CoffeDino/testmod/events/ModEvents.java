@@ -8,6 +8,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.event.entity.EntityJoinLevelEvent;
+import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.level.LevelEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -15,7 +16,6 @@ import net.minecraftforge.fml.common.Mod;
 
 @Mod.EventBusSubscriber(modid = TestingCoffeDinoMod.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class ModEvents {
-
     // Server-side events
     @Mod.EventBusSubscriber(modid = TestingCoffeDinoMod.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
     public static class ServerEvents {
@@ -24,10 +24,21 @@ public class ModEvents {
             if (event.getEntity() instanceof net.minecraft.server.level.ServerPlayer serverPlayer) {
                 System.out.println("DEBUG: ===== SERVER PLAYER LOGIN START =====");
                 System.out.println("DEBUG: Player logged in on server - " + serverPlayer.getName().getString() + " UUID: " + serverPlayer.getUUID());
-                races.onPlayerJoinWorld(serverPlayer);
+
                 races.Race race = races.getPlayerRace(serverPlayer);
-                NetworkHandler.syncRaceToClient(serverPlayer, race);
-                System.out.println("DEBUG: Synced race to client on login: " + (race != null ? race.getDisplayName() : "null"));
+                System.out.println("DEBUG: Retrieved race for player: " + (race != null ? race.getDisplayName() : "null"));
+
+                // Only apply race effects and sync if race is not null
+                if (race != null) {
+                    races.onPlayerJoinWorld(serverPlayer);
+                    NetworkHandler.syncRaceToClient(serverPlayer, race);
+                    NetworkHandler.syncSizeToClient(serverPlayer, race.getHeight(), race.getWidth());
+                    System.out.println("DEBUG: Synced race to client on login: " + race.getDisplayName());
+                } else {
+                    System.out.println("DEBUG: No race found for player, skipping race effects and sync");
+                    // Sync null race to clear any client-side data
+                    NetworkHandler.syncRaceToClient(serverPlayer, null);
+                }
                 System.out.println("DEBUG: ===== SERVER PLAYER LOGIN END =====");
             }
         }
@@ -53,6 +64,7 @@ public class ModEvents {
             races.resetClientRace();
         }
     }
+
 
     // Client-side events
     @Mod.EventBusSubscriber(modid = TestingCoffeDinoMod.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE, value = Dist.CLIENT)

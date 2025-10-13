@@ -29,6 +29,12 @@ public class NetworkHandler {
                 .decoder(SyncRacePacket::new)
                 .consumerMainThread(SyncRacePacket::handle)
                 .add();
+        INSTANCE.messageBuilder(RaceSizeSyncPacket.class, 3, NetworkDirection.PLAY_TO_CLIENT)
+                .encoder(RaceSizeSyncPacket::encode)
+                .decoder(RaceSizeSyncPacket::decode)
+                .consumerMainThread((packet, context) -> packet.handle())
+                .add();
+
     }
 
     public static <T extends CustomPacketPayload> void sendToServer(T message) {
@@ -42,5 +48,9 @@ public class NetworkHandler {
     public static void syncRaceToClient(ServerPlayer player, races.Race race) {
         String raceId = race != null ? race.getId() : "";
         sendToPlayer(new SyncRacePacket(raceId), player);
+    }
+    // In NetworkHandler.java
+    public static void syncSizeToClient(ServerPlayer player, float height, float width) {
+        INSTANCE.send(new RaceSizeSyncPacket(height, width), PacketDistributor.PLAYER.with(player));
     }
 }
