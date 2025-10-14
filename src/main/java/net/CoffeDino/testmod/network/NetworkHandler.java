@@ -34,6 +34,12 @@ public class NetworkHandler {
                 .decoder(RaceSizeSyncPacket::decode)
                 .consumerMainThread((packet, context) -> packet.handle())
                 .add();
+        INSTANCE.messageBuilder(OpenSculkStoragePacket.class, 4, NetworkDirection.PLAY_TO_SERVER)
+                .encoder(OpenSculkStoragePacket::encode)
+                .decoder(OpenSculkStoragePacket::new)
+                .consumerMainThread(OpenSculkStoragePacket::handle)
+                .add();
+
 
     }
 
@@ -49,8 +55,11 @@ public class NetworkHandler {
         String raceId = race != null ? race.getId() : "";
         sendToPlayer(new SyncRacePacket(raceId), player);
     }
-    // In NetworkHandler.java
+
     public static void syncSizeToClient(ServerPlayer player, float height, float width) {
         INSTANCE.send(new RaceSizeSyncPacket(height, width), PacketDistributor.PLAYER.with(player));
+    }
+    public static void openSculkStorage() {
+        INSTANCE.send(new OpenSculkStoragePacket(), PacketDistributor.SERVER.noArg());
     }
 }

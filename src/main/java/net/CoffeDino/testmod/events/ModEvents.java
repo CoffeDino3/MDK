@@ -28,7 +28,7 @@ public class ModEvents {
                 races.Race race = races.getPlayerRace(serverPlayer);
                 System.out.println("DEBUG: Retrieved race for player: " + (race != null ? race.getDisplayName() : "null"));
 
-                // Only apply race effects and sync if race is not null
+
                 if (race != null) {
                     races.onPlayerJoinWorld(serverPlayer);
                     NetworkHandler.syncRaceToClient(serverPlayer, race);
@@ -36,7 +36,6 @@ public class ModEvents {
                     System.out.println("DEBUG: Synced race to client on login: " + race.getDisplayName());
                 } else {
                     System.out.println("DEBUG: No race found for player, skipping race effects and sync");
-                    // Sync null race to clear any client-side data
                     NetworkHandler.syncRaceToClient(serverPlayer, null);
                 }
                 System.out.println("DEBUG: ===== SERVER PLAYER LOGIN END =====");

@@ -205,22 +205,16 @@ public class races {
         if (player instanceof ServerPlayer serverPlayer) {
             AttributeInstance healthAttribute = player.getAttribute(Attributes.MAX_HEALTH);
             if (healthAttribute != null) {
-                // Remove old health modifier if it exists
                 healthAttribute.removeModifier(HEALTH_MODIFIER_ID);
-
-                // Get the current health bonus for this race
                 float healthBonus = getHealthBonus(race);
 
                 if (healthBonus > 0) {
-                    // Create new health modifier with ResourceLocation ID
                     AttributeModifier healthModifier = new AttributeModifier(
                             HEALTH_MODIFIER_ID,
                             healthBonus,
                             AttributeModifier.Operation.ADD_VALUE
                     );
                     healthAttribute.addTransientModifier(healthModifier);
-
-                    // Heal player to new max health
                     player.setHealth(player.getMaxHealth());
 
                     System.out.println("DEBUG: Applied " + healthBonus + " health bonus to " + player.getName().getString());
@@ -240,7 +234,6 @@ public class races {
             }
         }
     }
-    // In your races.java file, replace the size methods:
 
     private static void applySizeModifiers(Player player, Race race) {
         if (player instanceof ServerPlayer serverPlayer) {
@@ -250,14 +243,8 @@ public class races {
 
             System.out.println("DEBUG: Applied size modifiers for " + race.getDisplayName() +
                     " - Height: " + race.getHeight() + ", Width: " + race.getWidth());
-
-            // Force refresh on server
             player.refreshDimensions();
-
-            // Sync to client
             NetworkHandler.syncSizeToClient(serverPlayer, race.getHeight(), race.getWidth());
-
-            // Schedule another refresh for next tick to ensure it applies
             serverPlayer.server.execute(() -> {
                 player.refreshDimensions();
             });

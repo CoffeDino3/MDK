@@ -3,13 +3,19 @@ package net.CoffeDino.testmod;
 import com.mojang.logging.LogUtils;
 import net.CoffeDino.testmod.block.ModBlocks;
 import net.CoffeDino.testmod.capability.IRaceSize;
+import net.CoffeDino.testmod.capability.ISculkStorage;
+import net.CoffeDino.testmod.capability.ModCapabilities;
 import net.CoffeDino.testmod.commands.RaceCommand;
 import net.CoffeDino.testmod.item.ModCreativeModeTabs;
 import net.CoffeDino.testmod.item.ModItems;
+import net.CoffeDino.testmod.menu.ModMenuTypes;
 import net.CoffeDino.testmod.network.NetworkHandler;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.CapabilityManager;
+import net.minecraftforge.common.capabilities.CapabilityToken;
 import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
 import net.minecraftforge.event.server.ServerStartingEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -30,7 +36,7 @@ public class TestingCoffeDinoMod
 {
     public static final String MOD_ID = "testingcoffedinomod";
     public static final Logger LOGGER = LogUtils.getLogger();
-
+    public static final Capability<ISculkStorage> SCULK_STORAGE = CapabilityManager.get(new CapabilityToken<>() {});
 
     public TestingCoffeDinoMod()
     {
@@ -43,6 +49,7 @@ public class TestingCoffeDinoMod
 
         ModItems.register(modEventBus);
         ModBlocks.register(modEventBus);
+        ModMenuTypes.MENUS.register(modEventBus);
 
 
 
@@ -50,15 +57,18 @@ public class TestingCoffeDinoMod
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, Config.SPEC);
     }
 
-    private void commonSetup(final FMLCommonSetupEvent event)
-    {
-        event.enqueueWork(NetworkHandler::register);
+    private void commonSetup(final FMLCommonSetupEvent event) {
+        event.enqueueWork(() -> {
+            NetworkHandler.register();
+            LOGGER.info("Sculk Storage capability initialized");
+        });
     }
 
 
 
 
-    // Add the example block item to the building blocks tab
+
+
     private void addCreative(BuildCreativeModeTabContentsEvent event)
     {
         if(event.getTabKey() == CreativeModeTabs.INGREDIENTS){

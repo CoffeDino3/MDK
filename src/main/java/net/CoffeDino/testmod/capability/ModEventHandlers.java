@@ -36,7 +36,6 @@ public class ModEventHandlers {
 
         original.getCapability(RaceSizeProvider.RACE_SIZE).ifPresent(oldCap -> {
             newPlayer.getCapability(RaceSizeProvider.RACE_SIZE).ifPresent(newCap -> {
-                // Use a dummy HolderLookup.Provider or get it from the level
                 HolderLookup.Provider lookup = newPlayer.level().registryAccess();
                 CompoundTag nbt = ((RaceSizeCapability) oldCap).serializeNBT(lookup);
                 ((RaceSizeCapability) newCap).deserializeNBT(lookup, nbt);

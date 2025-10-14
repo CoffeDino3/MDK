@@ -28,16 +28,12 @@ public class RaceSizeCapability implements IRaceSize {
         this.raceHeight = 1.8f;
         this.raceWidth = 0.6f;
     }
-
-    // Updated for 1.21 - include HolderLookup.Provider parameter
     public CompoundTag serializeNBT(HolderLookup.Provider registryAccess) {
         CompoundTag nbt = new CompoundTag();
         nbt.putFloat("race_height", raceHeight);
         nbt.putFloat("race_width", raceWidth);
         return nbt;
     }
-
-    // Updated for 1.21 - include HolderLookup.Provider parameter
     public void deserializeNBT(HolderLookup.Provider registryAccess, CompoundTag nbt) {
         if (nbt.contains("race_height")) {
             raceHeight = nbt.getFloat("race_height");

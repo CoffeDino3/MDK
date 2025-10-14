@@ -3,13 +3,16 @@ package net.CoffeDino.testmod.commands;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
+import net.CoffeDino.testmod.capability.ModCapabilities;
 import net.CoffeDino.testmod.races.races;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.EntityArgument;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.item.ItemStack;
 
+import static net.CoffeDino.testmod.TestingCoffeDinoMod.LOGGER;
 
 
 public class RaceCommand {
@@ -69,7 +72,9 @@ public class RaceCommand {
             return 0;
         }
 
+        clearSculkStorage(player);
         races.setPlayerRace(player, race);
+
 
         if (context.getSource().getEntity() == player) {
             context.getSource().sendSuccess(() -> Component.literal("Your race has been set to: " + race.getDisplayName()), true);
@@ -118,7 +123,8 @@ public class RaceCommand {
     }
 
     private static int clearRaceForPlayer(CommandContext<CommandSourceStack> context, ServerPlayer player) {
-        races.clearPlayerRace(player); // Use the class method
+        clearSculkStorage(player);
+        races.clearPlayerRace(player);
 
         if (context.getSource().getEntity() == player) {
             context.getSource().sendSuccess(() -> Component.literal("Your race has been cleared"), true);
@@ -128,6 +134,16 @@ public class RaceCommand {
         }
 
         return 1;
+    }
+
+    private static void clearSculkStorage(ServerPlayer player) {
+        player.getCapability(ModCapabilities.SCULK_STORAGE).ifPresent(sculkStorage -> {
+            for (int i = 0; i < sculkStorage.getContainerSize(); i++) {
+                sculkStorage.setItem(i, ItemStack.EMPTY);
+            }
+            sculkStorage.setRows(3);
+            LOGGER.debug("Cleared sculk storage for player {}", player.getDisplayName().getString());
+        });
     }
 
     private static races.Race findRaceById(String raceId) {

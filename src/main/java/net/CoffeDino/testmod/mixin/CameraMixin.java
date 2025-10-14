@@ -42,8 +42,6 @@ public abstract class CameraMixin {
                     System.out.println("  Player Pose: " + player.getPose());
                     System.out.println("  Race Height: " + raceSize.getRaceHeight());
                 }
-
-                // Simple direct approach - NO interpolation
                 float customHeight = raceSize.getRaceHeight();
                 float targetEyeHeight = calculateStableEyeHeight(customHeight, player.getPose());
 
