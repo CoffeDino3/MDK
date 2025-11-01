@@ -39,8 +39,44 @@ public class NetworkHandler {
                 .decoder(OpenSculkStoragePacket::new)
                 .consumerMainThread(OpenSculkStoragePacket::handle)
                 .add();
+        INSTANCE.messageBuilder(ActivateWarderAbilityPacket.class, 5, NetworkDirection.PLAY_TO_SERVER)
+                .encoder(ActivateWarderAbilityPacket::encode)
+                .decoder(ActivateWarderAbilityPacket::new)
+                .consumerMainThread(ActivateWarderAbilityPacket::handle)
+                .add();
 
+        INSTANCE.messageBuilder(DeactivateWarderAbilityPacket.class, 6, NetworkDirection.PLAY_TO_SERVER)
+                .encoder(DeactivateWarderAbilityPacket::encode)
+                .decoder(DeactivateWarderAbilityPacket::new)
+                .consumerMainThread(DeactivateWarderAbilityPacket::handle)
+                .add();
+        INSTANCE.messageBuilder(ActivateLoverAbilityPacket.class, 7, NetworkDirection.PLAY_TO_SERVER)
+                .encoder(ActivateLoverAbilityPacket::encode)
+                .decoder(ActivateLoverAbilityPacket::new)
+                .consumerMainThread(ActivateLoverAbilityPacket::handle)
+                .add();
 
+        INSTANCE.messageBuilder(DeactivateLoverAbilityPacket.class, 8, NetworkDirection.PLAY_TO_SERVER)
+                .encoder(DeactivateLoverAbilityPacket::encode)
+                .decoder(DeactivateLoverAbilityPacket::new)
+                .consumerMainThread(DeactivateLoverAbilityPacket::handle)
+                .add();
+
+        INSTANCE.messageBuilder(EnderTeleportPacket.class, 9, NetworkDirection.PLAY_TO_SERVER)
+                .encoder(EnderTeleportPacket::encode)
+                .decoder(EnderTeleportPacket::new)
+                .consumerMainThread(EnderTeleportPacket::handle)
+                .add();
+        INSTANCE.messageBuilder(ActivatePhantomAbilityPacket.class, 10, NetworkDirection.PLAY_TO_SERVER)
+                .encoder(ActivatePhantomAbilityPacket::encode)
+                .decoder(ActivatePhantomAbilityPacket::new)
+                .consumerMainThread(ActivatePhantomAbilityPacket::handle)
+                .add();
+        INSTANCE.messageBuilder(BelieverAbilityPacket.class, 11, NetworkDirection.PLAY_TO_SERVER)
+                .encoder(BelieverAbilityPacket::encode)
+                .decoder(BelieverAbilityPacket::new)
+                .consumerMainThread(BelieverAbilityPacket::handle)
+                .add();
     }
 
     public static <T extends CustomPacketPayload> void sendToServer(T message) {
@@ -61,5 +97,11 @@ public class NetworkHandler {
     }
     public static void openSculkStorage() {
         INSTANCE.send(new OpenSculkStoragePacket(), PacketDistributor.SERVER.noArg());
+    }
+    public static void triggerEnderTeleport() {
+        INSTANCE.send(new EnderTeleportPacket(), PacketDistributor.SERVER.noArg());
+    }
+    public static void triggerBelieverAbility() {
+        INSTANCE.send(new BelieverAbilityPacket(), PacketDistributor.SERVER.noArg());
     }
 }

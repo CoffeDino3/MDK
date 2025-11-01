@@ -36,7 +36,9 @@ public class RaceSelectionScreen extends Screen {
                 races.Race.SCULK,
                 races.Race.WARDER,
                 races.Race.ENDER,
-                races.Race.PHANTOM
+                races.Race.PHANTOM,
+                races.Race.LOVER,
+                races.Race.BELIEVER
         );
     }
 

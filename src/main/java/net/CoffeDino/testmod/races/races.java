@@ -1,6 +1,7 @@
 package net.CoffeDino.testmod.races;
 
 import net.CoffeDino.testmod.TestingCoffeDinoMod;
+import net.CoffeDino.testmod.abilities.BelieverAbilityHandler;
 import net.CoffeDino.testmod.capability.IRaceSize;
 import net.CoffeDino.testmod.capability.RaceSizeProvider;
 import net.CoffeDino.testmod.network.NetworkHandler;
@@ -11,6 +12,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EntityDimensions;
+import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
@@ -29,11 +31,15 @@ public class races {
     private static float warderHealthBonus = 10.0f;
     private static float enderHealthBonus = 0.0f;
     private static float phantomHealthBonus = 5.0f;
+    private static float loverHealthBonus = -4.0f;
+    private static float believerHealthBonus = 5.0f;
     public enum Race {
         SCULK("sculk", "Sculk", 1.8f, 0.6f),
         WARDER("warder", "Warder", 2.2f, 0.8f),
         ENDER("ender", "Ender", 1.9f, 0.6f),
-        PHANTOM("phantom", "Phantom", 1.6f, 0.5f);
+        PHANTOM("phantom", "Phantom", 1.6f, 0.5f),
+        LOVER("lover","Lover",1.8f,0.5f),
+        BELIEVER("believer","Believer",1.7f,0.5f);
 
         private final String id;
         private final String displayName;
@@ -74,6 +80,10 @@ public class races {
     public static void setPlayerRace(Player player, Race race) {
         if (player == null) return;
 
+        Race currentRace = getPlayerRace(player);
+        if (currentRace == Race.BELIEVER && race != Race.BELIEVER) {
+            BelieverAbilityHandler.onRaceChange(player);
+        }
         if (!player.level().isClientSide() && player instanceof ServerPlayer serverPlayer) {
             RaceDataManager dataManager = RaceDataManager.get(serverPlayer);
             dataManager.setPlayerRace(player.getUUID(), race != null ? race.getId() : "");
@@ -90,7 +100,6 @@ public class races {
             clientRace = race;
             System.out.println("DEBUG: Race set on client: " + (race != null ? race.getDisplayName() : "null"));
         }
-
     }
 
     public static void setClientRace(Race race) {
@@ -137,13 +146,14 @@ public class races {
     private static void syncRaceToClient(ServerPlayer player, Race race) {
         net.CoffeDino.testmod.network.NetworkHandler.syncRaceToClient(player, race);
     }
-
     public static void clearPlayerRace(Player player) {
+        if (getPlayerRace(player) == Race.BELIEVER) {
+            BelieverAbilityHandler.onRaceChange(player);
+        }
+
         setPlayerRace(player, null);
         System.out.println("DEBUG: Cleared race for player: " + player.getName().getString());
     }
-
-
     public static void onPlayerJoinWorld(Player player) {
         if (!player.level().isClientSide()) {
             Race race = getPlayerRace(player);
@@ -167,6 +177,8 @@ public class races {
             case WARDER -> warderHealthBonus;
             case ENDER -> enderHealthBonus;
             case PHANTOM -> phantomHealthBonus;
+            case LOVER -> loverHealthBonus;
+            case BELIEVER -> believerHealthBonus;
         };
     }
 
@@ -180,6 +192,8 @@ public class races {
             case SCULK -> applySculkTraits(player);
             case WARDER -> applyWarderTraits(player);
             case PHANTOM -> applyPhantomTraits(player);
+            case LOVER -> applyLoverTraits(player);
+            case BELIEVER -> applyBelieverTraits(player);
         }
         applyHealthBonus(player, race);
         applySizeModifiers(player, race);
@@ -193,6 +207,8 @@ public class races {
             player.removeEffect(MobEffects.DAMAGE_BOOST);
             player.removeEffect(MobEffects.NIGHT_VISION);
             player.removeEffect(MobEffects.JUMP);
+            player.removeEffect(MobEffects.LUCK);
+            player.removeEffect(MobEffects.HERO_OF_THE_VILLAGE);
         }
 
         clearHealthModifier(player);
@@ -207,18 +223,17 @@ public class races {
             if (healthAttribute != null) {
                 healthAttribute.removeModifier(HEALTH_MODIFIER_ID);
                 float healthBonus = getHealthBonus(race);
-
-                if (healthBonus > 0) {
-                    AttributeModifier healthModifier = new AttributeModifier(
-                            HEALTH_MODIFIER_ID,
-                            healthBonus,
-                            AttributeModifier.Operation.ADD_VALUE
-                    );
-                    healthAttribute.addTransientModifier(healthModifier);
+                AttributeModifier healthModifier = new AttributeModifier(
+                        HEALTH_MODIFIER_ID,
+                        healthBonus,
+                        AttributeModifier.Operation.ADD_VALUE
+                );
+                healthAttribute.addTransientModifier(healthModifier);
+                if (player.getHealth() > player.getMaxHealth()) {
                     player.setHealth(player.getMaxHealth());
-
-                    System.out.println("DEBUG: Applied " + healthBonus + " health bonus to " + player.getName().getString());
                 }
+
+                System.out.println("DEBUG: Applied " + healthBonus + " health bonus to " + player.getName().getString() + ". New max health: " + player.getMaxHealth());
             }
         }
     }
@@ -227,8 +242,6 @@ public class races {
         AttributeInstance healthAttribute = player.getAttribute(Attributes.MAX_HEALTH);
         if (healthAttribute != null) {
             healthAttribute.removeModifier(HEALTH_MODIFIER_ID);
-
-            // Ensure health doesn't go below 1
             if (player.getHealth() > player.getMaxHealth()) {
                 player.setHealth(player.getMaxHealth());
             }
@@ -255,6 +268,30 @@ public class races {
         player.getCapability(RaceSizeProvider.RACE_SIZE).ifPresent(IRaceSize::resetRaceSize);
         player.refreshDimensions();
         System.out.println("DEBUG: Cleared size modifiers for " + player.getName().getString());
+    }
+
+    private static void applyLoverTraits(Player player){
+        if(player instanceof ServerPlayer){
+            player.addEffect(new MobEffectInstance(
+                    MobEffects.HERO_OF_THE_VILLAGE,
+                    -1,
+                    0,
+                    true,
+                    false
+            ));
+        }
+    }
+
+    private static void applyBelieverTraits(Player player){
+        if(player instanceof ServerPlayer){
+            player.addEffect(new MobEffectInstance(
+                    MobEffects.LUCK,
+                    -1,
+                    0,
+                    true,
+                    false
+            ));
+        }
     }
 
 
