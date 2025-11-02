@@ -13,5 +13,8 @@
   "creativetab.testingcoffedinomod.special_tools": "Special Tools",
 
   "tooltip.testingcoffedinomod.special_wand.tooltip": "Right click with this item on §5any§r block to change it to another!",
-  "tooltip.testingcoffedinomod.the_wand.tooltip": "Right click a mineral block with this item to §4magically§r change it to another mineral!"
+  "tooltip.testingcoffedinomod.the_wand.tooltip": "Right click a mineral block with this item to §4magically§r change it to another mineral!",
+
+  "effect.testingcoffedinomod.ether": "Ether",
+  "effect.testingcoffedinomod.blood_surge": "Blood Surge"
 }

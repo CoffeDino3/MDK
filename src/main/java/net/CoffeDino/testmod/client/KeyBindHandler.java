@@ -2,6 +2,7 @@ package net.CoffeDino.testmod.client;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import net.CoffeDino.testmod.TestingCoffeDinoMod;
+import net.CoffeDino.testmod.abilities.EtherealAbilityHandler;
 import net.CoffeDino.testmod.abilities.LoverAbilityHandler;
 import net.CoffeDino.testmod.network.*;
 import net.CoffeDino.testmod.races.races;
@@ -51,6 +52,18 @@ public class KeyBindHandler {
             InputConstants.KEY_R,
             "category.testingcoffedinomod.abilities"
     );
+    public static final KeyMapping VAMPIREBORN_ABILITY_KEY = new KeyMapping(
+            "key.testingcoffedinomod.vampireborn_ability",
+            InputConstants.Type.KEYSYM,
+            InputConstants.KEY_R,
+            "category.testingcoffedinomod.abilities"
+    );
+    public static final KeyMapping ETHEREAL_ABILITY_KEY = new KeyMapping(
+            "key.testingcoffedinomod.ethereal_ability",
+            InputConstants.Type.KEYSYM,
+            InputConstants.KEY_R,
+            "category.testingcoffedinomod.abilities"
+    );
 
     @SubscribeEvent
     public static void registerBindings(RegisterKeyMappingsEvent event) {
@@ -60,13 +73,29 @@ public class KeyBindHandler {
         event.register(ENDER_TELEPORT_KEY);
         event.register(PHANTOM_ABILITY_KEY);
         event.register(BELIEVER_ABILITY_KEY);
+        event.register(VAMPIREBORN_ABILITY_KEY);
+        event.register(ETHEREAL_ABILITY_KEY);
     }
     private static boolean wasLoverKeyPressed = false;
+    private static boolean wasVampirebornKeyPressed = false;
+    private static long vampirebornPressTime = 0;
+    private static final long TAP_THRESHOLD = 200; // milliseconds
 
     @SubscribeEvent
     public static void onClientTick(TickEvent.ClientTickEvent event) {
         if (event.phase == TickEvent.Phase.END) {
             Minecraft minecraft = Minecraft.getInstance();
+
+            if (ETHEREAL_ABILITY_KEY.consumeClick()) {
+                if (minecraft.player != null && minecraft.screen == null && minecraft.player.isAlive()) {
+                    races.Race race = races.getPlayerRace(minecraft.player);
+                    if (race == races.Race.ETHEREAL) {
+                        boolean jumping = minecraft.options.keyJump.isDown();
+                        boolean shifting = minecraft.options.keyShift.isDown();
+                        NetworkHandler.sendToServer(new ActivateEtherealAbilityPacket(jumping, shifting));
+                    }
+                }
+            }
 
             if (ENDER_TELEPORT_KEY.consumeClick()) {
                 races.Race race = races.getPlayerRace(minecraft.player);
@@ -114,10 +143,58 @@ public class KeyBindHandler {
                     }
                 }
             }
+            if (minecraft.player != null && EtherealAbilityHandler.isAbilityActive(minecraft.player)) {
+                boolean jumping = minecraft.options.keyJump.isDown();
+                boolean shifting = minecraft.options.keyShift.isDown();
+                NetworkHandler.sendToServer(new UpdateEtherealInputPacket(jumping, shifting));
+            }
+            if (minecraft.player == null || minecraft.screen != null || !minecraft.player.isAlive()) {
+                wasVampirebornKeyPressed = false;
+                return;
+            }
+
+            races.Race race = races.getPlayerRace(minecraft.player);
+            if (race != races.Race.VAMPIREBORN) {
+                wasVampirebornKeyPressed = false;
+                return;
+            }
+
+            boolean isVampirebornKeyPressed = VAMPIREBORN_ABILITY_KEY.isDown();
+
+            if (isVampirebornKeyPressed && !wasVampirebornKeyPressed) {
+                vampirebornPressTime = System.currentTimeMillis();
+                wasVampirebornKeyPressed = true;
+            }
+
+            if (!isVampirebornKeyPressed && wasVampirebornKeyPressed) {
+                long pressDuration = System.currentTimeMillis() - vampirebornPressTime;
+
+                if (pressDuration < TAP_THRESHOLD) {
+                    NetworkHandler.sendToServer(new VampirebornAbilityPacket(false));
+                    TestingCoffeDinoMod.LOGGER.debug("Vampireborn single tap detected ({}ms)", pressDuration);
+                } else {
+                    NetworkHandler.sendToServer(new DeactivateVampirebornAbilityPacket());
+                    TestingCoffeDinoMod.LOGGER.debug("Vampireborn hold released ({}ms)", pressDuration);
+                }
+
+                wasVampirebornKeyPressed = false;
+            }
+
+            if (isVampirebornKeyPressed && wasVampirebornKeyPressed) {
+                long pressDuration = System.currentTimeMillis() - vampirebornPressTime;
+                if (pressDuration >= TAP_THRESHOLD) {
+                    if (pressDuration < TAP_THRESHOLD + 50) {
+                        NetworkHandler.sendToServer(new VampirebornAbilityPacket(true));
+                        TestingCoffeDinoMod.LOGGER.debug("Vampireborn hold started ({}ms)", pressDuration);
+                    }
+                }
+            }
+
+            wasVampirebornKeyPressed = isVampirebornKeyPressed;
             if (minecraft.player == null || minecraft.screen != null || !minecraft.player.isAlive())
                 return;
 
-            races.Race race = races.getPlayerRace(minecraft.player);
+
 
             if (race == races.Race.LOVER) {
                 boolean isLoverKeyPressed = LOVER_ABILITY_KEY.isDown();

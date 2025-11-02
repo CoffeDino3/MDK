@@ -4,6 +4,7 @@ import net.CoffeDino.testmod.TestingCoffeDinoMod;
 import net.CoffeDino.testmod.abilities.BelieverAbilityHandler;
 import net.CoffeDino.testmod.capability.IRaceSize;
 import net.CoffeDino.testmod.capability.RaceSizeProvider;
+import net.CoffeDino.testmod.effects.ModEffects;
 import net.CoffeDino.testmod.network.NetworkHandler;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -19,6 +20,8 @@ import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 public class races {
@@ -33,13 +36,21 @@ public class races {
     private static float phantomHealthBonus = 5.0f;
     private static float loverHealthBonus = -4.0f;
     private static float believerHealthBonus = 5.0f;
+    private static float angelbornHealthBonus = 0.0f;
+    private static float vampirebornHealthBonus = -5.0f;
+    private static float etherealHealthBonus = 10.0f;
+    private static float celestialHealthBonus = 5.0f;
     public enum Race {
         SCULK("sculk", "Sculk", 1.8f, 0.6f),
         WARDER("warder", "Warder", 2.2f, 0.8f),
         ENDER("ender", "Ender", 1.9f, 0.6f),
         PHANTOM("phantom", "Phantom", 1.6f, 0.5f),
         LOVER("lover","Lover",1.8f,0.5f),
-        BELIEVER("believer","Believer",1.7f,0.5f);
+        BELIEVER("believer","Believer",1.7f,0.6f),
+        ANGELBORN("angelborn","Angelborn", 2.0f,0.6f),
+        VAMPIREBORN("vampireborn","Vampireborn", 2.0f,0.6f),
+        ETHEREAL("ethereal","Ethereal",1.5f,0.5f),
+        CELESTIAL("celestial","Celestial",2.1f,0.6f);
 
         private final String id;
         private final String displayName;
@@ -179,6 +190,10 @@ public class races {
             case PHANTOM -> phantomHealthBonus;
             case LOVER -> loverHealthBonus;
             case BELIEVER -> believerHealthBonus;
+            case ANGELBORN -> angelbornHealthBonus;
+            case ETHEREAL -> etherealHealthBonus;
+            case CELESTIAL -> celestialHealthBonus;
+            case VAMPIREBORN -> vampirebornHealthBonus;
         };
     }
 
@@ -194,6 +209,10 @@ public class races {
             case PHANTOM -> applyPhantomTraits(player);
             case LOVER -> applyLoverTraits(player);
             case BELIEVER -> applyBelieverTraits(player);
+            case CELESTIAL -> applyCelestialTraits(player);
+            case ETHEREAL -> applyEtherealTraits(player);
+            case ANGELBORN -> applyAngelbornTraits(player);
+            case VAMPIREBORN -> applyVampirebornTraits(player);
         }
         applyHealthBonus(player, race);
         applySizeModifiers(player, race);
@@ -209,6 +228,12 @@ public class races {
             player.removeEffect(MobEffects.JUMP);
             player.removeEffect(MobEffects.LUCK);
             player.removeEffect(MobEffects.HERO_OF_THE_VILLAGE);
+            player.removeEffect(MobEffects.INVISIBILITY);
+            player.removeEffect(MobEffects.INVISIBILITY);
+            player.removeEffect(MobEffects.REGENERATION);
+            player.removeEffect(ModEffects.BLOOD_SURGE.getHolder().get());
+            player.removeEffect(ModEffects.ETHER.getHolder().get());
+
         }
 
         clearHealthModifier(player);
@@ -232,7 +257,6 @@ public class races {
                 if (player.getHealth() > player.getMaxHealth()) {
                     player.setHealth(player.getMaxHealth());
                 }
-
                 System.out.println("DEBUG: Applied " + healthBonus + " health bonus to " + player.getName().getString() + ". New max health: " + player.getMaxHealth());
             }
         }
@@ -268,6 +292,54 @@ public class races {
         player.getCapability(RaceSizeProvider.RACE_SIZE).ifPresent(IRaceSize::resetRaceSize);
         player.refreshDimensions();
         System.out.println("DEBUG: Cleared size modifiers for " + player.getName().getString());
+    }
+    private static void applyAngelbornTraits(Player player){
+        if(player instanceof ServerPlayer){
+            player.addEffect(new MobEffectInstance(
+                    MobEffects.REGENERATION,
+                    -1,
+                    0,
+                    true,
+                    false
+            ));
+        }
+    }
+    private static void applyEtherealTraits(Player player){
+        if(player instanceof ServerPlayer){
+            player.addEffect(new MobEffectInstance(
+                    ModEffects.ETHER.getHolder().get(),
+                    -1,
+                    0,
+                    true,
+                    false,
+                    true
+            ));
+        }
+    }
+    private static void applyVampirebornTraits(Player player){
+        if(player instanceof ServerPlayer){
+            player.addEffect(new MobEffectInstance(
+                    ModEffects.BLOOD_SURGE.getHolder().get(),
+                    -1,
+                    0,
+                    true,
+                    false,
+                    true
+            ));
+        }
+    }
+
+
+    private static void applyCelestialTraits(Player player){
+        if(player instanceof ServerPlayer){
+            player.addEffect(new MobEffectInstance(
+                    MobEffects.INVISIBILITY,
+                    -1,
+                    0,
+                    true,
+                    false
+            ));
+        }
     }
 
     private static void applyLoverTraits(Player player){
@@ -344,5 +416,47 @@ public class races {
             ));
         }
     }
+    private static final Map<UUID, Long> lastDamageTime = new HashMap<>();
+    private static final long DAMAGE_COOLDOWN = 40;
 
+    public static void handleVampireSunlight(Player player) {
+        if (player == null || player.level().isClientSide()) return;
+
+        Race race = getPlayerRace(player);
+        if (race != Race.VAMPIREBORN) return;
+        if (isExposedToSunlight(player)) {
+            if (!isWearingHelmet(player)) {
+                UUID playerId = player.getUUID();
+                long currentTime = player.level().getGameTime();
+                Long lastTime = lastDamageTime.get(playerId);
+
+                if (lastTime == null || currentTime - lastTime >= DAMAGE_COOLDOWN) {
+                    player.hurt(player.damageSources().onFire(), 2.0F);
+                    player.setRemainingFireTicks(4 * 20);
+                    lastDamageTime.put(playerId, currentTime);
+                    if (player.level().getGameTime() % 40 == 0) {
+                        player.displayClientMessage(
+                                Component.literal("The sunlight burns your vampire flesh! Shadows should help..."),
+                                true
+                        );
+                    }
+                }
+            }
+        }
+    }
+
+    private static boolean isExposedToSunlight(Player player) {
+        if (!player.level().isDay()) return false;
+        if (!player.level().canSeeSky(player.blockPosition())) return false;
+        if (player.level().isRaining()) return false;
+        return player.level().getMaxLocalRawBrightness(player.blockPosition()) >= 12;
+    }
+
+    private static boolean isWearingHelmet(Player player) {
+        var helmet = player.getInventory().getArmor(3);
+        if (helmet.isEmpty()) return false;
+        return helmet.getItem() instanceof net.minecraft.world.item.ArmorItem armorItem &&
+                armorItem.getType().getSlot() == net.minecraft.world.entity.EquipmentSlot.HEAD;
+    }
 }
+

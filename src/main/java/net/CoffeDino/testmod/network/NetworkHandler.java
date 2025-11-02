@@ -77,6 +77,27 @@ public class NetworkHandler {
                 .decoder(BelieverAbilityPacket::new)
                 .consumerMainThread(BelieverAbilityPacket::handle)
                 .add();
+        INSTANCE.messageBuilder(VampirebornAbilityPacket.class, 12, NetworkDirection.PLAY_TO_SERVER)
+                .encoder(VampirebornAbilityPacket::encode)
+                .decoder(VampirebornAbilityPacket::new)
+                .consumerMainThread(VampirebornAbilityPacket::handle)
+                .add();
+
+        INSTANCE.messageBuilder(DeactivateVampirebornAbilityPacket.class, 13, NetworkDirection.PLAY_TO_SERVER)
+                .encoder(DeactivateVampirebornAbilityPacket::encode)
+                .decoder(DeactivateVampirebornAbilityPacket::new)
+                .consumerMainThread(DeactivateVampirebornAbilityPacket::handle)
+                .add();
+        INSTANCE.messageBuilder(ActivateEtherealAbilityPacket.class, 14, NetworkDirection.PLAY_TO_SERVER)
+                .encoder(ActivateEtherealAbilityPacket::encode)
+                .decoder(ActivateEtherealAbilityPacket::new)
+                .consumerMainThread(ActivateEtherealAbilityPacket::handle)
+                .add();
+        INSTANCE.messageBuilder(UpdateEtherealInputPacket.class, 15, NetworkDirection.PLAY_TO_SERVER)
+                .encoder(UpdateEtherealInputPacket::encode)
+                .decoder(UpdateEtherealInputPacket::new)
+                .consumerMainThread(UpdateEtherealInputPacket::handle)
+                .add();
     }
 
     public static <T extends CustomPacketPayload> void sendToServer(T message) {

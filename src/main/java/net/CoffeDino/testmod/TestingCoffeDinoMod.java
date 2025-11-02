@@ -6,6 +6,7 @@ import net.CoffeDino.testmod.capability.IRaceSize;
 import net.CoffeDino.testmod.capability.ISculkStorage;
 import net.CoffeDino.testmod.capability.ModCapabilities;
 import net.CoffeDino.testmod.commands.RaceCommand;
+import net.CoffeDino.testmod.effects.ModEffects;
 import net.CoffeDino.testmod.item.ModCreativeModeTabs;
 import net.CoffeDino.testmod.item.ModItems;
 import net.CoffeDino.testmod.menu.ModMenuTypes;
@@ -49,6 +50,7 @@ public class TestingCoffeDinoMod
 
         ModItems.register(modEventBus);
         ModBlocks.register(modEventBus);
+        ModEffects.EFFECTS.register(modEventBus);
         ModMenuTypes.MENUS.register(modEventBus);
 
 

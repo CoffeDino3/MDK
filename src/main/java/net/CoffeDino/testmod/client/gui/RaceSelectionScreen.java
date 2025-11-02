@@ -38,7 +38,11 @@ public class RaceSelectionScreen extends Screen {
                 races.Race.ENDER,
                 races.Race.PHANTOM,
                 races.Race.LOVER,
-                races.Race.BELIEVER
+                races.Race.BELIEVER,
+                races.Race.VAMPIREBORN,
+                races.Race.ANGELBORN,
+                races.Race.ETHEREAL,
+                races.Race.CELESTIAL
         );
     }
 
@@ -142,10 +146,16 @@ public class RaceSelectionScreen extends Screen {
 
     private String getRaceDescription(races.Race race) {
         switch (race) {
-            case SCULK: return "Connected to the deep end, masters of space and stealth.";
-            case WARDER: return "Ancient guardians, strong and resilient protectors.";
-            case ENDER: return "Masters of teleportation and the end dimension.";
-            case PHANTOM: return "Spectral beings, elusive and mysterious.";
+            case SCULK: return "Void-born and resilient, Sculks grow tougher with experience and can carry items safely within themselves.";
+            case WARDER: return "Born to fight, Warders manipulate dimensional energy to crush foes and obstacles alike.";
+            case ENDER: return "Slipping through space instantly, Enders strike unseen and vanish just as quickly.";
+            case PHANTOM: return "Swift aerial hunters, gliding above the battlefield and striking with precision.";
+            case VAMPIREBORN: return "Crimson predators who trade their own life for deadly power under the cover of night.";
+            case BELIEVER: return "Faith makes them unbreakable, creating a sanctuary even in the fiercest battles.";
+            case LOVER: return "Their love shields them and punishes those who dare harm them.";
+            case ANGELBORN: return "Emissaries of light, Angelborn heal quickly and smite enemies with divine precision.";
+            case ETHEREAL: return "Existing between realities, Ethereals are untouchable and strike back at those who hit them.";
+            case CELESTIAL: return "Masters of cosmic force, Celestials bend gravity to crush or manipulate foes.";
             default: return "A mysterious race with unknown abilities.";
         }
     }
