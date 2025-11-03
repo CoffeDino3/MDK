@@ -14,6 +14,7 @@ import java.util.UUID;
 public class RaceDataManager extends SavedData {
     private static final String DATA_NAME = TestingCoffeDinoMod.MOD_ID + "_races";
     private final Map<UUID, String> playerRaces = new HashMap<>();
+    private static final boolean DEBUG = false;
 
     @Override
     public CompoundTag save(CompoundTag tag, HolderLookup.Provider registries) {
@@ -22,7 +23,9 @@ public class RaceDataManager extends SavedData {
             racesTag.putString(entry.getKey().toString(), entry.getValue());
         }
         tag.put("playerRaces", racesTag);
-        System.out.println("DEBUG: RaceDataManager saved - " + playerRaces.size() + " player races");
+        if (DEBUG) {
+            TestingCoffeDinoMod.LOGGER.debug("RaceDataManager saved - {} player races", playerRaces.size());
+        }
         return tag;
     }
 
@@ -34,35 +37,38 @@ public class RaceDataManager extends SavedData {
                 UUID playerId = UUID.fromString(uuidString);
                 String raceId = racesTag.getString(uuidString);
                 data.playerRaces.put(playerId, raceId);
-                System.out.println("DEBUG: Loaded race for " + playerId + ": " + raceId);
             } catch (IllegalArgumentException e) {
                 TestingCoffeDinoMod.LOGGER.error("Invalid UUID in race data: {}", uuidString);
             }
         }
-        System.out.println("DEBUG: RaceDataManager loaded - " + data.playerRaces.size() + " player races");
+        if (DEBUG) {
+            TestingCoffeDinoMod.LOGGER.debug("RaceDataManager loaded - {} player races", data.playerRaces.size());
+        }
         return data;
     }
 
     public void setPlayerRace(UUID playerId, String raceId) {
         if (raceId == null || raceId.isEmpty()) {
             playerRaces.remove(playerId);
-            System.out.println("DEBUG: Removed race for player: " + playerId);
+            if (DEBUG) {
+                TestingCoffeDinoMod.LOGGER.debug("Removed race for player: {}", playerId);
+            }
         } else {
             playerRaces.put(playerId, raceId);
-            System.out.println("DEBUG: Set race for player " + playerId + ": " + raceId);
+            if (DEBUG) {
+                TestingCoffeDinoMod.LOGGER.debug("Set race for player {}: {}", playerId, raceId);
+            }
         }
         setDirty();
     }
 
     public String getPlayerRace(UUID playerId) {
         String race = playerRaces.get(playerId);
-        System.out.println("DEBUG: Getting race for player " + playerId + ": " + race);
         return race;
     }
 
     public boolean hasRace(UUID playerId) {
         boolean hasRace = playerRaces.containsKey(playerId);
-        System.out.println("DEBUG: Checking if player " + playerId + " has race: " + hasRace);
         return hasRace;
     }
 
@@ -82,7 +88,6 @@ public class RaceDataManager extends SavedData {
                 DATA_NAME
         );
 
-        System.out.println("DEBUG: Retrieved RaceDataManager for world - " + manager.playerRaces.size() + " player races");
         return manager;
     }
 }

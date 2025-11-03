@@ -64,6 +64,12 @@ public class KeyBindHandler {
             InputConstants.KEY_R,
             "category.testingcoffedinomod.abilities"
     );
+    public static final KeyMapping ANGELBORN_ABILITY_KEY = new KeyMapping(
+            "key.testingcoffedinomod.angelborn_ability",
+            InputConstants.Type.KEYSYM,
+            InputConstants.KEY_R,
+            "category.testingcoffedinomod.abilities"
+    );
 
     @SubscribeEvent
     public static void registerBindings(RegisterKeyMappingsEvent event) {
@@ -75,7 +81,9 @@ public class KeyBindHandler {
         event.register(BELIEVER_ABILITY_KEY);
         event.register(VAMPIREBORN_ABILITY_KEY);
         event.register(ETHEREAL_ABILITY_KEY);
+        event.register(ANGELBORN_ABILITY_KEY);
     }
+
     private static boolean wasLoverKeyPressed = false;
     private static boolean wasVampirebornKeyPressed = false;
     private static long vampirebornPressTime = 0;
@@ -85,6 +93,14 @@ public class KeyBindHandler {
     public static void onClientTick(TickEvent.ClientTickEvent event) {
         if (event.phase == TickEvent.Phase.END) {
             Minecraft minecraft = Minecraft.getInstance();
+            if (ANGELBORN_ABILITY_KEY.consumeClick()) {
+                if (minecraft.player != null && minecraft.screen == null && minecraft.player.isAlive()) {
+                    races.Race race = races.getPlayerRace(minecraft.player);
+                    if (race == races.Race.ANGELBORN) {
+                        NetworkHandler.sendToServer(new ActivateAngelbornAbilityPacket());
+                    }
+                }
+            }
 
             if (ETHEREAL_ABILITY_KEY.consumeClick()) {
                 if (minecraft.player != null && minecraft.screen == null && minecraft.player.isAlive()) {
@@ -99,7 +115,7 @@ public class KeyBindHandler {
 
             if (ENDER_TELEPORT_KEY.consumeClick()) {
                 races.Race race = races.getPlayerRace(minecraft.player);
-                if(race==races.Race.ENDER){
+                if (race == races.Race.ENDER) {
                     NetworkHandler.triggerEnderTeleport();
                 }
             }
@@ -140,6 +156,18 @@ public class KeyBindHandler {
                     races.Race race = races.getPlayerRace(minecraft.player);
                     if (race == races.Race.WARDER) {
                         NetworkHandler.sendToServer(new DeactivateWarderAbilityPacket());
+                    }
+                }
+            }
+            if (LOVER_ABILITY_KEY.consumeClick()) {
+                if (minecraft.player != null && minecraft.screen == null && minecraft.player.isAlive()) {
+                    races.Race race2 = races.getPlayerRace(minecraft.player);
+                    if (race2 == races.Race.LOVER) {
+                        if (!LoverAbilityHandler.isAbilityActive(minecraft.player) &&
+                                LoverAbilityHandler.canActivateAbility(minecraft.player)) {
+                            NetworkHandler.sendToServer(new ActivateLoverAbilityPacket());
+                            TestingCoffeDinoMod.LOGGER.debug("Client: Sent Lover ability activation");
+                        }
                     }
                 }
             }
@@ -191,23 +219,6 @@ public class KeyBindHandler {
             }
 
             wasVampirebornKeyPressed = isVampirebornKeyPressed;
-            if (minecraft.player == null || minecraft.screen != null || !minecraft.player.isAlive())
-                return;
-
-
-
-            if (race == races.Race.LOVER) {
-                boolean isLoverKeyPressed = LOVER_ABILITY_KEY.isDown();
-                if (isLoverKeyPressed && !wasLoverKeyPressed) {
-                    if (!LoverAbilityHandler.isAbilityActive(minecraft.player) &&
-                            LoverAbilityHandler.canActivateAbility(minecraft.player)) {
-                        NetworkHandler.sendToServer(new ActivateLoverAbilityPacket());
-                        TestingCoffeDinoMod.LOGGER.debug("Client: Sent Lover ability activation");
-                    }
-                }
-                wasLoverKeyPressed = isLoverKeyPressed;
-            }
-
         }
     }
 }

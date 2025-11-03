@@ -7,10 +7,13 @@ import net.CoffeDino.testmod.capability.ISculkStorage;
 import net.CoffeDino.testmod.capability.ModCapabilities;
 import net.CoffeDino.testmod.commands.RaceCommand;
 import net.CoffeDino.testmod.effects.ModEffects;
+import net.CoffeDino.testmod.entity.ModEntities;
 import net.CoffeDino.testmod.item.ModCreativeModeTabs;
 import net.CoffeDino.testmod.item.ModItems;
 import net.CoffeDino.testmod.menu.ModMenuTypes;
 import net.CoffeDino.testmod.network.NetworkHandler;
+import net.CoffeDino.testmod.renderer.AngelbornRenderer;
+import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
@@ -30,6 +33,7 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.slf4j.Logger;
 import org.spongepowered.asm.launch.MixinBootstrap;
 import org.spongepowered.asm.mixin.Mixin;
+import net.CoffeDino.testmod.renderer.AngelbornAbilityRenderer;
 
 
 @Mod(TestingCoffeDinoMod.MOD_ID)
@@ -52,6 +56,7 @@ public class TestingCoffeDinoMod
         ModBlocks.register(modEventBus);
         ModEffects.EFFECTS.register(modEventBus);
         ModMenuTypes.MENUS.register(modEventBus);
+        ModEntities.ENTITIES.register(modEventBus);
 
 
 
@@ -65,6 +70,7 @@ public class TestingCoffeDinoMod
             LOGGER.info("Sculk Storage capability initialized");
         });
     }
+
 
 
 
@@ -102,8 +108,10 @@ public class TestingCoffeDinoMod
         @SubscribeEvent
         public static void onClientSetup(FMLClientSetupEvent event)
         {
-
+            EntityRenderers.register(ModEntities.ANGELBORN_ABILITY.get(), AngelbornAbilityRenderer::new);
+            LOGGER.debug("Angelborn ability renderer registered");
         }
+
     }
 
 }

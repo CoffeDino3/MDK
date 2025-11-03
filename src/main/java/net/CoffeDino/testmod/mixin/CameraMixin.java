@@ -36,12 +36,6 @@ public abstract class CameraMixin {
         if (entity instanceof Player player) {
             player.getCapability(RaceSizeProvider.RACE_SIZE).ifPresent(raceSize -> {
                 debugCounter++;
-                if (debugCounter % 100 == 0) { // Log every 100 frames to avoid spam
-                    System.out.println("Camera Debug - Frame: " + debugCounter);
-                    System.out.println("  EyeHeight: " + this.eyeHeight + ", Old: " + this.eyeHeightOld);
-                    System.out.println("  Player Pose: " + player.getPose());
-                    System.out.println("  Race Height: " + raceSize.getRaceHeight());
-                }
                 float customHeight = raceSize.getRaceHeight();
                 float targetEyeHeight = calculateStableEyeHeight(customHeight, player.getPose());
 

@@ -30,7 +30,8 @@ public abstract class PlayerRendererMixin extends LivingEntityRenderer<AbstractC
                 float widthScale = width / 0.6f;
 
                 poseStack.scale(widthScale, heightScale, widthScale);
-                this.shadowRadius *= Math.max(widthScale, heightScale);
+
+                //this.shadowRadius *= Math.max(widthScale, heightScale);
                 ci.cancel();
             }
         });

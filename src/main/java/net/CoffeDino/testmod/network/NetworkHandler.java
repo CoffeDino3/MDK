@@ -98,6 +98,11 @@ public class NetworkHandler {
                 .decoder(UpdateEtherealInputPacket::new)
                 .consumerMainThread(UpdateEtherealInputPacket::handle)
                 .add();
+        INSTANCE.messageBuilder(ActivateAngelbornAbilityPacket.class, 16, NetworkDirection.PLAY_TO_SERVER)
+                .encoder(ActivateAngelbornAbilityPacket::encode)
+                .decoder(ActivateAngelbornAbilityPacket::new)
+                .consumerMainThread(ActivateAngelbornAbilityPacket::handle)
+                .add();
     }
 
     public static <T extends CustomPacketPayload> void sendToServer(T message) {
