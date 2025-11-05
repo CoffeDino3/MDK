@@ -34,6 +34,7 @@ public class ModCreativeModeTabs {
                     .displayItems((parameters, output) -> {
                         output.accept(ModItems.THE_WAND.get());
                         output.accept(ModItems.SPECIAL_WAND.get());
+                        output.accept(ModItems.RACE_RESET_SCROLL.get());
                     })
 
                     .build());

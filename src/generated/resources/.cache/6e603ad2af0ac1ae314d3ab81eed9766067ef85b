@@ -1,6 +1,7 @@
-// 1.21	2025-10-05T19:57:55.0242142	Item Models: testingcoffedinomod
+// 1.21	2025-11-04T22:14:21.6669757	Item Models: testingcoffedinomod
 bb510bcf4ebafbdfc45c6b5c19919df16157b92a assets/testingcoffedinomod/models/item/cummingtonite.json
 74b45afd06866aa492b935bf3b3f4fadf4cb7c9f assets/testingcoffedinomod/models/item/cummingtonite_ingot.json
+a6a3d784ca2d66fd5b8f58f74bf17792bcfc2511 assets/testingcoffedinomod/models/item/race_reset_scroll.json
 7cf9b2975314a69b2fec7203fb89e308e04e46be assets/testingcoffedinomod/models/item/special_wand.json
 7acd6db4f72193d9352cb77edcc67079c95b876f assets/testingcoffedinomod/models/item/stack_star.json
 ac660422bbd24d14b317a7217e1badd333a77c4b assets/testingcoffedinomod/models/item/storage_gem.json

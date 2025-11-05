@@ -2,6 +2,7 @@ package net.CoffeDino.testmod.client;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import net.CoffeDino.testmod.TestingCoffeDinoMod;
+import net.CoffeDino.testmod.abilities.CelestialAbilityHandler;
 import net.CoffeDino.testmod.abilities.EtherealAbilityHandler;
 import net.CoffeDino.testmod.abilities.LoverAbilityHandler;
 import net.CoffeDino.testmod.network.*;
@@ -9,6 +10,7 @@ import net.CoffeDino.testmod.races.races;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -70,6 +72,12 @@ public class KeyBindHandler {
             InputConstants.KEY_R,
             "category.testingcoffedinomod.abilities"
     );
+    public static final KeyMapping CELESTIAL_ABILITY_KEY = new KeyMapping(
+            "key.testingcoffedinomod.celestial_ability",
+            InputConstants.Type.KEYSYM,
+            InputConstants.KEY_R,
+            "category.testingcoffedinomod.abilities"
+    );
 
     @SubscribeEvent
     public static void registerBindings(RegisterKeyMappingsEvent event) {
@@ -82,17 +90,49 @@ public class KeyBindHandler {
         event.register(VAMPIREBORN_ABILITY_KEY);
         event.register(ETHEREAL_ABILITY_KEY);
         event.register(ANGELBORN_ABILITY_KEY);
+        event.register(CELESTIAL_ABILITY_KEY);
     }
 
     private static boolean wasLoverKeyPressed = false;
     private static boolean wasVampirebornKeyPressed = false;
     private static long vampirebornPressTime = 0;
     private static final long TAP_THRESHOLD = 200; // milliseconds
+    private static boolean wasCelestialKeyPressed = false;
+    private static boolean celestialAbilityActive = false;
 
     @SubscribeEvent
     public static void onClientTick(TickEvent.ClientTickEvent event) {
         if (event.phase == TickEvent.Phase.END) {
             Minecraft minecraft = Minecraft.getInstance();
+
+            boolean isCelestialKeyPressed = CELESTIAL_ABILITY_KEY.isDown();
+
+            if (minecraft.player != null && minecraft.screen == null && minecraft.player.isAlive()) {
+                races.Race race = races.getPlayerRace(minecraft.player);
+                if (race == races.Race.CELESTIAL) {
+                    // Key pressed - activate if not active and no cooldown
+                    if (isCelestialKeyPressed && !wasCelestialKeyPressed && !celestialAbilityActive) {
+                        if (CelestialAbilityHandler.canActivateAbility(minecraft.player)) {
+                            NetworkHandler.sendToServer(new ActivateCelestialAbilityPacket());
+                            celestialAbilityActive = true;
+                        }
+                    }
+                    // Key released - deactivate if active
+                    else if (!isCelestialKeyPressed && wasCelestialKeyPressed && celestialAbilityActive) {
+                        NetworkHandler.sendToServer(new DeactivateCelestialAbilityPacket());
+                        celestialAbilityActive = false;
+                    }
+                } else {
+                    // Not celestial race - reset state
+                    celestialAbilityActive = false;
+                }
+            } else {
+                // No valid player - reset state
+                celestialAbilityActive = false;
+            }
+
+            wasCelestialKeyPressed = isCelestialKeyPressed;
+
             if (ANGELBORN_ABILITY_KEY.consumeClick()) {
                 if (minecraft.player != null && minecraft.screen == null && minecraft.player.isAlive()) {
                     races.Race race = races.getPlayerRace(minecraft.player);
@@ -219,6 +259,24 @@ public class KeyBindHandler {
             }
 
             wasVampirebornKeyPressed = isVampirebornKeyPressed;
+        }
+    }
+    @SubscribeEvent
+    public static void onMouseClick(InputEvent.MouseButton.Post event) {
+        Minecraft minecraft = Minecraft.getInstance();
+        if (minecraft.player == null || minecraft.screen != null || !minecraft.player.isAlive()) return;
+
+        races.Race race = races.getPlayerRace(minecraft.player);
+        if (race != races.Race.CELESTIAL || !CelestialAbilityHandler.isAbilityActive(minecraft.player)) {
+            return;
+        }
+
+        if (event.getButton() == 1 && event.getAction() == InputConstants.PRESS) { // Right click
+            NetworkHandler.sendToServer(new CelestialPushPacket());
+            // REMOVED: event.setCanceled(true);
+        } else if (event.getButton() == 0 && event.getAction() == InputConstants.PRESS) { // Left click
+            NetworkHandler.sendToServer(new CelestialPullPacket());
+            // REMOVED: event.setCanceled(true);
         }
     }
 }

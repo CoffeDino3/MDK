@@ -20,5 +20,6 @@ public class ModItemModelProvider extends ItemModelProvider {
         basicItem(ModItems.THE_WAND.get());
         basicItem(ModItems.STACK_STAR.get());
         basicItem(ModItems.STORAGE_GEM.get());
+        basicItem(ModItems.RACE_RESET_SCROLL.get());
     }
 }

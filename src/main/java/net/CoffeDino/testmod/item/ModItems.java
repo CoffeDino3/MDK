@@ -1,6 +1,7 @@
 package net.CoffeDino.testmod.item;
 
 import net.CoffeDino.testmod.TestingCoffeDinoMod;
+import net.CoffeDino.testmod.item.Custom.RaceResetScrollItem;
 import net.CoffeDino.testmod.item.Custom.SpecialWandItem;
 import net.CoffeDino.testmod.item.Custom.WandItem;
 import net.minecraft.world.item.Item;
@@ -27,6 +28,9 @@ public class ModItems {
             () -> new WandItem(new Item.Properties().durability(200)));
     public static final RegistryObject<Item> SPECIAL_WAND = ITEMS.register("special_wand",
             () -> new SpecialWandItem(new Item.Properties().durability(10)));
+    // Add this to your ModItems class
+    public static final RegistryObject<Item> RACE_RESET_SCROLL = ITEMS.register("race_reset_scroll",
+            () -> new RaceResetScrollItem(new Item.Properties().stacksTo(1)));
 
     public static void register(IEventBus eventBus){
         ITEMS.register(eventBus);

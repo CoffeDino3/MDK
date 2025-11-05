@@ -103,6 +103,28 @@ public class NetworkHandler {
                 .decoder(ActivateAngelbornAbilityPacket::new)
                 .consumerMainThread(ActivateAngelbornAbilityPacket::handle)
                 .add();
+        INSTANCE.messageBuilder(ActivateCelestialAbilityPacket.class, 17, NetworkDirection.PLAY_TO_SERVER)
+                .encoder(ActivateCelestialAbilityPacket::encode)
+                .decoder(ActivateCelestialAbilityPacket::new)
+                .consumerMainThread(ActivateCelestialAbilityPacket::handle)
+                .add();
+
+        INSTANCE.messageBuilder(CelestialPushPacket.class, 18, NetworkDirection.PLAY_TO_SERVER)
+                .encoder(CelestialPushPacket::encode)
+                .decoder(CelestialPushPacket::new)
+                .consumerMainThread(CelestialPushPacket::handle)
+                .add();
+
+        INSTANCE.messageBuilder(CelestialPullPacket.class, 19, NetworkDirection.PLAY_TO_SERVER)
+                .encoder(CelestialPullPacket::encode)
+                .decoder(CelestialPullPacket::new)
+                .consumerMainThread(CelestialPullPacket::handle)
+                .add();
+        INSTANCE.messageBuilder(DeactivateCelestialAbilityPacket.class, 20, NetworkDirection.PLAY_TO_SERVER)
+                .encoder(DeactivateCelestialAbilityPacket::encode)
+                .decoder(DeactivateCelestialAbilityPacket::new)
+                .consumerMainThread(DeactivateCelestialAbilityPacket::handle)
+                .add();
     }
 
     public static <T extends CustomPacketPayload> void sendToServer(T message) {

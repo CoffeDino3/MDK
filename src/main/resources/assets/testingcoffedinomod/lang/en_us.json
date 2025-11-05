@@ -5,6 +5,8 @@
   "item.testingcoffedinomod.special_wand": "§6Special Wand§r",
   "item.testingcoffedinomod.stack_star": "Stack Star",
   "item.testingcoffedinomod.storage_gem": "Storage gem",
+  "item.testingcoffedinomod.race_reset_scroll": "Race Reset Scroll",
+  "item.testingcoffedinomod.race_reset_scroll.tooltip": "Resets your race and allows you to choose a new one",
   "block.testingcoffedinomod.cummingtonite_block": "Cummingtonite Block",
   "block.testingcoffedinomod.cummingtonite_ingot_block": "Cummingtonite Ingot Block",
 

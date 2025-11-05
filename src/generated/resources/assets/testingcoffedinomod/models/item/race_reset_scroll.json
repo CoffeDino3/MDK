@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/handheld",
+  "textures": {
+    "layer0": "testingcoffedinomod:item/race_reset_scroll"
+  }
+}
