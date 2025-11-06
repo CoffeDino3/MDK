@@ -5,6 +5,7 @@ import net.CoffeDino.testmod.block.ModBlocks;
 import net.CoffeDino.testmod.capability.IRaceSize;
 import net.CoffeDino.testmod.capability.ISculkStorage;
 import net.CoffeDino.testmod.capability.ModCapabilities;
+import net.CoffeDino.testmod.commands.ClassCommand;
 import net.CoffeDino.testmod.commands.RaceCommand;
 import net.CoffeDino.testmod.effects.ModEffects;
 import net.CoffeDino.testmod.entity.ModEntities;
@@ -101,6 +102,7 @@ public class TestingCoffeDinoMod
     public void onServerStarting(ServerStartingEvent event)
     {
         RaceCommand.register(event.getServer().getCommands().getDispatcher());
+        ClassCommand.register(event.getServer().getCommands().getDispatcher());
     }
 
     @Mod.EventBusSubscriber(modid = MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)

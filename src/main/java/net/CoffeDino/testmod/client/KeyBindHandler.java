@@ -5,6 +5,8 @@ import net.CoffeDino.testmod.TestingCoffeDinoMod;
 import net.CoffeDino.testmod.abilities.CelestialAbilityHandler;
 import net.CoffeDino.testmod.abilities.EtherealAbilityHandler;
 import net.CoffeDino.testmod.abilities.LoverAbilityHandler;
+import net.CoffeDino.testmod.classes.PlayerClasses;
+import net.CoffeDino.testmod.client.gui.ClassSelectionScreen;
 import net.CoffeDino.testmod.network.*;
 import net.CoffeDino.testmod.races.races;
 import net.minecraft.client.KeyMapping;
@@ -78,6 +80,12 @@ public class KeyBindHandler {
             InputConstants.KEY_R,
             "category.testingcoffedinomod.abilities"
     );
+    public static final KeyMapping CLASS_SELECTION_KEY = new KeyMapping(
+            "key.testingcoffedinomod.class_selection",
+            InputConstants.Type.KEYSYM,
+            InputConstants.KEY_C, // C key for class selection
+            "category.testingcoffedinomod.general"
+    );
 
     @SubscribeEvent
     public static void registerBindings(RegisterKeyMappingsEvent event) {
@@ -91,6 +99,7 @@ public class KeyBindHandler {
         event.register(ETHEREAL_ABILITY_KEY);
         event.register(ANGELBORN_ABILITY_KEY);
         event.register(CELESTIAL_ABILITY_KEY);
+        event.register(CLASS_SELECTION_KEY);
     }
 
     private static boolean wasLoverKeyPressed = false;
@@ -104,6 +113,14 @@ public class KeyBindHandler {
     public static void onClientTick(TickEvent.ClientTickEvent event) {
         if (event.phase == TickEvent.Phase.END) {
             Minecraft minecraft = Minecraft.getInstance();
+            if (CLASS_SELECTION_KEY.consumeClick()) {
+                if (minecraft.player != null && minecraft.screen == null && minecraft.player.isAlive()) {
+                    // Only open if player hasn't chosen a class yet
+                    if (!PlayerClasses.hasChosenClass(minecraft.player)) {
+                        minecraft.setScreen(new ClassSelectionScreen());
+                    }
+                }
+            }
 
             boolean isCelestialKeyPressed = CELESTIAL_ABILITY_KEY.isDown();
 

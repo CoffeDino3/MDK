@@ -1,6 +1,7 @@
 package net.CoffeDino.testmod.events;
 
 import net.CoffeDino.testmod.TestingCoffeDinoMod;
+import net.CoffeDino.testmod.classes.PlayerClasses;
 import net.CoffeDino.testmod.client.gui.RaceSelectionScreen;
 import net.CoffeDino.testmod.network.NetworkHandler;
 import net.CoffeDino.testmod.races.races;
@@ -38,6 +39,11 @@ public class ModEvents {
                     System.out.println("DEBUG: No race found for player, skipping race effects and sync");
                     NetworkHandler.syncRaceToClient(serverPlayer, null);
                 }
+                PlayerClasses.PlayerClass playerClass = PlayerClasses.getPlayerClass(serverPlayer);
+                if (playerClass != null) {
+                    NetworkHandler.syncClassToClient(serverPlayer, playerClass);
+                    System.out.println("DEBUG: Synced class to client on login: " + playerClass.getDisplayName());
+                }
                 System.out.println("DEBUG: ===== SERVER PLAYER LOGIN END =====");
             }
         }
@@ -61,6 +67,7 @@ public class ModEvents {
     public static void onWorldUnload(LevelEvent.Unload event) {
         if (event.getLevel().isClientSide()) {
             races.resetClientRace();
+            PlayerClasses.resetClientClass();
         }
     }
 

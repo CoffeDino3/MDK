@@ -1,6 +1,7 @@
 package net.CoffeDino.testmod.network;
 
 import net.CoffeDino.testmod.TestingCoffeDinoMod;
+import net.CoffeDino.testmod.classes.PlayerClasses;
 import net.CoffeDino.testmod.races.races;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
@@ -125,6 +126,23 @@ public class NetworkHandler {
                 .decoder(DeactivateCelestialAbilityPacket::new)
                 .consumerMainThread(DeactivateCelestialAbilityPacket::handle)
                 .add();
+        INSTANCE.messageBuilder(ClassSelectionPacket.class, 21, NetworkDirection.PLAY_TO_SERVER)
+                .encoder(ClassSelectionPacket::encode)
+                .decoder(ClassSelectionPacket::new)
+                .consumerMainThread(ClassSelectionPacket::handle)
+                .add();
+
+        INSTANCE.messageBuilder(SyncClassPacket.class, 22, NetworkDirection.PLAY_TO_CLIENT)
+                .encoder(SyncClassPacket::encode)
+                .decoder(SyncClassPacket::new)
+                .consumerMainThread(SyncClassPacket::handle)
+                .add();
+
+        INSTANCE.messageBuilder(OpenClassSelectionPacket.class, 23, NetworkDirection.PLAY_TO_SERVER)
+                .encoder(OpenClassSelectionPacket::encode)
+                .decoder(OpenClassSelectionPacket::new)
+                .consumerMainThread(OpenClassSelectionPacket::handle)
+                .add();
     }
 
     public static <T extends CustomPacketPayload> void sendToServer(T message) {
@@ -151,5 +169,13 @@ public class NetworkHandler {
     }
     public static void triggerBelieverAbility() {
         INSTANCE.send(new BelieverAbilityPacket(), PacketDistributor.SERVER.noArg());
+    }
+    public static void syncClassToClient(ServerPlayer player, PlayerClasses.PlayerClass playerClass) {
+        String classId = playerClass != null ? playerClass.getId() : "";
+        sendToPlayer(new SyncClassPacket(classId), player);
+    }
+
+    public static void openClassSelection() {
+        INSTANCE.send(new OpenClassSelectionPacket(), PacketDistributor.SERVER.noArg());
     }
 }
