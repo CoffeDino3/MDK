@@ -5,6 +5,8 @@
   "item.testingcoffedinomod.special_wand": "§6Special Wand§r",
   "item.testingcoffedinomod.stack_star": "Stack Star",
   "item.testingcoffedinomod.storage_gem": "Storage gem",
+  "item.testingcoffedinomod.lament_gun": "Solemn",
+  "item.testingcoffedinomod.lament_bullet": "Lamenting bullet",
   "item.testingcoffedinomod.race_reset_scroll": "Race Reset Scroll",
   "item.testingcoffedinomod.race_reset_scroll.tooltip": "Resets your race and allows you to choose a new one",
   "block.testingcoffedinomod.cummingtonite_block": "Cummingtonite Block",
@@ -19,6 +21,7 @@
 
   "effect.testingcoffedinomod.ether": "Ether",
   "effect.testingcoffedinomod.blood_surge": "Blood Surge",
+  "effect.testingcoffedinomod.mourning_funeral": "Mourning Funeral",
   "key.testingcoffedinomod.class_selection": "Open Class Selection",
   "category.testingcoffedinomod.general": "Lunacy",
 

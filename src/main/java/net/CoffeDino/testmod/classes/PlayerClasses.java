@@ -20,7 +20,8 @@ public class PlayerClasses {
         GUARDIAN("guardian", "Guardian"),
         SPELLBLADE("spellblade", "Spellblade"),
         CHRONOBLADE("chronoblade", "Chronoblade"),
-        REAPER("reaper", "Reaper");
+        REAPER("reaper", "Reaper"),
+        GUNSMITH("gunsmith", "Gunsmith");
 
         private final String id;
         private final String displayName;

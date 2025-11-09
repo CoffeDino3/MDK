@@ -19,4 +19,11 @@ public class ModEntities {
                             .clientTrackingRange(4)
                             .updateInterval(20)
                             .build("angelborn_ability"));
+    public static final RegistryObject<EntityType<LamentBulletEntity>> LAMENT_BULLET =
+            ENTITIES.register("lament_bullet",
+                    () -> EntityType.Builder.<LamentBulletEntity>of(LamentBulletEntity::new, MobCategory.MISC)
+                            .sized(0.25f, 0.25f)
+                            .clientTrackingRange(4)
+                            .updateInterval(1)
+                            .build("lament_bullet"));
 }

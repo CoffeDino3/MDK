@@ -35,6 +35,8 @@ public class ModCreativeModeTabs {
                         output.accept(ModItems.THE_WAND.get());
                         output.accept(ModItems.SPECIAL_WAND.get());
                         output.accept(ModItems.RACE_RESET_SCROLL.get());
+                        output.accept(ModItems.LAMENT_BULLET.get());
+                        output.accept(ModItems.LAMENT_GUN.get());
                     })
 
                     .build());

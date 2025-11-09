@@ -26,7 +26,7 @@ public class WarderAbilityHandler {
     private static final int ABILITY_DURATION = 100;
     private static final float DAMAGE = 8.0f;
     private static final float CIRCLE_RADIUS = 2.0f;
-    private static final float CIRCLE_DISTANCE = 3.0f;
+    private static final float CIRCLE_DISTANCE = 2.5f;
 
     public static void activateAbility(Player player) {
         if (player.level().isClientSide()) return;
@@ -155,7 +155,7 @@ public class WarderAbilityHandler {
             );
 
             for (LivingEntity entity : entities) {
-                if (ticksActive % 10 == 0) { // Damage every 0.5 seconds
+                if (ticksActive % 10 == 0) {
                     Vec3 toEntity = entity.position().subtract(center);
                     double distanceInPlane = toEntity.subtract(lookVec.scale(toEntity.dot(lookVec))).length();
 

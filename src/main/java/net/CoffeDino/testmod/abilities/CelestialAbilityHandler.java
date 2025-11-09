@@ -1,6 +1,8 @@
 package net.CoffeDino.testmod.abilities;
 
 import net.CoffeDino.testmod.TestingCoffeDinoMod;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.BlockParticleOption;
 import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
@@ -10,6 +12,8 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.TickEvent;
@@ -26,18 +30,19 @@ import java.util.UUID;
 @Mod.EventBusSubscriber(modid = TestingCoffeDinoMod.MOD_ID)
 public class CelestialAbilityHandler {
     private static final Map<UUID, CelestialAbilityInstance> ACTIVE_ABILITIES = new HashMap<>();
-    private static final int MAX_DURATION = 200; // 10 seconds at 20 ticks/sec
-    private static final float GRAVITY_FIELD_RADIUS = 7.5f; // 15x15 area
-    private static final float GRAVITY_FIELD_HEIGHT = 20f; // 40 blocks total height (20 up, 20 down)
-    private static final float DAMAGE_PER_SECOND = 2.0f;
+    private static final int MAX_DURATION = 200;
+    private static final float GRAVITY_FIELD_RADIUS = 7.5f;
+    private static final float GRAVITY_FIELD_HEIGHT = 20f;
+    private static final float DAMAGE_PER_SECOND = 0.5f;
     private static final float PUSH_PULL_DAMAGE = 8.0f;
     private static final float PUSH_FORCE = 3.0f;
     private static final float PULL_FORCE = 2.5f;
     private static final float SINK_SPEED = 0.3f;
-
-    // Cooldown system
+    private static final int SINKING_START_TIME = 140;
+    private static final int SINKING_RADIUS = 2;
+    private static final int SINKING_DEPTH = 2;
     private static final Map<UUID, Long> COOLDOWNS = new HashMap<>();
-    private static final long COOLDOWN_DURATION = 5000; // 5 seconds
+    private static final long COOLDOWN_DURATION = 13000; // 13 seconds
 
     public static void activateAbility(Player player) {
         if (player.level().isClientSide()) return;
@@ -100,8 +105,6 @@ public class CelestialAbilityHandler {
     @SubscribeEvent
     public static void onServerTick(TickEvent.ServerTickEvent event) {
         if (event.phase != TickEvent.Phase.END) return;
-
-        // Fix: Use iterator to avoid ConcurrentModificationException
         Iterator<Map.Entry<UUID, CelestialAbilityInstance>> iterator = ACTIVE_ABILITIES.entrySet().iterator();
         while (iterator.hasNext()) {
             Map.Entry<UUID, CelestialAbilityInstance> entry = iterator.next();
@@ -136,8 +139,11 @@ public class CelestialAbilityHandler {
             }
 
             updateGravityField();
-            updateGravityEffects(); // FIXED: This was missing!
+            updateGravityEffects();
             spawnParticles();
+            if (ticksActive >= SINKING_START_TIME && ticksActive % 20 == 0) {
+                applySinkingBlocks();
+            }
 
             return false;
         }
@@ -160,8 +166,6 @@ public class CelestialAbilityHandler {
 
             for (LivingEntity entity : entities) {
                 applyGravityEffects(entity);
-
-                // Damage over time (every second)
                 if (ticksActive % 20 == 0) {
                     entity.hurt(player.damageSources().magic(), DAMAGE_PER_SECOND);
                     TestingCoffeDinoMod.LOGGER.debug("Applied {} damage to {}", DAMAGE_PER_SECOND, entity.getName().getString());
@@ -170,35 +174,66 @@ public class CelestialAbilityHandler {
         }
 
         private void applyGravityEffects(LivingEntity entity) {
-            // 1. Apply slow effect (Slowness II for 2 seconds)
             entity.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 40, 4));
-
-            // 2. Make flying/levitating entities fall
-            entity.removeEffect(MobEffects.LEVITATION);
-            entity.removeEffect(MobEffects.SLOW_FALLING);
-
             if (entity instanceof Mob mob) {
                 mob.setNoGravity(false);
             }
-
-            // 3. Make entity sink until they hit a block
             Vec3 entityPos = entity.position();
-
-            // Check if the position below is clear
             if (entity.level().isEmptyBlock(entity.blockPosition().below())) {
                 entity.setDeltaMovement(entity.getDeltaMovement().add(0, -SINK_SPEED, 0));
                 entity.hurtMarked = true;
             }
-
-            // Slow down horizontal movement
             Vec3 currentMotion = entity.getDeltaMovement();
             entity.setDeltaMovement(currentMotion.x * 0.7, currentMotion.y, currentMotion.z * 0.7);
         }
 
+        private void applySinkingBlocks() {
+            ServerLevel level = (ServerLevel) player.level();
+            List<LivingEntity> entities = level.getEntitiesOfClass(
+                    LivingEntity.class,
+                    gravityField,
+                    entity -> entity != player && entity.isAlive()
+            );
+
+            for (LivingEntity entity : entities) {
+                breakBlocksUnderEntity(level, entity);
+            }
+
+            TestingCoffeDinoMod.LOGGER.debug("Applied sinking blocks to {} entities", entities.size());
+        }
+
+        private void breakBlocksUnderEntity(ServerLevel level, LivingEntity entity) {
+            BlockPos entityPos = entity.blockPosition();
+            for (int x = -SINKING_RADIUS; x <= SINKING_RADIUS; x++) {
+                for (int z = -SINKING_RADIUS; z <= SINKING_RADIUS; z++) {
+                    for (int y = 0; y > -SINKING_DEPTH; y--) {
+                        BlockPos breakPos = entityPos.offset(x, y, z);
+                        BlockState blockState = level.getBlockState(breakPos);
+                        if (canBreakBlock(blockState, level, breakPos)) {
+                            level.destroyBlock(breakPos, true, player);
+                            level.sendParticles(
+                                    new BlockParticleOption(ParticleTypes.BLOCK, blockState),
+                                    breakPos.getX() + 0.5, breakPos.getY() + 0.5, breakPos.getZ() + 0.5,
+                                    10, 0.3, 0.3, 0.3, 0.02
+                            );
+                        }
+                    }
+                }
+            }
+        }
+
+        private boolean canBreakBlock(BlockState blockState, ServerLevel level, BlockPos pos) {
+            if (blockState.isAir() ||
+                    !blockState.getFluidState().isEmpty() ||
+                    blockState.getDestroySpeed(level, pos) < 0) {
+                return false;
+            }
+
+            return true;
+        }
+
         private void spawnParticles() {
             ServerLevel level = (ServerLevel) player.level();
-
-            // Purple falling particles throughout the field
             for (int i = 0; i < 60; i++) {
                 double x = gravityField.minX + Math.random() * (gravityField.maxX - gravityField.minX);
                 double y = gravityField.minY + Math.random() * (gravityField.maxY - gravityField.minY);
@@ -222,12 +257,9 @@ public class CelestialAbilityHandler {
             for (LivingEntity entity : entities) {
                 Vec3 direction = entity.position().subtract(player.position()).normalize();
                 Vec3 pushForce = direction.scale(PUSH_FORCE);
-
                 entity.setDeltaMovement(pushForce.x, pushForce.y + 0.5, pushForce.z);
                 entity.hurtMarked = true;
                 entity.hurt(player.damageSources().magic(), PUSH_PULL_DAMAGE);
-
-                // Push particles
                 level.sendParticles(
                         ParticleTypes.SWEEP_ATTACK,
                         entity.getX(), entity.getY() + 1, entity.getZ(),
@@ -251,8 +283,8 @@ public class CelestialAbilityHandler {
                 Vec3 toPlayer = player.position().subtract(entity.position());
                 double distance = toPlayer.length();
 
-                if (distance > 1.0) { // prevent jitter close-up
-                    Vec3 gentlePull = toPlayer.normalize().scale(2.4); // tweak this for strength
+                if (distance > 1.0) {
+                    Vec3 gentlePull = toPlayer.normalize().scale(2.4);
                     entity.setDeltaMovement(entity.getDeltaMovement().add(gentlePull));
                 }
                 entity.hurtMarked = true;

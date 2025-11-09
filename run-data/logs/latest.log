@@ -1,40 +1,39 @@
-[05Nov2025 16:35:20.104] [main/INFO] [cpw.mods.modlauncher.Launcher/MODLAUNCHER]: ModLauncher running: args [--launchTarget, forge_userdev_data, --assetIndex, 17, --assetsDir, C:\Users\Asus\.gradle\caches\forge_gradle\assets, --gameDir, ., --mod, testingcoffedinomod, --all, --output, C:\MDK\src\generated\resources, --existing, C:\MDK\src\main\resources, --mixin.config, testmod.mixins.json]
-[05Nov2025 16:35:20.108] [main/INFO] [cpw.mods.modlauncher.Launcher/MODLAUNCHER]: JVM identified as Eclipse Adoptium OpenJDK 64-Bit Server VM 21.0.7+6-LTS
-[05Nov2025 16:35:20.110] [main/INFO] [cpw.mods.modlauncher.Launcher/MODLAUNCHER]: ModLauncher 10.2.1 starting: java version 21.0.7 by Eclipse Adoptium; OS Windows 11 arch amd64 version 10.0
-[05Nov2025 16:35:20.225] [main/INFO] [net.minecraftforge.fml.loading.ImmediateWindowHandler/]: ImmediateWindowProvider not loading because launch target is forge_userdev_data
-[05Nov2025 16:35:20.312] [main/INFO] [mixin/]: SpongePowered MIXIN Subsystem Version=0.8.7 Source=jar:file:///C:/Users/Asus/.gradle/caches/modules-2/files-2.1/org.spongepowered/mixin/0.8.7/8ab114ac385e6dbdad5efafe28aba4df8120915f/mixin-0.8.7.jar!/ Service=ModLauncher Env=UNKNOWN
-[05Nov2025 16:35:21.221] [main/INFO] [net.minecraftforge.fml.loading.moddiscovery.JarInJarDependencyLocator/]: No dependencies to load found. Skipping!
-[05Nov2025 16:35:21.873] [main/WARN] [mixin/]: Compatibility level JAVA_17 specified by testmod.mixins.json is higher than the maximum level supported by this version of mixin (JAVA_13).
-[05Nov2025 16:35:21.873] [main/INFO] [mixin/]: Compatibility level set to JAVA_17
-[05Nov2025 16:35:21.874] [main/ERROR] [mixin/]: Mixin config testmod.mixins.json does not specify "minVersion" or "requiredFeatures" property
-[05Nov2025 16:35:21.878] [main/INFO] [cpw.mods.modlauncher.LaunchServiceHandler/MODLAUNCHER]: Launching target 'forge_userdev_data' with arguments [--gameDir, ., --assetsDir, C:\Users\Asus\.gradle\caches\forge_gradle\assets, --assetIndex, 17, --mod, testingcoffedinomod, --all, --output, C:\MDK\src\generated\resources, --existing, C:\MDK\src\main\resources]
-[05Nov2025 16:35:21.901] [main/INFO] [mixin/]: Attempting to load Fernflower decompiler (Threaded mode)
-[05Nov2025 16:35:21.902] [main/INFO] [mixin/]: Fernflower could not be loaded, exported classes will not be decompiled. NoClassDefFoundError: org/jetbrains/java/decompiler/main/extern/IResultSaver
-[05Nov2025 16:35:21.915] [main/INFO] [mixin/]: Preparing mixins for MixinEnvironment[DEFAULT]
-[05Nov2025 16:35:21.915] [main/INFO] [mixin/]: Selecting config testmod.mixins.json
-[05Nov2025 16:35:21.919] [main/WARN] [mixin/]: Reference map 'testmod.refmap.json' for testmod.mixins.json could not be read. If this is a development environment you can ignore this message
-[05Nov2025 16:35:21.921] [main/INFO] [mixin/]: Preparing testmod.mixins.json (4)
-[05Nov2025 16:35:21.968] [main/WARN] [mixin/]: Mixin environment was unable to detect the current side, sided mixins will not be applied
-[05Nov2025 16:35:22.332] [main/INFO] [mixin/]: Mixing LivingEntitySizeMixin from testmod.mixins.json into net.minecraft.world.entity.LivingEntity
-[05Nov2025 16:35:22.351] [main/WARN] [mixin/]: testmod.mixins.json:LivingEntitySizeMixin: Class version 65 required is higher than the class version supported by the current version of Mixin (JAVA_17 supports class version 61)
-[05Nov2025 16:35:22.358] [main/INFO] [mixin/]: Renaming synthetic method lambda$injectCustomDimensions$0(Lorg/spongepowered/asm/mixin/injection/callback/CallbackInfoReturnable;Lnet/CoffeDino/testmod/capability/IRaceSize;)V to md52a654$lambda$injectCustomDimensions$0$0 in testmod.mixins.json:LivingEntitySizeMixin
-[05Nov2025 16:35:26.552] [modloading-worker-0/INFO] [net.minecraftforge.common.ForgeMod/FORGEMOD]: Forge mod loading, version 51.0.32, for MC 1.21 with MCP 20240613.102039
-[05Nov2025 16:35:26.552] [modloading-worker-0/INFO] [net.minecraftforge.common.MinecraftForge/FORGE]: MinecraftForge v51.0.32 Initialized
-[05Nov2025 16:35:26.574] [modloading-worker-0/INFO] [net.minecraftforge.common.ForgeMod/FORGEMOD]: Opening jdk.naming.dns/com.sun.jndi.dns to java.naming
-[05Nov2025 16:35:27.074] [main/INFO] [net.minecraftforge.data.loading.DatagenModLoader/]: Initializing Data Gatherer for mods [testingcoffedinomod]
-[05Nov2025 16:35:27.131] [main/WARN] [net.minecraft.server.packs.VanillaPackResourcesBuilder/]: Assets URL 'union:/C:/Users/Asus/.gradle/caches/forge_gradle/minecraft_user_repo/net/minecraftforge/forge/1.21-51.0.32_mapped_parchment_2024.07.28-1.21/forge-1.21-51.0.32_mapped_parchment_2024.07.28-1.21-recomp.jar%230!/assets/.mcassetsroot' uses unexpected schema
-[05Nov2025 16:35:27.132] [main/WARN] [net.minecraft.server.packs.VanillaPackResourcesBuilder/]: Assets URL 'union:/C:/Users/Asus/.gradle/caches/forge_gradle/minecraft_user_repo/net/minecraftforge/forge/1.21-51.0.32_mapped_parchment_2024.07.28-1.21/forge-1.21-51.0.32_mapped_parchment_2024.07.28-1.21-recomp.jar%230!/data/.mcassetsroot' uses unexpected schema
-[05Nov2025 16:35:27.264] [main/INFO] [net.minecraft.data.DataGenerator/]: Starting provider: Loot Tables
-[05Nov2025 16:35:27.454] [main/INFO] [net.minecraft.data.DataGenerator/]: Loot Tables finished after 190 ms
-[05Nov2025 16:35:27.454] [main/INFO] [net.minecraft.data.DataGenerator/]: Starting provider: Recipes
-[05Nov2025 16:35:27.504] [main/INFO] [net.minecraft.data.DataGenerator/]: Recipes finished after 48 ms
-[05Nov2025 16:35:27.504] [main/INFO] [net.minecraft.data.DataGenerator/]: Starting provider: Tags for minecraft:block mod id testingcoffedinomod
-[05Nov2025 16:35:27.513] [main/INFO] [net.minecraft.data.DataGenerator/]: Tags for minecraft:block mod id testingcoffedinomod finished after 8 ms
-[05Nov2025 16:35:27.513] [main/INFO] [net.minecraft.data.DataGenerator/]: Starting provider: Tags for minecraft:item mod id testingcoffedinomod
-[05Nov2025 16:35:27.514] [main/INFO] [net.minecraft.data.DataGenerator/]: Tags for minecraft:item mod id testingcoffedinomod finished after 0 ms
-[05Nov2025 16:35:27.514] [main/INFO] [net.minecraft.data.DataGenerator/]: Starting provider: Item Models: testingcoffedinomod
-[05Nov2025 16:35:27.520] [main/INFO] [net.minecraft.data.DataGenerator/]: Item Models: testingcoffedinomod finished after 7 ms
-[05Nov2025 16:35:27.520] [main/INFO] [net.minecraft.data.DataGenerator/]: Starting provider: Block States: testingcoffedinomod
-[05Nov2025 16:35:27.621] [main/INFO] [net.minecraft.data.DataGenerator/]: Block States: testingcoffedinomod finished after 99 ms
-[05Nov2025 16:35:27.621] [main/INFO] [net.minecraft.data.DataGenerator/]: All providers took: 357 ms
-[05Nov2025 16:35:27.625] [main/INFO] [net.minecraft.data.HashCache/]: Caching: total files: 37, old count: 37, new count: 38, removed stale: 0, written: 0
+[09Nov2025 20:33:36.814] [main/INFO] [cpw.mods.modlauncher.Launcher/MODLAUNCHER]: ModLauncher running: args [--launchTarget, forge_userdev_data, --assetIndex, 17, --assetsDir, C:\Users\Asus\.gradle\caches\forge_gradle\assets, --gameDir, ., --mod, testingcoffedinomod, --all, --output, D:\MDK\src\generated\resources, --existing, D:\MDK\src\main\resources, --mixin.config, testmod.mixins.json]
+[09Nov2025 20:33:36.817] [main/INFO] [cpw.mods.modlauncher.Launcher/MODLAUNCHER]: JVM identified as Eclipse Adoptium OpenJDK 64-Bit Server VM 21.0.7+6-LTS
+[09Nov2025 20:33:36.818] [main/INFO] [cpw.mods.modlauncher.Launcher/MODLAUNCHER]: ModLauncher 10.2.1 starting: java version 21.0.7 by Eclipse Adoptium; OS Windows 11 arch amd64 version 10.0
+[09Nov2025 20:33:36.909] [main/INFO] [net.minecraftforge.fml.loading.ImmediateWindowHandler/]: ImmediateWindowProvider not loading because launch target is forge_userdev_data
+[09Nov2025 20:33:37.007] [main/INFO] [mixin/]: SpongePowered MIXIN Subsystem Version=0.8.7 Source=jar:file:///C:/Users/Asus/.gradle/caches/modules-2/files-2.1/org.spongepowered/mixin/0.8.7/8ab114ac385e6dbdad5efafe28aba4df8120915f/mixin-0.8.7.jar!/ Service=ModLauncher Env=UNKNOWN
+[09Nov2025 20:33:37.879] [main/INFO] [net.minecraftforge.fml.loading.moddiscovery.JarInJarDependencyLocator/]: No dependencies to load found. Skipping!
+[09Nov2025 20:33:38.610] [main/WARN] [mixin/]: Compatibility level JAVA_17 specified by testmod.mixins.json is higher than the maximum level supported by this version of mixin (JAVA_13).
+[09Nov2025 20:33:38.612] [main/INFO] [mixin/]: Compatibility level set to JAVA_17
+[09Nov2025 20:33:38.616] [main/INFO] [cpw.mods.modlauncher.LaunchServiceHandler/MODLAUNCHER]: Launching target 'forge_userdev_data' with arguments [--gameDir, ., --assetsDir, C:\Users\Asus\.gradle\caches\forge_gradle\assets, --assetIndex, 17, --mod, testingcoffedinomod, --all, --output, D:\MDK\src\generated\resources, --existing, D:\MDK\src\main\resources]
+[09Nov2025 20:33:38.640] [main/INFO] [mixin/]: Attempting to load Fernflower decompiler (Threaded mode)
+[09Nov2025 20:33:38.643] [main/INFO] [mixin/]: Fernflower could not be loaded, exported classes will not be decompiled. NoClassDefFoundError: org/jetbrains/java/decompiler/main/extern/IResultSaver
+[09Nov2025 20:33:38.646] [main/INFO] [mixin/]: Preparing mixins for MixinEnvironment[DEFAULT]
+[09Nov2025 20:33:38.646] [main/INFO] [mixin/]: Selecting config testmod.mixins.json
+[09Nov2025 20:33:38.649] [main/WARN] [mixin/]: Reference map 'testmod.refmap.json' for testmod.mixins.json could not be read. If this is a development environment you can ignore this message
+[09Nov2025 20:33:38.651] [main/INFO] [mixin/]: Preparing testmod.mixins.json (4)
+[09Nov2025 20:33:38.692] [main/WARN] [mixin/]: Mixin environment was unable to detect the current side, sided mixins will not be applied
+[09Nov2025 20:33:39.059] [main/INFO] [mixin/]: Mixing LivingEntitySizeMixin from testmod.mixins.json into net.minecraft.world.entity.LivingEntity
+[09Nov2025 20:33:39.082] [main/WARN] [mixin/]: testmod.mixins.json:LivingEntitySizeMixin: Class version 65 required is higher than the class version supported by the current version of Mixin (JAVA_17 supports class version 61)
+[09Nov2025 20:33:39.090] [main/INFO] [mixin/]: Renaming synthetic method lambda$injectCustomDimensions$0(Lorg/spongepowered/asm/mixin/injection/callback/CallbackInfoReturnable;Lnet/CoffeDino/testmod/capability/IRaceSize;)V to md4f5e21$lambda$injectCustomDimensions$0$0 in testmod.mixins.json:LivingEntitySizeMixin
+[09Nov2025 20:33:43.462] [modloading-worker-0/INFO] [net.minecraftforge.common.ForgeMod/FORGEMOD]: Forge mod loading, version 51.0.32, for MC 1.21 with MCP 20240613.102039
+[09Nov2025 20:33:43.463] [modloading-worker-0/INFO] [net.minecraftforge.common.MinecraftForge/FORGE]: MinecraftForge v51.0.32 Initialized
+[09Nov2025 20:33:43.484] [modloading-worker-0/INFO] [net.minecraftforge.common.ForgeMod/FORGEMOD]: Opening jdk.naming.dns/com.sun.jndi.dns to java.naming
+[09Nov2025 20:33:44.047] [main/INFO] [net.minecraftforge.data.loading.DatagenModLoader/]: Initializing Data Gatherer for mods [testingcoffedinomod]
+[09Nov2025 20:33:44.105] [main/WARN] [net.minecraft.server.packs.VanillaPackResourcesBuilder/]: Assets URL 'union:/C:/Users/Asus/.gradle/caches/forge_gradle/minecraft_user_repo/net/minecraftforge/forge/1.21-51.0.32_mapped_parchment_2024.07.28-1.21/forge-1.21-51.0.32_mapped_parchment_2024.07.28-1.21-recomp.jar%230!/assets/.mcassetsroot' uses unexpected schema
+[09Nov2025 20:33:44.106] [main/WARN] [net.minecraft.server.packs.VanillaPackResourcesBuilder/]: Assets URL 'union:/C:/Users/Asus/.gradle/caches/forge_gradle/minecraft_user_repo/net/minecraftforge/forge/1.21-51.0.32_mapped_parchment_2024.07.28-1.21/forge-1.21-51.0.32_mapped_parchment_2024.07.28-1.21-recomp.jar%230!/data/.mcassetsroot' uses unexpected schema
+[09Nov2025 20:33:44.264] [main/INFO] [net.minecraft.data.DataGenerator/]: Starting provider: Loot Tables
+[09Nov2025 20:33:44.462] [main/INFO] [net.minecraft.data.DataGenerator/]: Loot Tables finished after 197 ms
+[09Nov2025 20:33:44.462] [main/INFO] [net.minecraft.data.DataGenerator/]: Starting provider: Recipes
+[09Nov2025 20:33:44.497] [main/INFO] [net.minecraft.data.DataGenerator/]: Recipes finished after 34 ms
+[09Nov2025 20:33:44.497] [main/INFO] [net.minecraft.data.DataGenerator/]: Starting provider: Tags for minecraft:block mod id testingcoffedinomod
+[09Nov2025 20:33:44.504] [main/INFO] [net.minecraft.data.DataGenerator/]: Tags for minecraft:block mod id testingcoffedinomod finished after 6 ms
+[09Nov2025 20:33:44.504] [main/INFO] [net.minecraft.data.DataGenerator/]: Starting provider: Tags for minecraft:item mod id testingcoffedinomod
+[09Nov2025 20:33:44.505] [main/INFO] [net.minecraft.data.DataGenerator/]: Tags for minecraft:item mod id testingcoffedinomod finished after 0 ms
+[09Nov2025 20:33:44.505] [main/INFO] [net.minecraft.data.DataGenerator/]: Starting provider: Item Models: testingcoffedinomod
+[09Nov2025 20:33:44.512] [main/INFO] [net.minecraft.data.DataGenerator/]: Item Models: testingcoffedinomod finished after 7 ms
+[09Nov2025 20:33:44.512] [main/INFO] [net.minecraft.data.DataGenerator/]: Starting provider: Block States: testingcoffedinomod
+[09Nov2025 20:33:44.616] [main/INFO] [net.minecraft.data.DataGenerator/]: Block States: testingcoffedinomod finished after 102 ms
+[09Nov2025 20:33:44.616] [main/INFO] [net.minecraft.data.DataGenerator/]: All providers took: 351 ms
+[09Nov2025 20:33:44.621] [main/INFO] [net.minecraft.data.HashCache/]: Caching: total files: 39, old count: 37, new count: 40, removed stale: 0, written: 2

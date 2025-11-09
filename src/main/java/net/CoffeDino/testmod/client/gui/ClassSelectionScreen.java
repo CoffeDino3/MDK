@@ -335,6 +335,7 @@ public class ClassSelectionScreen extends Screen {
             case SPELLBLADE: return "A conduit of elements, fusing magic and motion into destruction.";
             case CHRONOBLADE: return "Moves between heartbeats, twisting time itself to undo your strike.";
             case REAPER: return "Silent bringer of endings, harvesting souls with cold, patient grace.";
+            case GUNSMITH: return "Master of firearms, delivering precision and power with every shot.";
             default: return "A specialized combat style with unique techniques and abilities.";
         }
     }

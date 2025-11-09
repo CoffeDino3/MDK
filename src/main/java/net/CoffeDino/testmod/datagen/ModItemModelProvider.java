@@ -21,5 +21,7 @@ public class ModItemModelProvider extends ItemModelProvider {
         basicItem(ModItems.STACK_STAR.get());
         basicItem(ModItems.STORAGE_GEM.get());
         basicItem(ModItems.RACE_RESET_SCROLL.get());
+        basicItem(ModItems.LAMENT_GUN.get());
+        basicItem(ModItems.LAMENT_BULLET.get());
     }
 }

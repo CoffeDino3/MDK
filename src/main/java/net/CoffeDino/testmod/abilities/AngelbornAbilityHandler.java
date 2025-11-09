@@ -17,7 +17,7 @@ import java.util.UUID;
 @Mod.EventBusSubscriber(modid = TestingCoffeDinoMod.MOD_ID)
 public class AngelbornAbilityHandler {
     private static final Map<UUID, Long> COOLDOWNS = new HashMap<>();
-    private static final long COOLDOWN_DURATION = 5000;
+    private static final long COOLDOWN_DURATION = 12000;
 
     public static void activateAbility(Player player) {
         if (player.level().isClientSide()) return;

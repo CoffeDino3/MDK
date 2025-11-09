@@ -27,7 +27,7 @@ public class LoverAbilityHandler {
     private static final Map<UUID, LoverAbilityInstance> ACTIVE_ABILITIES = new HashMap<>();
     private static final int ABILITY_DURATION = 400;
     private static final float CIRCLE_RADIUS = 1.0f;
-    private static final long COOLDOWN_DURATION = 5000;
+    private static final long COOLDOWN_DURATION = 14000;
 
     private static final Map<UUID, Long> COOLDOWNS = new HashMap<>();
 

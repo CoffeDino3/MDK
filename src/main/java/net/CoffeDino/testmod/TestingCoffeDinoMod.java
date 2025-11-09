@@ -13,10 +13,17 @@ import net.CoffeDino.testmod.item.ModCreativeModeTabs;
 import net.CoffeDino.testmod.item.ModItems;
 import net.CoffeDino.testmod.menu.ModMenuTypes;
 import net.CoffeDino.testmod.network.NetworkHandler;
+import net.CoffeDino.testmod.particle.ModParticles;
+import net.CoffeDino.testmod.particle.MourningButterflyParticle;
+import net.CoffeDino.testmod.effects.MourningFuneralEffect;
 import net.CoffeDino.testmod.renderer.AngelbornRenderer;
+import net.CoffeDino.testmod.renderer.LamentBulletRenderer;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.particle.ParticleEngine;
 import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.client.event.RegisterParticleProvidersEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityManager;
@@ -49,15 +56,17 @@ public class TestingCoffeDinoMod
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
         modEventBus.addListener(this::commonSetup);
         MinecraftForge.EVENT_BUS.register(this);
-        MixinBootstrap.init();
+
 
         ModCreativeModeTabs.register(modEventBus);
 
         ModItems.register(modEventBus);
         ModBlocks.register(modEventBus);
+
         ModEffects.EFFECTS.register(modEventBus);
         ModMenuTypes.MENUS.register(modEventBus);
         ModEntities.ENTITIES.register(modEventBus);
+        ModParticles.register(modEventBus);
 
 
 
@@ -112,7 +121,15 @@ public class TestingCoffeDinoMod
         {
             EntityRenderers.register(ModEntities.ANGELBORN_ABILITY.get(), AngelbornAbilityRenderer::new);
             LOGGER.debug("Angelborn ability renderer registered");
+            EntityRenderers.register(ModEntities.LAMENT_BULLET.get(), LamentBulletRenderer::new);
+            LOGGER.debug("Lament bullet renderer registered");
         }
+
+        @SubscribeEvent
+        public static void registerParticleProvider(RegisterParticleProvidersEvent event){
+            event.registerSpriteSet(ModParticles.MOURNING_BUTTERFLY_PARTICLES.get(), MourningButterflyParticle.Provider::new);
+        }
+
 
     }
 
