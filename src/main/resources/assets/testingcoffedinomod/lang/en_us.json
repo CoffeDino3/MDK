@@ -25,6 +25,24 @@
   "key.testingcoffedinomod.class_selection": "Open Class Selection",
   "category.testingcoffedinomod.general": "Lunacy",
 
+  "painting.testingcoffedinomod.catto.title": "Catto",
+  "painting.testingcoffedinomod.catto.author": "CoffeDino",
+  "painting.testingcoffedinomod.dog.title": "Dog",
+  "painting.testingcoffedinomod.dog.author": "CoffeDino",
+  "painting.testingcoffedinomod.dabil.title": "Debo;boobies",
+  "painting.testingcoffedinomod.dabil.author": "CoffeDino",
+  "painting.testingcoffedinomod.boobies.title": "Zzz Boobies",
+  "painting.testingcoffedinomod.boobies.author": "CoffeDino",
+  "painting.testingcoffedinomod.pretty.title": "Femboy",
+  "painting.testingcoffedinomod.pretty.author": "CoffeDino",
+
+
+  "item.testingcoffedinomod.viridyum_greatsword": "§6Viridyum Greatsword§r",
+  "item.testingcoffedinomod.viridyum_greatsword.tooltip.chronobreak": "§3Chronobreak§r",
+  "item.testingcoffedinomod.viridyum_greatsword.tooltip.ready": "§2This mysterious sword lets you rewind time!§r",
+  "item.testingcoffedinomod.viridyum_greatsword.tooltip.cooldown": "§Right click to view the cooldown§r",
+  "item.testingcoffedinomod.agnis_fury": "§9Agni's fury§r",
+
   "class.testingcoffedinomod.swordsman": "Swordsman",
   "class.testingcoffedinomod.spearman": "Spearman",
   "class.testingcoffedinomod.viking": "Viking",
@@ -35,6 +53,7 @@
   "class.testingcoffedinomod.spellblade": "Spellblade",
   "class.testingcoffedinomod.chronoblade": "Chronoblade",
   "class.testingcoffedinomod.reaper": "Reaper",
+  "class.testingcoffedinomod.gunsmith": "Gunsmith",
 
   "commands.class.set.success": "Your class has been set to: %s",
   "commands.class.set.other.success": "Set %s's class to: %s",

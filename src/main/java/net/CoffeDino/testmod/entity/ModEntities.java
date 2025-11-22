@@ -26,4 +26,10 @@ public class ModEntities {
                             .clientTrackingRange(4)
                             .updateInterval(1)
                             .build("lament_bullet"));
+    public static final RegistryObject<EntityType<FireSpearEntity>> FIRE_SPEAR = ENTITIES.register("fire_spear",
+            () -> EntityType.Builder.<FireSpearEntity>of(FireSpearEntity::new, MobCategory.MISC)
+                    .sized(0.5F, 0.5F)
+                    .clientTrackingRange(4)
+                    .updateInterval(20)
+                    .build("fire_spear"));
 }

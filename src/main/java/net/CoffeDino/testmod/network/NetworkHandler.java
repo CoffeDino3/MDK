@@ -143,6 +143,11 @@ public class NetworkHandler {
                 .decoder(OpenClassSelectionPacket::new)
                 .consumerMainThread(OpenClassSelectionPacket::handle)
                 .add();
+        INSTANCE.messageBuilder(SyncChronobreakCooldownPacket.class, 24, NetworkDirection.PLAY_TO_CLIENT)
+                .encoder(SyncChronobreakCooldownPacket::encode)
+                .decoder(SyncChronobreakCooldownPacket::new)
+                .consumerMainThread(SyncChronobreakCooldownPacket::handle)
+                .add();
     }
 
     public static <T extends CustomPacketPayload> void sendToServer(T message) {
@@ -173,6 +178,9 @@ public class NetworkHandler {
     public static void syncClassToClient(ServerPlayer player, PlayerClasses.PlayerClass playerClass) {
         String classId = playerClass != null ? playerClass.getId() : "";
         sendToPlayer(new SyncClassPacket(classId), player);
+    }
+    public static void syncChronobreakCooldown(ServerPlayer player, long cooldownEnd) {
+        INSTANCE.send(new SyncChronobreakCooldownPacket(cooldownEnd), PacketDistributor.PLAYER.with(player));
     }
 
     public static void openClassSelection() {

@@ -3,6 +3,7 @@ package net.CoffeDino.testmod.item;
 import net.CoffeDino.testmod.TestingCoffeDinoMod;
 import net.CoffeDino.testmod.item.Custom.*;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Tiers;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -33,6 +34,10 @@ public class ModItems {
 
     public static final RegistryObject<Item> LAMENT_BULLET = ITEMS.register("lament_bullet",
             () -> new BulletItem(new Item.Properties().stacksTo(64)));
+    public static final RegistryObject<Item> VIRIDYUM_GREATSWORD = ITEMS.register("viridyum_greatsword",
+            () -> new ViridyumGreatswordItem(Tiers.NETHERITE, new Item.Properties().durability(2031).fireResistant()));
+    public static final RegistryObject<Item> AGNIS_FURY = ITEMS.register("agnis_fury",
+            () -> new FireSpearItem(Tiers.NETHERITE, new Item.Properties().durability(2031).fireResistant()));
 
     public static void register(IEventBus eventBus){
         ITEMS.register(eventBus);

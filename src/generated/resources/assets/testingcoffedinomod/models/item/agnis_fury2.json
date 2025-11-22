@@ -1,0 +1,43 @@
+{
+  "parent": "minecraft:item/handheld",
+  "textures": {
+    "layer0": "testingcoffedinomod:item/fire_fury2"
+  },
+  "display": {
+    "firstperson_righthand": {
+      "rotation": [0, -70, 25],
+      "translation": [1, 4, 1],
+      "scale": [1, 1.9, 1]
+    },
+    "firstperson_lefthand": {
+      "rotation": [0, 70, -25],
+      "translation": [-1, 4, -1],
+      "scale": [1, 1.9, 1]
+    },
+    "thirdperson_righthand": {
+      "rotation": [-20, 90, 0],
+      "translation": [0, 5, 0],
+      "scale": [1.8, 2.9, 1.5]
+    },
+    "thirdperson_lefthand": {
+      "rotation": [-20, -90, 0],
+      "translation": [0, 5, 0],
+      "scale": [1.8, 2.9, 1.5]
+    },
+    "gui": {
+      "rotation": [0, 0, 0],
+      "translation": [0, 0, 0],
+      "scale": [0.7, 1, 1]
+    },
+    "ground": {
+      "rotation": [0, 0, 0],
+      "translation": [0, 2, 0],
+      "scale": [1.7, 2.8, 1]
+    },
+    "fixed": {
+      "rotation": [0, 0, 0],
+      "translation": [0, 0, 0],
+      "scale": [0.6, 0.6, 0.6]
+    }
+  }
+}

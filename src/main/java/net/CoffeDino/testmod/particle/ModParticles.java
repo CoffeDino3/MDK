@@ -15,6 +15,9 @@ public class ModParticles {
     public static final RegistryObject<SimpleParticleType> MOURNING_BUTTERFLY_PARTICLES =
             PARTICLE_TYPES.register("mourning_butterfly_particles",
                     () -> new SimpleParticleType(false));
+    public static final RegistryObject<SimpleParticleType> CLOCK_PARTICLES =
+            PARTICLE_TYPES.register("clock_particles",
+                    () -> new SimpleParticleType(false));
 
     public static void register(IEventBus eventBus){
         PARTICLE_TYPES.register(eventBus);

@@ -3,10 +3,13 @@ package net.CoffeDino.testmod.events;
 import net.CoffeDino.testmod.TestingCoffeDinoMod;
 import net.CoffeDino.testmod.classes.PlayerClasses;
 import net.CoffeDino.testmod.client.gui.RaceSelectionScreen;
+import net.CoffeDino.testmod.item.Custom.ViridyumGreatswordItem;
 import net.CoffeDino.testmod.network.NetworkHandler;
 import net.CoffeDino.testmod.races.races;
 import net.minecraft.client.Minecraft;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.event.entity.EntityJoinLevelEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
@@ -137,6 +140,20 @@ public class ModEvents {
                 System.out.println("DEBUG: Race already chosen and synced: " + currentRace);
             }
             System.out.println("DEBUG: ===== CLIENT RACE CHECK END =====");
+        }
+    }
+    @SubscribeEvent
+    public static void onPlayerDeath(net.minecraftforge.event.entity.living.LivingDeathEvent event) {
+        if (event.getEntity() instanceof ServerPlayer player) {
+            ItemStack mainHand = player.getMainHandItem();
+            ItemStack offHand = player.getOffhandItem();
+
+            boolean hasGreatsword = (mainHand.getItem() instanceof ViridyumGreatswordItem) ||
+                    (offHand.getItem() instanceof ViridyumGreatswordItem);
+
+            if (hasGreatsword && ViridyumGreatswordItem.tryChronobreak(player)) {
+                event.setCanceled(true);
+            }
         }
     }
 }

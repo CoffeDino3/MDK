@@ -2,27 +2,30 @@ package net.CoffeDino.testmod;
 
 import com.mojang.logging.LogUtils;
 import net.CoffeDino.testmod.block.ModBlocks;
-import net.CoffeDino.testmod.capability.IRaceSize;
 import net.CoffeDino.testmod.capability.ISculkStorage;
-import net.CoffeDino.testmod.capability.ModCapabilities;
 import net.CoffeDino.testmod.commands.ClassCommand;
 import net.CoffeDino.testmod.commands.RaceCommand;
 import net.CoffeDino.testmod.effects.ModEffects;
 import net.CoffeDino.testmod.entity.ModEntities;
+import net.CoffeDino.testmod.item.Custom.FireSpearItem;
 import net.CoffeDino.testmod.item.ModCreativeModeTabs;
 import net.CoffeDino.testmod.item.ModItems;
 import net.CoffeDino.testmod.menu.ModMenuTypes;
 import net.CoffeDino.testmod.network.NetworkHandler;
+import net.CoffeDino.testmod.particle.ClockParticle;
 import net.CoffeDino.testmod.particle.ModParticles;
 import net.CoffeDino.testmod.particle.MourningButterflyParticle;
-import net.CoffeDino.testmod.effects.MourningFuneralEffect;
-import net.CoffeDino.testmod.renderer.AngelbornRenderer;
+import net.CoffeDino.testmod.renderer.FireSpearRenderer;
 import net.CoffeDino.testmod.renderer.LamentBulletRenderer;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.particle.ParticleEngine;
+import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.entity.EntityRenderers;
+import net.minecraft.client.renderer.item.ItemProperties;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.CreativeModeTabs;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.client.event.ModelEvent;
 import net.minecraftforge.client.event.RegisterParticleProvidersEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.Capability;
@@ -39,9 +42,8 @@ import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.slf4j.Logger;
-import org.spongepowered.asm.launch.MixinBootstrap;
-import org.spongepowered.asm.mixin.Mixin;
 import net.CoffeDino.testmod.renderer.AngelbornAbilityRenderer;
+
 
 
 @Mod(TestingCoffeDinoMod.MOD_ID)
@@ -70,6 +72,8 @@ public class TestingCoffeDinoMod
 
 
 
+
+
         modEventBus.addListener(this::addCreative);
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, Config.SPEC);
     }
@@ -80,11 +84,6 @@ public class TestingCoffeDinoMod
             LOGGER.info("Sculk Storage capability initialized");
         });
     }
-
-
-
-
-
 
 
     private void addCreative(BuildCreativeModeTabContentsEvent event)
@@ -123,12 +122,21 @@ public class TestingCoffeDinoMod
             LOGGER.debug("Angelborn ability renderer registered");
             EntityRenderers.register(ModEntities.LAMENT_BULLET.get(), LamentBulletRenderer::new);
             LOGGER.debug("Lament bullet renderer registered");
+            EntityRenderers.register(ModEntities.FIRE_SPEAR.get(), FireSpearRenderer::new);
+            event.enqueueWork(() -> {
+                ItemProperties.register(ModItems.AGNIS_FURY.get(),
+                        ResourceLocation.fromNamespaceAndPath(MOD_ID, "charged"),
+                        (stack, level, entity, seed) -> FireSpearItem.isCharged(stack) ? 1.0F : 0.0F);
+            });
         }
 
         @SubscribeEvent
         public static void registerParticleProvider(RegisterParticleProvidersEvent event){
             event.registerSpriteSet(ModParticles.MOURNING_BUTTERFLY_PARTICLES.get(), MourningButterflyParticle.Provider::new);
+            event.registerSpriteSet(ModParticles.CLOCK_PARTICLES.get(), ClockParticle.Provider::new);
         }
+
+
 
 
     }

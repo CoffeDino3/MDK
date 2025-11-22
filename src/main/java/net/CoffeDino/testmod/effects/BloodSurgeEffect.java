@@ -82,10 +82,6 @@ public class BloodSurgeEffect extends MobEffect {
             double y = startY + (endY - startY) * progress + (level.random.nextDouble() - 0.5) * 0.3;
             double z = startZ + (endZ - startZ) * progress + (level.random.nextDouble() - 0.5) * 0.3;
 
-            level.sendParticles(
-                    net.minecraft.core.particles.ParticleTypes.DRIPPING_HONEY,
-                    x, y, z, 1, 0, 0, 0, 0.02
-            );
         }
     }
 }
