@@ -1,6 +1,6 @@
 package net.CoffeDino.testmod.abilities;
 
-import net.CoffeDino.testmod.TestingCoffeDinoMod;
+import net.CoffeDino.testmod.Lunacy;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -13,7 +13,7 @@ import net.minecraftforge.fml.common.Mod;
 
 import java.util.*;
 
-@Mod.EventBusSubscriber(modid = TestingCoffeDinoMod.MOD_ID)
+@Mod.EventBusSubscriber(modid = Lunacy.MOD_ID)
 public class BelieverAbilityHandler {
     private static final Map<UUID, BelieverBarrierInstance> ACTIVE_BARRIERS = new HashMap<>();
     private static final int BARRIER_SIZE = 10;
@@ -30,7 +30,7 @@ public class BelieverAbilityHandler {
 
         if (ACTIVE_BARRIERS.containsKey(playerId)) {
             deactivateAbility(player);
-            TestingCoffeDinoMod.LOGGER.debug("Believer barrier manually deactivated for player: {}", player.getName().getString());
+            Lunacy.LOGGER.debug("Believer barrier manually deactivated for player: {}", player.getName().getString());
         } else {
             activateAbility(player);
         }
@@ -55,7 +55,7 @@ public class BelieverAbilityHandler {
                     true
             );
 
-            TestingCoffeDinoMod.LOGGER.debug("Believer barrier activated for player: {}", player.getName().getString());
+            Lunacy.LOGGER.debug("Believer barrier activated for player: {}", player.getName().getString());
         }
     }
 
@@ -70,7 +70,7 @@ public class BelieverAbilityHandler {
                     true
             );
 
-            TestingCoffeDinoMod.LOGGER.debug("Believer barrier deactivated for player: {}", player.getName().getString());
+            Lunacy.LOGGER.debug("Believer barrier deactivated for player: {}", player.getName().getString());
         }
     }
 
@@ -93,7 +93,7 @@ public class BelieverAbilityHandler {
                     );
                 }
 
-                TestingCoffeDinoMod.LOGGER.debug("Believer barrier expired for player: {}", barrier.getPlayer().getName().getString());
+                Lunacy.LOGGER.debug("Believer barrier expired for player: {}", barrier.getPlayer().getName().getString());
             }
         }
     }
@@ -157,7 +157,7 @@ public class BelieverAbilityHandler {
                 }
             }
 
-            TestingCoffeDinoMod.LOGGER.debug("Created double-layered believer barrier with {} blocks for player: {}",
+            Lunacy.LOGGER.debug("Created double-layered believer barrier with {} blocks for player: {}",
                     barrierBlocks.size(), player.getName().getString());
 
             return !barrierBlocks.isEmpty();
@@ -283,11 +283,11 @@ public class BelieverAbilityHandler {
 
     public static void onPlayerLogout(Player player) {
         deactivateAbility(player);
-        TestingCoffeDinoMod.LOGGER.debug("Believer barrier removed due to player logout: {}", player.getName().getString());
+        Lunacy.LOGGER.debug("Believer barrier removed due to player logout: {}", player.getName().getString());
     }
 
     public static void onRaceChange(Player player) {
         deactivateAbility(player);
-        TestingCoffeDinoMod.LOGGER.debug("Believer barrier removed due to race change: {}", player.getName().getString());
+        Lunacy.LOGGER.debug("Believer barrier removed due to race change: {}", player.getName().getString());
     }
 }

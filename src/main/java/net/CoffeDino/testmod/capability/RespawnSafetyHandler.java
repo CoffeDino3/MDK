@@ -1,18 +1,18 @@
 package net.CoffeDino.testmod.capability;
 
-import net.CoffeDino.testmod.TestingCoffeDinoMod;
+import net.CoffeDino.testmod.Lunacy;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
-@Mod.EventBusSubscriber(modid = TestingCoffeDinoMod.MOD_ID)
+@Mod.EventBusSubscriber(modid = Lunacy.MOD_ID)
 public class RespawnSafetyHandler {
 
     @SubscribeEvent
     public static void onPlayerRespawn(PlayerEvent.PlayerRespawnEvent event) {
         if (event.getEntity() instanceof ServerPlayer player) {
-            player.getCapability(TestingCoffeDinoMod.SCULK_STORAGE).ifPresent(storage -> {
+            player.getCapability(Lunacy.SCULK_STORAGE).ifPresent(storage -> {
                 storage.startCooldown();
             });
 
@@ -25,7 +25,7 @@ public class RespawnSafetyHandler {
     @SubscribeEvent
     public static void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent event) {
         if (event.getEntity() instanceof ServerPlayer player) {
-            player.getCapability(TestingCoffeDinoMod.SCULK_STORAGE).ifPresent(storage -> {
+            player.getCapability(Lunacy.SCULK_STORAGE).ifPresent(storage -> {
             });
         }
     }

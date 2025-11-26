@@ -1,7 +1,0 @@
-{
-  "parent": "minecraft:block/cube_top",
-  "textures": {
-    "side": "testingcoffedinomod:block/cummingtonite_ingot_block_side",
-    "top": "testingcoffedinomod:block/cummingtonite_ingot_block_end"
-  }
-}

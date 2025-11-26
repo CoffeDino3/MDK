@@ -1,6 +1,6 @@
 package net.CoffeDino.testmod.capability;
 
-import net.CoffeDino.testmod.TestingCoffeDinoMod;
+import net.CoffeDino.testmod.Lunacy;
 import net.minecraft.world.entity.EntityDimensions;
 import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.player.Player;
@@ -8,7 +8,7 @@ import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
-@Mod.EventBusSubscriber(modid = TestingCoffeDinoMod.MOD_ID)
+@Mod.EventBusSubscriber(modid = Lunacy.MOD_ID)
 public class PlayerSizeHandler {
 
     @SubscribeEvent

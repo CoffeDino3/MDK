@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/cube_top",
+  "textures": {
+    "side": "lunacy:block/cummingtonite_ingot_block_side",
+    "top": "lunacy:block/cummingtonite_ingot_block_end"
+  }
+}

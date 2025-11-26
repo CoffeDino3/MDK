@@ -1,7 +1,7 @@
 package net.CoffeDino.testmod.client;
 
 import com.mojang.blaze3d.platform.InputConstants;
-import net.CoffeDino.testmod.TestingCoffeDinoMod;
+import net.CoffeDino.testmod.Lunacy;
 import net.CoffeDino.testmod.abilities.CelestialAbilityHandler;
 import net.CoffeDino.testmod.abilities.EtherealAbilityHandler;
 import net.CoffeDino.testmod.abilities.LoverAbilityHandler;
@@ -18,73 +18,73 @@ import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
-@Mod.EventBusSubscriber(modid = TestingCoffeDinoMod.MOD_ID, value = Dist.CLIENT)
+@Mod.EventBusSubscriber(modid = Lunacy.MOD_ID, value = Dist.CLIENT)
 public class KeyBindHandler {
     public static final KeyMapping SCULK_STORAGE_KEY = new KeyMapping(
-            "key.testingcoffedinomod.sculk_storage",
+            "key.lunacy.sculk_storage",
             InputConstants.Type.KEYSYM,
             InputConstants.KEY_R,
-            "category.testingcoffedinomod.abilities"
+            "category.lunacy.abilities"
     );
     public static final KeyMapping WARDER_ABILITY_KEY = new KeyMapping(
-            "key.testingcoffedinomod.warder_ability",
+            "key.lunacy.warder_ability",
             InputConstants.Type.KEYSYM,
             InputConstants.KEY_R,
-            "category.testingcoffedinomod.abilities"
+            "category.lunacy.abilities"
     );
     public static final KeyMapping LOVER_ABILITY_KEY = new KeyMapping(
-            "key.testingcoffedinomod.lover_ability",
+            "key.lunacy.lover_ability",
             InputConstants.Type.KEYSYM,
             InputConstants.KEY_R,
-            "category.testingcoffedinomod.abilities"
+            "category.lunacy.abilities"
     );
     public static final KeyMapping ENDER_TELEPORT_KEY = new KeyMapping(
-            "key.testingcoffedinomod.ender_teleport",
+            "key.lunacy.ender_teleport",
             InputConstants.Type.KEYSYM,
             InputConstants.KEY_R, // Same key as sculk, but will check race
-            "category.testingcoffedinomod.abilities"
+            "category.lunacy.abilities"
     );
     public static final KeyMapping PHANTOM_ABILITY_KEY = new KeyMapping(
-            "key.testingcoffedinomod.phantom_ability",
+            "key.lunacy.phantom_ability",
             InputConstants.Type.KEYSYM,
             InputConstants.KEY_R,
-            "category.testingcoffedinomod.abilities"
+            "category.lunacy.abilities"
     );
     public static final KeyMapping BELIEVER_ABILITY_KEY = new KeyMapping(
-            "key.testingcoffedinomod.believer_ability",
+            "key.lunacy.believer_ability",
             InputConstants.Type.KEYSYM,
             InputConstants.KEY_R,
-            "category.testingcoffedinomod.abilities"
+            "category.lunacy.abilities"
     );
     public static final KeyMapping VAMPIREBORN_ABILITY_KEY = new KeyMapping(
-            "key.testingcoffedinomod.vampireborn_ability",
+            "key.lunacy.vampireborn_ability",
             InputConstants.Type.KEYSYM,
             InputConstants.KEY_R,
-            "category.testingcoffedinomod.abilities"
+            "category.lunacy.abilities"
     );
     public static final KeyMapping ETHEREAL_ABILITY_KEY = new KeyMapping(
-            "key.testingcoffedinomod.ethereal_ability",
+            "key.lunacy.ethereal_ability",
             InputConstants.Type.KEYSYM,
             InputConstants.KEY_R,
-            "category.testingcoffedinomod.abilities"
+            "category.lunacy.abilities"
     );
     public static final KeyMapping ANGELBORN_ABILITY_KEY = new KeyMapping(
-            "key.testingcoffedinomod.angelborn_ability",
+            "key.lunacy.angelborn_ability",
             InputConstants.Type.KEYSYM,
             InputConstants.KEY_R,
-            "category.testingcoffedinomod.abilities"
+            "category.lunacy.abilities"
     );
     public static final KeyMapping CELESTIAL_ABILITY_KEY = new KeyMapping(
-            "key.testingcoffedinomod.celestial_ability",
+            "key.lunacy.celestial_ability",
             InputConstants.Type.KEYSYM,
             InputConstants.KEY_R,
-            "category.testingcoffedinomod.abilities"
+            "category.lunacy.abilities"
     );
     public static final KeyMapping CLASS_SELECTION_KEY = new KeyMapping(
-            "key.testingcoffedinomod.class_selection",
+            "key.lunacy.class_selection",
             InputConstants.Type.KEYSYM,
             InputConstants.KEY_C, // C key for class selection
-            "category.testingcoffedinomod.general"
+            "category.lunacy.general"
     );
 
     @SubscribeEvent
@@ -223,7 +223,7 @@ public class KeyBindHandler {
                         if (!LoverAbilityHandler.isAbilityActive(minecraft.player) &&
                                 LoverAbilityHandler.canActivateAbility(minecraft.player)) {
                             NetworkHandler.sendToServer(new ActivateLoverAbilityPacket());
-                            TestingCoffeDinoMod.LOGGER.debug("Client: Sent Lover ability activation");
+                            Lunacy.LOGGER.debug("Client: Sent Lover ability activation");
                         }
                     }
                 }
@@ -256,10 +256,10 @@ public class KeyBindHandler {
 
                 if (pressDuration < TAP_THRESHOLD) {
                     NetworkHandler.sendToServer(new VampirebornAbilityPacket(false));
-                    TestingCoffeDinoMod.LOGGER.debug("Vampireborn single tap detected ({}ms)", pressDuration);
+                    Lunacy.LOGGER.debug("Vampireborn single tap detected ({}ms)", pressDuration);
                 } else {
                     NetworkHandler.sendToServer(new DeactivateVampirebornAbilityPacket());
-                    TestingCoffeDinoMod.LOGGER.debug("Vampireborn hold released ({}ms)", pressDuration);
+                    Lunacy.LOGGER.debug("Vampireborn hold released ({}ms)", pressDuration);
                 }
 
                 wasVampirebornKeyPressed = false;
@@ -270,7 +270,7 @@ public class KeyBindHandler {
                 if (pressDuration >= TAP_THRESHOLD) {
                     if (pressDuration < TAP_THRESHOLD + 50) {
                         NetworkHandler.sendToServer(new VampirebornAbilityPacket(true));
-                        TestingCoffeDinoMod.LOGGER.debug("Vampireborn hold started ({}ms)", pressDuration);
+                        Lunacy.LOGGER.debug("Vampireborn hold started ({}ms)", pressDuration);
                     }
                 }
             }

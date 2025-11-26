@@ -1,6 +1,6 @@
 package net.CoffeDino.testmod.entity.abilities;
 
-import net.CoffeDino.testmod.TestingCoffeDinoMod;
+import net.CoffeDino.testmod.Lunacy;
 import net.CoffeDino.testmod.entity.ModEntities;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;

@@ -1,6 +1,6 @@
 package net.CoffeDino.testmod.abilities;
 
-import net.CoffeDino.testmod.TestingCoffeDinoMod;
+import net.CoffeDino.testmod.Lunacy;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
@@ -20,7 +20,7 @@ import net.minecraftforge.fml.common.Mod;
 
 import java.util.*;
 
-@Mod.EventBusSubscriber(modid = TestingCoffeDinoMod.MOD_ID)
+@Mod.EventBusSubscriber(modid = Lunacy.MOD_ID)
 public class WarderAbilityHandler {
     private static final Map<UUID, WarderAbilityInstance> ACTIVE_ABILITIES = new HashMap<>();
     private static final int ABILITY_DURATION = 100;
@@ -37,7 +37,7 @@ public class WarderAbilityHandler {
         }
 
         ACTIVE_ABILITIES.put(playerId, new WarderAbilityInstance(player));
-        TestingCoffeDinoMod.LOGGER.debug("Warder ability activated for player: {}", player.getName().getString());
+        Lunacy.LOGGER.debug("Warder ability activated for player: {}", player.getName().getString());
     }
 
     @SubscribeEvent
@@ -51,7 +51,7 @@ public class WarderAbilityHandler {
 
             if (ability.tick() || !ability.isValid()) {
                 iterator.remove();
-                TestingCoffeDinoMod.LOGGER.debug("Warder ability ended for player: {}", ability.getPlayer().getName().getString());
+                Lunacy.LOGGER.debug("Warder ability ended for player: {}", ability.getPlayer().getName().getString());
             }
         }
     }

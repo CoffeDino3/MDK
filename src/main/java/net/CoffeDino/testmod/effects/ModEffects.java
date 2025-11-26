@@ -1,6 +1,6 @@
 package net.CoffeDino.testmod.effects;
 
-import net.CoffeDino.testmod.TestingCoffeDinoMod;
+import net.CoffeDino.testmod.Lunacy;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
@@ -11,11 +11,11 @@ import net.minecraftforge.registries.RegistryObject;
 
 public class ModEffects {
     public static final DeferredRegister<MobEffect> EFFECTS =
-            DeferredRegister.create(Registries.MOB_EFFECT, TestingCoffeDinoMod.MOD_ID);
+            DeferredRegister.create(Registries.MOB_EFFECT, Lunacy.MOD_ID);
 
     public static final ResourceKey<MobEffect> MOURNING_FUNERAL_KEY =
             ResourceKey.create(Registries.MOB_EFFECT,
-                    ResourceLocation.fromNamespaceAndPath(TestingCoffeDinoMod.MOD_ID, "mourning_funeral"));
+                    ResourceLocation.fromNamespaceAndPath(Lunacy.MOD_ID, "mourning_funeral"));
 
     public static final RegistryObject<MobEffect> ETHER = EFFECTS.register(
             "ether",

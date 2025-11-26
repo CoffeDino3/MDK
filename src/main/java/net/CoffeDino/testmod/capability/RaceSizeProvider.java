@@ -1,7 +1,7 @@
 
 package net.CoffeDino.testmod.capability;
 
-import net.CoffeDino.testmod.TestingCoffeDinoMod;
+import net.CoffeDino.testmod.Lunacy;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -19,7 +19,7 @@ public class RaceSizeProvider implements ICapabilitySerializable<CompoundTag> {
             CapabilityManager.get(new CapabilityToken<>() {});
 
     private static final ResourceLocation RACE_SIZE_ID =
-            ResourceLocation.fromNamespaceAndPath(TestingCoffeDinoMod.MOD_ID, "race_size");
+            ResourceLocation.fromNamespaceAndPath(Lunacy.MOD_ID, "race_size");
 
     private final IRaceSize instance = new RaceSizeCapability();
     private final LazyOptional<IRaceSize> optional = LazyOptional.of(() -> instance);

@@ -438,7 +438,7 @@ public class FireSpearItem extends SpearItem {
         return !data.isEmpty() && data.copyTag().contains("IsThrown") && data.copyTag().getBoolean("IsThrown");
     }
 
-    @Mod.EventBusSubscriber(value = Dist.CLIENT, modid = "testingcoffedinomod")
+    @Mod.EventBusSubscriber(value = Dist.CLIENT, modid = "lunacy")
     public static class FireSpearOverlay {
 
         @SubscribeEvent

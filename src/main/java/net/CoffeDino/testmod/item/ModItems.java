@@ -1,6 +1,6 @@
 package net.CoffeDino.testmod.item;
 
-import net.CoffeDino.testmod.TestingCoffeDinoMod;
+import net.CoffeDino.testmod.Lunacy;
 import net.CoffeDino.testmod.item.Custom.*;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Tiers;
@@ -11,7 +11,7 @@ import net.minecraftforge.registries.RegistryObject;
 
 public class ModItems {
     public static final DeferredRegister<Item> ITEMS =
-            DeferredRegister.create(ForgeRegistries.ITEMS, TestingCoffeDinoMod.MOD_ID);
+            DeferredRegister.create(ForgeRegistries.ITEMS, Lunacy.MOD_ID);
 
     public static final RegistryObject<Item> CUMMINGTONITE = ITEMS.register("cummingtonite",
             () -> new Item(new Item.Properties()));

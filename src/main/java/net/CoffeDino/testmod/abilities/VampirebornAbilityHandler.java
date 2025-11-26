@@ -1,6 +1,6 @@
 package net.CoffeDino.testmod.abilities;
 
-import net.CoffeDino.testmod.TestingCoffeDinoMod;
+import net.CoffeDino.testmod.Lunacy;
 import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -19,7 +19,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-@Mod.EventBusSubscriber(modid = TestingCoffeDinoMod.MOD_ID)
+@Mod.EventBusSubscriber(modid = Lunacy.MOD_ID)
 public class VampirebornAbilityHandler {
     private static final Map<UUID, VampirebornAbilityInstance> ACTIVE_ABILITIES = new HashMap<>();
     private static final Map<UUID, Long> COOLDOWNS = new HashMap<>();
@@ -44,7 +44,7 @@ public class VampirebornAbilityHandler {
         VampirebornAbilityInstance ability = new VampirebornAbilityInstance((ServerPlayer) player);
         ACTIVE_ABILITIES.put(playerId, ability);
 
-        TestingCoffeDinoMod.LOGGER.debug("Vampireborn hold started for player: {}", player.getName().getString());
+        Lunacy.LOGGER.debug("Vampireborn hold started for player: {}", player.getName().getString());
     }
 
     public static void fireSingleShot(Player player) {
@@ -60,7 +60,7 @@ public class VampirebornAbilityHandler {
         ability.fireProjectile();
         startCooldown(player);
 
-        TestingCoffeDinoMod.LOGGER.debug("Vampireborn single shot fired");
+        Lunacy.LOGGER.debug("Vampireborn single shot fired");
     }
 
     public static void releaseHeldAbility(Player player) {
@@ -72,7 +72,7 @@ public class VampirebornAbilityHandler {
             ACTIVE_ABILITIES.remove(playerId);
             startCooldown(player);
 
-            TestingCoffeDinoMod.LOGGER.debug("Vampireborn held ability released with {} particles",
+            Lunacy.LOGGER.debug("Vampireborn held ability released with {} particles",
                     ability.getParticleCount());
         } else {
             ACTIVE_ABILITIES.remove(playerId);
@@ -90,7 +90,7 @@ public class VampirebornAbilityHandler {
             if (ability.shouldAutoFire()) {
                 ability.fireProjectile();
                 startCooldown(ability.getPlayer());
-                TestingCoffeDinoMod.LOGGER.debug("Vampireborn auto-fired with {} particles",
+                Lunacy.LOGGER.debug("Vampireborn auto-fired with {} particles",
                         ability.getParticleCount());
                 return true;
             }
@@ -140,7 +140,7 @@ public class VampirebornAbilityHandler {
             // Damage player
             player.hurt(player.damageSources().magic(), SELF_DAMAGE_PER_PARTICLE);
 
-            TestingCoffeDinoMod.LOGGER.debug("Vampireborn particle added. Count: {}", particleCount);
+            Lunacy.LOGGER.debug("Vampireborn particle added. Count: {}", particleCount);
         }
 
         public void fireProjectile() {
@@ -149,7 +149,7 @@ public class VampirebornAbilityHandler {
             float totalDamage = BASE_DAMAGE + (Math.max(0, particleCount - 1) * DAMAGE_PER_EXTRA_PARTICLE);
             createProjectile(totalDamage);
 
-            TestingCoffeDinoMod.LOGGER.debug("Vampireborn fired with {} particles, damage: {}",
+            Lunacy.LOGGER.debug("Vampireborn fired with {} particles, damage: {}",
                     particleCount, totalDamage);
         }
 

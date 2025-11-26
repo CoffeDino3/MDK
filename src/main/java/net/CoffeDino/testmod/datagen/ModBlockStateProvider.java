@@ -1,6 +1,6 @@
 package net.CoffeDino.testmod.datagen;
 
-import net.CoffeDino.testmod.TestingCoffeDinoMod;
+import net.CoffeDino.testmod.Lunacy;
 import net.CoffeDino.testmod.block.ModBlocks;
 import net.minecraft.data.PackOutput;
 import net.minecraft.world.level.block.Block;
@@ -10,7 +10,7 @@ import net.minecraftforge.registries.RegistryObject;
 
 public class ModBlockStateProvider extends BlockStateProvider {
     public ModBlockStateProvider(PackOutput output, ExistingFileHelper exFileHelper) {
-        super(output, TestingCoffeDinoMod.MOD_ID, exFileHelper);
+        super(output, Lunacy.MOD_ID, exFileHelper);
     }
 
     @Override

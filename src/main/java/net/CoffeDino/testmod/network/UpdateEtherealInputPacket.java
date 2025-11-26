@@ -1,6 +1,6 @@
 package net.CoffeDino.testmod.network;
 
-import net.CoffeDino.testmod.TestingCoffeDinoMod;
+import net.CoffeDino.testmod.Lunacy;
 import net.CoffeDino.testmod.abilities.EtherealAbilityHandler;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
@@ -10,7 +10,7 @@ import net.minecraftforge.event.network.CustomPayloadEvent;
 
 public record UpdateEtherealInputPacket(boolean jumping, boolean shifting) implements CustomPacketPayload {
     public static final Type<UpdateEtherealInputPacket> TYPE = new Type<>(
-            ResourceLocation.fromNamespaceAndPath(TestingCoffeDinoMod.MOD_ID, "update_ethereal_input")
+            ResourceLocation.fromNamespaceAndPath(Lunacy.MOD_ID, "update_ethereal_input")
     );
 
     public UpdateEtherealInputPacket(FriendlyByteBuf buf) {

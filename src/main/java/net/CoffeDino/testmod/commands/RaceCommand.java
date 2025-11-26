@@ -12,7 +12,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 
-import static net.CoffeDino.testmod.TestingCoffeDinoMod.LOGGER;
+import static net.CoffeDino.testmod.Lunacy.LOGGER;
 
 
 public class RaceCommand {

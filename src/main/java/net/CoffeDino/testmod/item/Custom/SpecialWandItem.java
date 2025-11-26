@@ -55,7 +55,7 @@ public class SpecialWandItem extends Item {
     @Override
     public void appendHoverText(ItemStack pStack, TooltipContext pContext, List<Component> pTooltipComponents, TooltipFlag pTooltipFlag) {
         super.appendHoverText(pStack, pContext, pTooltipComponents, pTooltipFlag);
-        pTooltipComponents.add(Component.translatable("tooltip.testingcoffedinomod.special_wand.tooltip"));
+        pTooltipComponents.add(Component.translatable("tooltip.lunacy.special_wand.tooltip"));
 
     }
 }

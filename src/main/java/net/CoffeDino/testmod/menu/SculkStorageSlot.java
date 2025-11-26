@@ -1,6 +1,6 @@
 package net.CoffeDino.testmod.menu;
 
-import net.CoffeDino.testmod.TestingCoffeDinoMod;
+import net.CoffeDino.testmod.Lunacy;
 import net.CoffeDino.testmod.capability.SculkStorageProvider;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -23,14 +23,14 @@ public class SculkStorageSlot extends Slot {
 
     @Override
     public ItemStack getItem() {
-        return player.getCapability(TestingCoffeDinoMod.SCULK_STORAGE)
+        return player.getCapability(Lunacy.SCULK_STORAGE)
                 .map(storage -> storage.getItem(slotIndex))
                 .orElse(ItemStack.EMPTY);
     }
 
     @Override
     public void set(ItemStack stack) {
-        player.getCapability(TestingCoffeDinoMod.SCULK_STORAGE)
+        player.getCapability(Lunacy.SCULK_STORAGE)
                 .ifPresent(storage -> storage.setItem(slotIndex, stack));
         this.setChanged();
     }
@@ -68,7 +68,7 @@ public class SculkStorageSlot extends Slot {
 
         @Override
         public int getContainerSize() {
-            return player.getCapability(TestingCoffeDinoMod.SCULK_STORAGE)
+            return player.getCapability(Lunacy.SCULK_STORAGE)
                     .map(storage -> storage.getContainerSize())
                     .orElse(27);
         }
@@ -83,7 +83,7 @@ public class SculkStorageSlot extends Slot {
 
         @Override
         public ItemStack getItem(int slot) {
-            return player.getCapability(TestingCoffeDinoMod.SCULK_STORAGE)
+            return player.getCapability(Lunacy.SCULK_STORAGE)
                     .map(storage -> storage.getItem(slot))
                     .orElse(ItemStack.EMPTY);
         }
@@ -114,7 +114,7 @@ public class SculkStorageSlot extends Slot {
 
         @Override
         public void setItem(int slot, ItemStack stack) {
-            player.getCapability(TestingCoffeDinoMod.SCULK_STORAGE)
+            player.getCapability(Lunacy.SCULK_STORAGE)
                     .ifPresent(storage -> storage.setItem(slot, stack));
         }
 

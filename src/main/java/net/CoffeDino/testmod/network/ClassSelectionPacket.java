@@ -1,6 +1,6 @@
 package net.CoffeDino.testmod.network;
 
-import net.CoffeDino.testmod.TestingCoffeDinoMod;
+import net.CoffeDino.testmod.Lunacy;
 import net.CoffeDino.testmod.classes.PlayerClasses;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
@@ -10,7 +10,7 @@ import net.minecraftforge.event.network.CustomPayloadEvent;
 
 public record ClassSelectionPacket(String classId) implements CustomPacketPayload {
     public static final Type<ClassSelectionPacket> TYPE = new Type<>(
-            ResourceLocation.fromNamespaceAndPath(TestingCoffeDinoMod.MOD_ID, "class_selection")
+            ResourceLocation.fromNamespaceAndPath(Lunacy.MOD_ID, "class_selection")
     );
 
     public ClassSelectionPacket(FriendlyByteBuf buf) {

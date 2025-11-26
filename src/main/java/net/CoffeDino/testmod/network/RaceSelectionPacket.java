@@ -1,6 +1,6 @@
 package net.CoffeDino.testmod.network;
 
-import net.CoffeDino.testmod.TestingCoffeDinoMod;
+import net.CoffeDino.testmod.Lunacy;
 import net.CoffeDino.testmod.races.races;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
@@ -10,7 +10,7 @@ import net.minecraftforge.event.network.CustomPayloadEvent;
 
 public record RaceSelectionPacket(String raceId) implements CustomPacketPayload {
     public static final Type<RaceSelectionPacket> TYPE = new Type<>(
-            ResourceLocation.fromNamespaceAndPath(TestingCoffeDinoMod.MOD_ID, "race_selection")
+            ResourceLocation.fromNamespaceAndPath(Lunacy.MOD_ID, "race_selection")
     );
 
     public RaceSelectionPacket(FriendlyByteBuf buf){

@@ -1,6 +1,6 @@
 package net.CoffeDino.testmod.abilities;
 
-import net.CoffeDino.testmod.TestingCoffeDinoMod;
+import net.CoffeDino.testmod.Lunacy;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -16,7 +16,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-@Mod.EventBusSubscriber(modid = TestingCoffeDinoMod.MOD_ID)
+@Mod.EventBusSubscriber(modid = Lunacy.MOD_ID)
 public class EtherealAbilityHandler {
     private static final Map<UUID, EtherealAbilityInstance> ACTIVE_ABILITIES = new HashMap<>();
     private static final Map<UUID, Boolean> PLAYER_JUMPING = new HashMap<>();
@@ -37,7 +37,7 @@ public class EtherealAbilityHandler {
         ACTIVE_ABILITIES.put(playerId, ability);
         startCooldown(player);
 
-        TestingCoffeDinoMod.LOGGER.debug("Ethereal ability activated for player: {}", player.getName().getString());
+        Lunacy.LOGGER.debug("Ethereal ability activated for player: {}", player.getName().getString());
     }
     public static void updateEtherealInput(ServerPlayer player, boolean jumping, boolean shifting) {
         if (isAbilityActive(player)) {
@@ -60,7 +60,7 @@ public class EtherealAbilityHandler {
             EtherealAbilityInstance ability = entry.getValue();
             if (ability.shouldEnd()) {
                 ability.deactivate();
-                TestingCoffeDinoMod.LOGGER.debug("Ethereal ability ended for player: {}", ability.getPlayer().getName().getString());
+                Lunacy.LOGGER.debug("Ethereal ability ended for player: {}", ability.getPlayer().getName().getString());
                 return true;
             }
             return false;
@@ -128,7 +128,7 @@ public class EtherealAbilityHandler {
                     true
             );
 
-            TestingCoffeDinoMod.LOGGER.info("Ethereal ability activated for {}", player.getName().getString());
+            Lunacy.LOGGER.info("Ethereal ability activated for {}", player.getName().getString());
         }
 
         public void tick() {
@@ -208,9 +208,9 @@ public class EtherealAbilityHandler {
             Vec3 safeExit = findNearestSafePosition();
             if (safeExit != null) {
                 player.teleportTo(safeExit.x, safeExit.y, safeExit.z);
-                TestingCoffeDinoMod.LOGGER.debug("Teleported player to safe position at ability end");
+                Lunacy.LOGGER.debug("Teleported player to safe position at ability end");
             } else {
-                TestingCoffeDinoMod.LOGGER.debug("No safe position found, using emergency escape");
+                Lunacy.LOGGER.debug("No safe position found, using emergency escape");
                 emergencyEscapeFromBlocks();
             }
 
@@ -232,7 +232,7 @@ public class EtherealAbilityHandler {
                     true
             );
 
-            TestingCoffeDinoMod.LOGGER.info("Ethereal ability ended for {}", player.getName().getString());
+            Lunacy.LOGGER.info("Ethereal ability ended for {}", player.getName().getString());
             isActive = false;
         }
 
@@ -240,12 +240,12 @@ public class EtherealAbilityHandler {
             BlockPos currentPos = player.blockPosition();
 
             if (!level.isEmptyBlock(currentPos)) {
-                TestingCoffeDinoMod.LOGGER.debug("Player stuck in block at ability end, attempting emergency escape");
+                Lunacy.LOGGER.debug("Player stuck in block at ability end, attempting emergency escape");
                 for (int i = 1; i <= 10; i++) {
                     BlockPos checkPos = currentPos.above(i);
                     if (level.isEmptyBlock(checkPos) && level.isEmptyBlock(checkPos.above())) {
                         player.teleportTo(player.getX(), player.getY() + i, player.getZ());
-                        TestingCoffeDinoMod.LOGGER.debug("Emergency escape: moved up {} blocks", i);
+                        Lunacy.LOGGER.debug("Emergency escape: moved up {} blocks", i);
                         return;
                     }
                 }
@@ -257,7 +257,7 @@ public class EtherealAbilityHandler {
                                     BlockPos checkPos = currentPos.offset(x, y, z);
                                     if (level.isEmptyBlock(checkPos) && level.isEmptyBlock(checkPos.above())) {
                                         player.teleportTo(player.getX() + x, player.getY() + y, player.getZ() + z);
-                                        TestingCoffeDinoMod.LOGGER.debug("Emergency escape: moved to ({}, {}, {})", x, y, z);
+                                        Lunacy.LOGGER.debug("Emergency escape: moved to ({}, {}, {})", x, y, z);
                                         return;
                                     }
                                 }
@@ -266,7 +266,7 @@ public class EtherealAbilityHandler {
                     }
                 }
                 player.teleportTo(safePosition.x, safePosition.y, safePosition.z);
-                TestingCoffeDinoMod.LOGGER.debug("Emergency escape: teleported to original safe position");
+                Lunacy.LOGGER.debug("Emergency escape: teleported to original safe position");
             }
         }
 
@@ -294,7 +294,7 @@ public class EtherealAbilityHandler {
         }
 
         private void logDebugInfo(boolean inBlock) {
-            TestingCoffeDinoMod.LOGGER.debug(
+            Lunacy.LOGGER.debug(
                     "Ethereal [{}] - Pos: ({:.1f}, {:.1f}, {:.1f}), InBlock: {}, noPhysics: {}",
                     ticksActive, player.getX(), player.getY(), player.getZ(), inBlock, player.noPhysics
             );

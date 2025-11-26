@@ -1,7 +1,7 @@
 // net/CoffeDino/testmod/classes/PlayerClasses.java
 package net.CoffeDino.testmod.classes;
 
-import net.CoffeDino.testmod.TestingCoffeDinoMod;
+import net.CoffeDino.testmod.Lunacy;
 import net.CoffeDino.testmod.network.NetworkHandler;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;

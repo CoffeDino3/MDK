@@ -2,7 +2,7 @@ package net.CoffeDino.testmod.client.gui;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.math.Axis;
-import net.CoffeDino.testmod.TestingCoffeDinoMod;
+import net.CoffeDino.testmod.Lunacy;
 import net.CoffeDino.testmod.client.gui.components.ColoredButton;
 import net.CoffeDino.testmod.network.NetworkHandler;
 import net.CoffeDino.testmod.network.RaceSelectionPacket;
@@ -23,7 +23,7 @@ import java.util.List;
 public class RaceSelectionScreen extends Screen {
 
     private static final ResourceLocation BACKGROUND =
-            ResourceLocation.fromNamespaceAndPath(TestingCoffeDinoMod.MOD_ID, "textures/gui/race_selection_bg2.png");
+            ResourceLocation.fromNamespaceAndPath(Lunacy.MOD_ID, "textures/gui/race_selection_bg2.png");
     private int currentRaceIndex = 0;
     private List<races.Race> raceList;
     private Button selectButton;

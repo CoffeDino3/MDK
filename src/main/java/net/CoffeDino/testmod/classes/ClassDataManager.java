@@ -1,6 +1,6 @@
 package net.CoffeDino.testmod.classes;
 
-import net.CoffeDino.testmod.TestingCoffeDinoMod;
+import net.CoffeDino.testmod.Lunacy;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
@@ -12,7 +12,7 @@ import java.util.Map;
 import java.util.UUID;
 
 public class ClassDataManager extends SavedData {
-    private static final String DATA_NAME = TestingCoffeDinoMod.MOD_ID + "_classes";
+    private static final String DATA_NAME = Lunacy.MOD_ID + "_classes";
     private final Map<UUID, String> playerClasses = new HashMap<>();
     private static final boolean DEBUG = false;
 
@@ -24,7 +24,7 @@ public class ClassDataManager extends SavedData {
         }
         tag.put("playerClasses", classesTag);
         if (DEBUG) {
-            TestingCoffeDinoMod.LOGGER.debug("ClassDataManager saved - {} player classes", playerClasses.size());
+            Lunacy.LOGGER.debug("ClassDataManager saved - {} player classes", playerClasses.size());
         }
         return tag;
     }
@@ -38,11 +38,11 @@ public class ClassDataManager extends SavedData {
                 String classId = classesTag.getString(uuidString);
                 data.playerClasses.put(playerId, classId);
             } catch (IllegalArgumentException e) {
-                TestingCoffeDinoMod.LOGGER.error("Invalid UUID in class data: {}", uuidString);
+                Lunacy.LOGGER.error("Invalid UUID in class data: {}", uuidString);
             }
         }
         if (DEBUG) {
-            TestingCoffeDinoMod.LOGGER.debug("ClassDataManager loaded - {} player classes", data.playerClasses.size());
+            Lunacy.LOGGER.debug("ClassDataManager loaded - {} player classes", data.playerClasses.size());
         }
         return data;
     }
@@ -51,12 +51,12 @@ public class ClassDataManager extends SavedData {
         if (classId == null || classId.isEmpty()) {
             playerClasses.remove(playerId);
             if (DEBUG) {
-                TestingCoffeDinoMod.LOGGER.debug("Removed class for player: {}", playerId);
+                Lunacy.LOGGER.debug("Removed class for player: {}", playerId);
             }
         } else {
             playerClasses.put(playerId, classId);
             if (DEBUG) {
-                TestingCoffeDinoMod.LOGGER.debug("Set class for player {}: {}", playerId, classId);
+                Lunacy.LOGGER.debug("Set class for player {}: {}", playerId, classId);
             }
         }
         setDirty();
@@ -72,7 +72,7 @@ public class ClassDataManager extends SavedData {
 
     public static ClassDataManager get(ServerPlayer player) {
         if (player.serverLevel() == null) {
-            TestingCoffeDinoMod.LOGGER.warn("Server level is null for player: {}", player.getName().getString());
+            Lunacy.LOGGER.warn("Server level is null for player: {}", player.getName().getString());
             return new ClassDataManager();
         }
 

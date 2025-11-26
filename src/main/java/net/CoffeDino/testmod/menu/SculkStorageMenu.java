@@ -1,6 +1,6 @@
 package net.CoffeDino.testmod.menu;
 
-import net.CoffeDino.testmod.TestingCoffeDinoMod;
+import net.CoffeDino.testmod.Lunacy;
 import net.CoffeDino.testmod.capability.SculkStorageProvider;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -22,7 +22,7 @@ public class SculkStorageMenu extends AbstractContainerMenu {
             throw new IllegalStateException("Cannot open menu for dead player");
         }
         this.player = player;
-        this.rowCount = player.getCapability(TestingCoffeDinoMod.SCULK_STORAGE)
+        this.rowCount = player.getCapability(Lunacy.SCULK_STORAGE)
                 .map(storage -> storage.getRows())
                 .orElse(3);
         for (int row = 0; row < rowCount; ++row) {
@@ -80,7 +80,7 @@ public class SculkStorageMenu extends AbstractContainerMenu {
 
     @Override
     public boolean stillValid(Player player) {
-        return player.isAlive() && player.getCapability(TestingCoffeDinoMod.SCULK_STORAGE)
+        return player.isAlive() && player.getCapability(Lunacy.SCULK_STORAGE)
                 .map(storage -> !storage.isOnCooldown())
                 .orElse(false);
     }

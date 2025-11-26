@@ -1,6 +1,6 @@
 package net.CoffeDino.testmod.abilities;
 
-import net.CoffeDino.testmod.TestingCoffeDinoMod;
+import net.CoffeDino.testmod.Lunacy;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.BlockParticleOption;
 import net.minecraft.core.particles.DustParticleOptions;
@@ -27,7 +27,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-@Mod.EventBusSubscriber(modid = TestingCoffeDinoMod.MOD_ID)
+@Mod.EventBusSubscriber(modid = Lunacy.MOD_ID)
 public class CelestialAbilityHandler {
     private static final Map<UUID, CelestialAbilityInstance> ACTIVE_ABILITIES = new HashMap<>();
     private static final int MAX_DURATION = 200;
@@ -54,13 +54,13 @@ public class CelestialAbilityHandler {
         }
 
         ACTIVE_ABILITIES.put(playerId, new CelestialAbilityInstance((ServerPlayer) player));
-        TestingCoffeDinoMod.LOGGER.debug("Celestial gravity ability activated for player: {}", player.getName().getString());
+        Lunacy.LOGGER.debug("Celestial gravity ability activated for player: {}", player.getName().getString());
     }
 
     public static void deactivateAbility(Player player) {
         ACTIVE_ABILITIES.remove(player.getUUID());
         startCooldown(player);
-        TestingCoffeDinoMod.LOGGER.debug("Celestial gravity ability deactivated for player: {}", player.getName().getString());
+        Lunacy.LOGGER.debug("Celestial gravity ability deactivated for player: {}", player.getName().getString());
     }
 
     public static void performPush(Player player) {
@@ -111,7 +111,7 @@ public class CelestialAbilityHandler {
             CelestialAbilityInstance ability = entry.getValue();
 
             if (ability.tick()) {
-                TestingCoffeDinoMod.LOGGER.debug("Celestial ability removed for player {} - duration expired", entry.getKey());
+                Lunacy.LOGGER.debug("Celestial ability removed for player {} - duration expired", entry.getKey());
                 startCooldown(ability.getPlayer());
                 iterator.remove();
             }
@@ -168,7 +168,7 @@ public class CelestialAbilityHandler {
                 applyGravityEffects(entity);
                 if (ticksActive % 20 == 0) {
                     entity.hurt(player.damageSources().magic(), DAMAGE_PER_SECOND);
-                    TestingCoffeDinoMod.LOGGER.debug("Applied {} damage to {}", DAMAGE_PER_SECOND, entity.getName().getString());
+                    Lunacy.LOGGER.debug("Applied {} damage to {}", DAMAGE_PER_SECOND, entity.getName().getString());
                 }
             }
         }
@@ -199,7 +199,7 @@ public class CelestialAbilityHandler {
                 breakBlocksUnderEntity(level, entity);
             }
 
-            TestingCoffeDinoMod.LOGGER.debug("Applied sinking blocks to {} entities", entities.size());
+            Lunacy.LOGGER.debug("Applied sinking blocks to {} entities", entities.size());
         }
 
         private void breakBlocksUnderEntity(ServerLevel level, LivingEntity entity) {
@@ -268,7 +268,7 @@ public class CelestialAbilityHandler {
             }
 
             spawnBurstParticles(level);
-            TestingCoffeDinoMod.LOGGER.debug("Celestial push performed, affected {} entities", entities.size());
+            Lunacy.LOGGER.debug("Celestial push performed, affected {} entities", entities.size());
         }
 
         public void performPull() {
@@ -299,7 +299,7 @@ public class CelestialAbilityHandler {
             }
 
             spawnImplosionParticles(level);
-            TestingCoffeDinoMod.LOGGER.debug("Celestial pull performed, affected {} entities", entities.size());
+            Lunacy.LOGGER.debug("Celestial pull performed, affected {} entities", entities.size());
         }
 
         private void spawnBurstParticles(ServerLevel level) {

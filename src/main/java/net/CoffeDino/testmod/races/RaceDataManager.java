@@ -1,6 +1,6 @@
 package net.CoffeDino.testmod.races;
 
-import net.CoffeDino.testmod.TestingCoffeDinoMod;
+import net.CoffeDino.testmod.Lunacy;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
@@ -12,7 +12,7 @@ import java.util.Map;
 import java.util.UUID;
 
 public class RaceDataManager extends SavedData {
-    private static final String DATA_NAME = TestingCoffeDinoMod.MOD_ID + "_races";
+    private static final String DATA_NAME = Lunacy.MOD_ID + "_races";
     private final Map<UUID, String> playerRaces = new HashMap<>();
     private static final boolean DEBUG = false;
 
@@ -24,7 +24,7 @@ public class RaceDataManager extends SavedData {
         }
         tag.put("playerRaces", racesTag);
         if (DEBUG) {
-            TestingCoffeDinoMod.LOGGER.debug("RaceDataManager saved - {} player races", playerRaces.size());
+            Lunacy.LOGGER.debug("RaceDataManager saved - {} player races", playerRaces.size());
         }
         return tag;
     }
@@ -38,11 +38,11 @@ public class RaceDataManager extends SavedData {
                 String raceId = racesTag.getString(uuidString);
                 data.playerRaces.put(playerId, raceId);
             } catch (IllegalArgumentException e) {
-                TestingCoffeDinoMod.LOGGER.error("Invalid UUID in race data: {}", uuidString);
+                Lunacy.LOGGER.error("Invalid UUID in race data: {}", uuidString);
             }
         }
         if (DEBUG) {
-            TestingCoffeDinoMod.LOGGER.debug("RaceDataManager loaded - {} player races", data.playerRaces.size());
+            Lunacy.LOGGER.debug("RaceDataManager loaded - {} player races", data.playerRaces.size());
         }
         return data;
     }
@@ -51,12 +51,12 @@ public class RaceDataManager extends SavedData {
         if (raceId == null || raceId.isEmpty()) {
             playerRaces.remove(playerId);
             if (DEBUG) {
-                TestingCoffeDinoMod.LOGGER.debug("Removed race for player: {}", playerId);
+                Lunacy.LOGGER.debug("Removed race for player: {}", playerId);
             }
         } else {
             playerRaces.put(playerId, raceId);
             if (DEBUG) {
-                TestingCoffeDinoMod.LOGGER.debug("Set race for player {}: {}", playerId, raceId);
+                Lunacy.LOGGER.debug("Set race for player {}: {}", playerId, raceId);
             }
         }
         setDirty();
@@ -74,7 +74,7 @@ public class RaceDataManager extends SavedData {
 
     public static RaceDataManager get(ServerPlayer player) {
         if (player.serverLevel() == null) {
-            TestingCoffeDinoMod.LOGGER.warn("Server level is null for player: {}", player.getName().getString());
+            Lunacy.LOGGER.warn("Server level is null for player: {}", player.getName().getString());
             return new RaceDataManager();
         }
 

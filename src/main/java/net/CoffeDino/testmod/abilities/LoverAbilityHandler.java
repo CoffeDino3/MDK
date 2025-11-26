@@ -1,6 +1,6 @@
 package net.CoffeDino.testmod.abilities;
 
-import net.CoffeDino.testmod.TestingCoffeDinoMod;
+import net.CoffeDino.testmod.Lunacy;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -22,7 +22,7 @@ import net.minecraftforge.fml.common.Mod;
 
 import java.util.*;
 
-@Mod.EventBusSubscriber(modid = TestingCoffeDinoMod.MOD_ID)
+@Mod.EventBusSubscriber(modid = Lunacy.MOD_ID)
 public class LoverAbilityHandler {
     private static final Map<UUID, LoverAbilityInstance> ACTIVE_ABILITIES = new HashMap<>();
     private static final int ABILITY_DURATION = 400;
@@ -42,7 +42,7 @@ public class LoverAbilityHandler {
 
         ACTIVE_ABILITIES.put(playerId, new LoverAbilityInstance(player));
         startCooldown(player);
-        TestingCoffeDinoMod.LOGGER.debug("Lover ability activated for player: {}", player.getName().getString());
+        Lunacy.LOGGER.debug("Lover ability activated for player: {}", player.getName().getString());
     }
 
     @SubscribeEvent
@@ -57,11 +57,11 @@ public class LoverAbilityHandler {
             if (ability.tick()) {
                 UUID playerId = entry.getKey();
                 iterator.remove();
-                TestingCoffeDinoMod.LOGGER.debug("Lover ability removed for player {} - tick() returned true", playerId);
+                Lunacy.LOGGER.debug("Lover ability removed for player {} - tick() returned true", playerId);
             } else if (!ability.isValid()) {
                 UUID playerId = entry.getKey();
                 iterator.remove();
-                TestingCoffeDinoMod.LOGGER.debug("Lover ability removed for player {} - invalid", playerId);
+                Lunacy.LOGGER.debug("Lover ability removed for player {} - invalid", playerId);
             }
         }
     }
@@ -77,7 +77,7 @@ public class LoverAbilityHandler {
                 redirectDamageToRandomEntity(player, damageAmount, source);
                 event.setCanceled(true);
 
-                TestingCoffeDinoMod.LOGGER.debug("Lover ability redirected {} damage from source: {}",
+                Lunacy.LOGGER.debug("Lover ability redirected {} damage from source: {}",
                         damageAmount, source.getMsgId());
             }
         }
@@ -101,7 +101,7 @@ public class LoverAbilityHandler {
         if (!entitiesIn30.isEmpty()) {
             Collections.shuffle(entitiesIn30);
             target = entitiesIn30.get(0);
-            TestingCoffeDinoMod.LOGGER.debug("Found random target in 30-block radius: {}", target.getName().getString());
+            Lunacy.LOGGER.debug("Found random target in 30-block radius: {}", target.getName().getString());
         } else {
             AABB searchArea1000 = new AABB(
                     playerPos.x - 1000, playerPos.y - 50, playerPos.z - 1000,
@@ -119,7 +119,7 @@ public class LoverAbilityHandler {
                         .orElse(null);
 
                 if (target != null) {
-                    TestingCoffeDinoMod.LOGGER.debug("Found nearest target in 1000-block radius: {} at {} blocks",
+                    Lunacy.LOGGER.debug("Found nearest target in 1000-block radius: {} at {} blocks",
                             target.getName().getString(), Math.sqrt(target.distanceToSqr(playerPos)));
                 }
             }
@@ -134,10 +134,10 @@ public class LoverAbilityHandler {
 
             spawnDamageTransferParticles(player.position(), target.position(), level);
 
-            TestingCoffeDinoMod.LOGGER.debug("Redirected {} damage from {} to {}",
+            Lunacy.LOGGER.debug("Redirected {} damage from {} to {}",
                     damageAmount, player.getName().getString(), target.getName().getString());
         } else {
-            TestingCoffeDinoMod.LOGGER.debug("No valid target found for damage redirection - damage absorbed");
+            Lunacy.LOGGER.debug("No valid target found for damage redirection - damage absorbed");
 
             level.sendParticles(ParticleTypes.SOUL_FIRE_FLAME,
                     player.getX(), player.getY() + 1, player.getZ(),

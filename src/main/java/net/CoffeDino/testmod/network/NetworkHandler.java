@@ -1,6 +1,6 @@
 package net.CoffeDino.testmod.network;
 
-import net.CoffeDino.testmod.TestingCoffeDinoMod;
+import net.CoffeDino.testmod.Lunacy;
 import net.CoffeDino.testmod.classes.PlayerClasses;
 import net.CoffeDino.testmod.races.races;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
@@ -15,7 +15,7 @@ import net.minecraftforge.event.network.CustomPayloadEvent;
 public class NetworkHandler {
     private static final String PROTOCOL_VERSION = "1";
     public static final SimpleChannel INSTANCE = ChannelBuilder.named(
-            ResourceLocation.fromNamespaceAndPath(TestingCoffeDinoMod.MOD_ID, "main")
+            ResourceLocation.fromNamespaceAndPath(Lunacy.MOD_ID, "main")
     ).simpleChannel();
 
     public static void register() {

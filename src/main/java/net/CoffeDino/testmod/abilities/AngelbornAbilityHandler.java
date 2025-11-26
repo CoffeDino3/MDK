@@ -1,6 +1,6 @@
 package net.CoffeDino.testmod.abilities;
 
-import net.CoffeDino.testmod.TestingCoffeDinoMod;
+import net.CoffeDino.testmod.Lunacy;
 import net.CoffeDino.testmod.entity.abilities.AngelbornAbilityEntity;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -14,7 +14,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-@Mod.EventBusSubscriber(modid = TestingCoffeDinoMod.MOD_ID)
+@Mod.EventBusSubscriber(modid = Lunacy.MOD_ID)
 public class AngelbornAbilityHandler {
     private static final Map<UUID, Long> COOLDOWNS = new HashMap<>();
     private static final long COOLDOWN_DURATION = 12000;
@@ -32,7 +32,7 @@ public class AngelbornAbilityHandler {
         level.addFreshEntity(abilityEntity);
 
         startCooldown(player);
-        TestingCoffeDinoMod.LOGGER.debug("Angelborn ability activated for player: {}", player.getName().getString());
+        Lunacy.LOGGER.debug("Angelborn ability activated for player: {}", player.getName().getString());
     }
 
     private static Vec3 getRandomSpawnPosition(Player player) {

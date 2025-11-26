@@ -1,6 +1,6 @@
 package net.CoffeDino.testmod.item;
 
-import net.CoffeDino.testmod.TestingCoffeDinoMod;
+import net.CoffeDino.testmod.Lunacy;
 import net.CoffeDino.testmod.block.ModBlocks;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
@@ -14,12 +14,12 @@ import net.minecraftforge.registries.RegistryObject;
 
 public class ModCreativeModeTabs {
     public static final DeferredRegister<CreativeModeTab> CREATIVE_MODE_TABS =
-            DeferredRegister.create(Registries.CREATIVE_MODE_TAB, TestingCoffeDinoMod.MOD_ID);
+            DeferredRegister.create(Registries.CREATIVE_MODE_TAB, Lunacy.MOD_ID);
 
     public static final RegistryObject<CreativeModeTab> CUMMINGTONITE_ITEMS_TAB = CREATIVE_MODE_TABS.register("cummingtonite_items_tab",
             () -> CreativeModeTab.builder()
                     .icon(() -> new ItemStack(ModItems.CUMMINGTONITE.get()))
-                    .title(Component.translatable("creativetab.testingcoffedinomod.cummingtonite_items"))
+                    .title(Component.translatable("creativetab.lunacy.cummingtonite_items"))
                     .displayItems((parameters, output) -> {
                         output.accept(ModItems.CUMMINGTONITE.get());
                         output.accept(ModItems.CUMMINGTONITE_INGOT.get());
@@ -31,7 +31,7 @@ public class ModCreativeModeTabs {
     public static final RegistryObject<CreativeModeTab> SPECIAL_TOOLS_TAB = CREATIVE_MODE_TABS.register("special_tools_tab",
             () -> CreativeModeTab.builder()
                     .icon(() -> new ItemStack(ModItems.THE_WAND.get()))
-                    .title(Component.translatable("creativetab.testingcoffedinomod.special_tools"))
+                    .title(Component.translatable("creativetab.lunacy.special_tools"))
                     .displayItems((parameters, output) -> {
                         output.accept(ModItems.THE_WAND.get());
                         output.accept(ModItems.SPECIAL_WAND.get());
@@ -48,7 +48,7 @@ public class ModCreativeModeTabs {
             () -> CreativeModeTab.builder()
                     .icon(() -> new ItemStack(ModBlocks.CUMMINGTONITE_BLOCK.get().asItem()))
                     .withTabsBefore(CUMMINGTONITE_ITEMS_TAB.getId())
-                    .title(Component.translatable("creativetab.testingcoffedinomod.cummingtonite_blocks"))
+                    .title(Component.translatable("creativetab.lunacy.cummingtonite_blocks"))
                     .displayItems((parameters, output) -> {
                         output.accept(ModBlocks.CUMMINGTONITE_BLOCK.get().asItem());
                         output.accept(ModBlocks.CUMMINGTONITE_INGOT_BLOCK.get().asItem());

@@ -1,6 +1,6 @@
 package net.CoffeDino.testmod.block;
 
-import net.CoffeDino.testmod.TestingCoffeDinoMod;
+import net.CoffeDino.testmod.Lunacy;
 import net.CoffeDino.testmod.item.ModItems;
 import net.minecraft.util.valueproviders.UniformInt;
 import net.minecraft.world.item.BlockItem;
@@ -19,7 +19,7 @@ import java.util.function.Supplier;
 
 public class ModBlocks {
     public static final DeferredRegister<Block> BLOCKS =
-            DeferredRegister.create(ForgeRegistries.BLOCKS, TestingCoffeDinoMod.MOD_ID);
+            DeferredRegister.create(ForgeRegistries.BLOCKS, Lunacy.MOD_ID);
 
     public static final RegistryObject<Block> CUMMINGTONITE_BLOCK = registerBlock("cummingtonite_block",
             () -> new DropExperienceBlock(UniformInt.of(2,4), BlockBehaviour.Properties.of()

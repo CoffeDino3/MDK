@@ -11,7 +11,7 @@ import net.minecraft.commands.arguments.EntityArgument;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 
-import static net.CoffeDino.testmod.TestingCoffeDinoMod.LOGGER;
+import static net.CoffeDino.testmod.Lunacy.LOGGER;
 
 public class ClassCommand {
 

@@ -1,6 +1,6 @@
 package net.CoffeDino.testmod.network;
 
-import net.CoffeDino.testmod.TestingCoffeDinoMod;
+import net.CoffeDino.testmod.Lunacy;
 import net.CoffeDino.testmod.races.races;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;
@@ -10,7 +10,7 @@ import net.minecraftforge.event.network.CustomPayloadEvent;
 
 public record SyncRacePacket(String raceId) implements CustomPacketPayload {
     public static final Type<SyncRacePacket> TYPE = new Type<>(
-            ResourceLocation.fromNamespaceAndPath(TestingCoffeDinoMod.MOD_ID, "sync_race")
+            ResourceLocation.fromNamespaceAndPath(Lunacy.MOD_ID, "sync_race")
     );
 
     public SyncRacePacket(FriendlyByteBuf buf) {

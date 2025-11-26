@@ -1,6 +1,6 @@
 package net.CoffeDino.testmod.capability;
 
-import net.CoffeDino.testmod.TestingCoffeDinoMod;
+import net.CoffeDino.testmod.Lunacy;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
@@ -17,7 +17,7 @@ public class SculkStorageProvider implements ICapabilityProvider, INBTSerializab
 
     @Override
     public @NotNull <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
-        if (cap == TestingCoffeDinoMod.SCULK_STORAGE) {
+        if (cap == Lunacy.SCULK_STORAGE) {
             return optional.cast();
         }
         return LazyOptional.empty();

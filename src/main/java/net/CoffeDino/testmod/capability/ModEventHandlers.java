@@ -1,6 +1,6 @@
 package net.CoffeDino.testmod.capability;
 
-import net.CoffeDino.testmod.TestingCoffeDinoMod;
+import net.CoffeDino.testmod.Lunacy;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
@@ -11,7 +11,7 @@ import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
-@Mod.EventBusSubscriber(modid = TestingCoffeDinoMod.MOD_ID)
+@Mod.EventBusSubscriber(modid = Lunacy.MOD_ID)
 public class ModEventHandlers {
 
     @SubscribeEvent
@@ -19,7 +19,7 @@ public class ModEventHandlers {
         if (event.getObject() instanceof Player) {
             if (!event.getObject().getCapability(RaceSizeProvider.RACE_SIZE).isPresent()) {
                 event.addCapability(
-                        ResourceLocation.fromNamespaceAndPath(TestingCoffeDinoMod.MOD_ID, "race_size"),
+                        ResourceLocation.fromNamespaceAndPath(Lunacy.MOD_ID, "race_size"),
                         new RaceSizeProvider()
                 );
                 System.out.println("DEBUG: Attached race size capability to player");

@@ -1,0 +1,43 @@
+{
+  "parent": "minecraft:item/handheld",
+  "textures": {
+    "layer0": "lunacy:item/viridyum_greatsword"
+  },
+  "display": {
+    "firstperson_righthand": {
+      "rotation": [0, -90, 25],
+      "translation": [2.5, 5.5, 2],
+      "scale": [1.4, 2.3, 0.6]
+    },
+    "firstperson_lefthand": {
+      "rotation": [0, 90, -25],
+      "translation": [-2.5, 5.5, 2],
+      "scale": [1.4, 2.3, 0.6]
+    },
+    "thirdperson_righthand": {
+      "rotation": [0, 90, 0],
+      "translation": [0, 12, 1],
+      "scale": [1.8, 2.7, 1]
+    },
+    "thirdperson_lefthand": {
+      "rotation": [0, -90, 0],
+      "translation": [0, 12, 1],
+      "scale": [1.8, 2.7, 1]
+    },
+    "gui": {
+      "rotation": [0, 0, 45],
+      "translation": [0, 0, 0],
+      "scale": [0.8, 1.2, 1]
+    },
+    "ground": {
+      "rotation": [0, 30, 90],
+      "translation": [0, 3, 0],
+      "scale": [1.5, 2.5, 1]
+    },
+    "fixed": {
+      "rotation": [0, 0, 0],
+      "translation": [0, 0, 0],
+      "scale": [0.5, 0.5, 0.5]
+    }
+  }
+}

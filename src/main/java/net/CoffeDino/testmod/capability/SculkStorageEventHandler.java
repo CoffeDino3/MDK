@@ -1,6 +1,6 @@
 package net.CoffeDino.testmod.capability;
 
-import net.CoffeDino.testmod.TestingCoffeDinoMod;
+import net.CoffeDino.testmod.Lunacy;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
@@ -12,7 +12,7 @@ import net.minecraftforge.fml.common.Mod;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@Mod.EventBusSubscriber(modid = TestingCoffeDinoMod.MOD_ID)
+@Mod.EventBusSubscriber(modid = Lunacy.MOD_ID)
 public class SculkStorageEventHandler {
     private static final Logger LOGGER = LoggerFactory.getLogger(SculkStorageEventHandler.class);
 
@@ -20,7 +20,7 @@ public class SculkStorageEventHandler {
     public static void onAttachCapabilities(AttachCapabilitiesEvent<Entity> event) {
         if (event.getObject() instanceof Player) {
             event.addCapability(
-                    net.minecraft.resources.ResourceLocation.fromNamespaceAndPath(TestingCoffeDinoMod.MOD_ID, "sculk_storage"),
+                    net.minecraft.resources.ResourceLocation.fromNamespaceAndPath(Lunacy.MOD_ID, "sculk_storage"),
                     new SculkStorageProvider()
             );
             LOGGER.debug("Attached sculk storage capability to player");
@@ -67,7 +67,7 @@ public class SculkStorageEventHandler {
     @SubscribeEvent
     public static void onPlayerLoggedIn(net.minecraftforge.event.entity.player.PlayerEvent.PlayerLoggedInEvent event) {
         Player player = (Player) event.getEntity();
-        player.getCapability(TestingCoffeDinoMod.SCULK_STORAGE).ifPresent(storage -> {
+        player.getCapability(Lunacy.SCULK_STORAGE).ifPresent(storage -> {
             LOGGER.info("Player logged in. Storage has {} rows and {} items",
                     storage.getRows(), countItems(storage));
         });
@@ -76,7 +76,7 @@ public class SculkStorageEventHandler {
     @SubscribeEvent
     public static void onPlayerRespawn(net.minecraftforge.event.entity.player.PlayerEvent.PlayerRespawnEvent event) {
         Player player = (Player) event.getEntity();
-        player.getCapability(TestingCoffeDinoMod.SCULK_STORAGE).ifPresent(storage -> {
+        player.getCapability(Lunacy.SCULK_STORAGE).ifPresent(storage -> {
             LOGGER.info("Player respawned. Storage has {} rows and {} items",
                     storage.getRows(), countItems(storage));
         });

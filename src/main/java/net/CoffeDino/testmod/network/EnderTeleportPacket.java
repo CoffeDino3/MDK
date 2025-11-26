@@ -1,6 +1,6 @@
 package net.CoffeDino.testmod.network;
 
-import net.CoffeDino.testmod.TestingCoffeDinoMod;
+import net.CoffeDino.testmod.Lunacy;
 import net.CoffeDino.testmod.abilities.EnderTeleportHandler;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
@@ -10,7 +10,7 @@ import net.minecraftforge.event.network.CustomPayloadEvent;
 
 public record EnderTeleportPacket() implements CustomPacketPayload {
     public static final Type<EnderTeleportPacket> TYPE = new Type<>(
-            ResourceLocation.fromNamespaceAndPath(TestingCoffeDinoMod.MOD_ID, "ender_teleport")
+            ResourceLocation.fromNamespaceAndPath(Lunacy.MOD_ID, "ender_teleport")
     );
 
     public EnderTeleportPacket(FriendlyByteBuf buf) {

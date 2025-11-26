@@ -1,6 +1,6 @@
 package net.CoffeDino.testmod.races;
 
-import net.CoffeDino.testmod.TestingCoffeDinoMod;
+import net.CoffeDino.testmod.Lunacy;
 import net.CoffeDino.testmod.abilities.BelieverAbilityHandler;
 import net.CoffeDino.testmod.capability.IRaceSize;
 import net.CoffeDino.testmod.capability.RaceSizeProvider;
@@ -8,7 +8,6 @@ import net.CoffeDino.testmod.effects.ModEffects;
 import net.CoffeDino.testmod.network.NetworkHandler;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -19,6 +18,8 @@ import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.resources.ResourceLocation;
+
 
 import java.util.HashMap;
 import java.util.Map;
@@ -26,9 +27,9 @@ import java.util.UUID;
 
 public class races {
     private static Race clientRace = null;
-    private static final ResourceLocation HEALTH_MODIFIER_ID = ResourceLocation.fromNamespaceAndPath(TestingCoffeDinoMod.MOD_ID, "race_health_modifier");
-    private static final ResourceLocation HEIGHT_MODIFIER_ID = ResourceLocation.fromNamespaceAndPath(TestingCoffeDinoMod.MOD_ID, "race_height");
-    private static final ResourceLocation WIDTH_MODIFIER_ID = ResourceLocation.fromNamespaceAndPath(TestingCoffeDinoMod.MOD_ID, "race_width");
+    private static final ResourceLocation HEALTH_MODIFIER_ID = ResourceLocation.fromNamespaceAndPath(Lunacy.MOD_ID, "race_health_modifier");
+    private static final ResourceLocation HEIGHT_MODIFIER_ID = ResourceLocation.fromNamespaceAndPath(Lunacy.MOD_ID, "race_height");
+    private static final ResourceLocation WIDTH_MODIFIER_ID = ResourceLocation.fromNamespaceAndPath(Lunacy.MOD_ID, "race_width");
 
     private static float sculkHealthBonus = 20.0f;
     private static float warderHealthBonus = 10.0f;
@@ -40,17 +41,18 @@ public class races {
     private static float vampirebornHealthBonus = -5.0f;
     private static float etherealHealthBonus = 10.0f;
     private static float celestialHealthBonus = 5.0f;
+
     public enum Race {
         SCULK("sculk", "Sculk", 1.8f, 0.6f),
         WARDER("warder", "Warder", 2.2f, 0.8f),
         ENDER("ender", "Ender", 1.9f, 0.6f),
         PHANTOM("phantom", "Phantom", 1.6f, 0.5f),
-        LOVER("lover","Lover",1.8f,0.5f),
-        BELIEVER("believer","Believer",1.7f,0.6f),
-        ANGELBORN("angelborn","Angelborn", 2.0f,0.6f),
-        VAMPIREBORN("vampireborn","Vampireborn", 2.0f,0.6f),
-        ETHEREAL("ethereal","Ethereal",1.5f,0.5f),
-        CELESTIAL("celestial","Celestial",2.1f,0.6f);
+        LOVER("lover", "Lover", 1.8f, 0.5f),
+        BELIEVER("believer", "Believer", 1.7f, 0.6f),
+        ANGELBORN("angelborn", "Angelborn", 2.0f, 0.6f),
+        VAMPIREBORN("vampireborn", "Vampireborn", 2.0f, 0.6f),
+        ETHEREAL("ethereal", "Ethereal", 1.5f, 0.5f),
+        CELESTIAL("celestial", "Celestial", 2.1f, 0.6f);
 
         private final String id;
         private final String displayName;
@@ -69,7 +71,7 @@ public class races {
             return id;
         }
 
-        public String getDisplayName(){
+        public String getDisplayName() {
             return displayName;
         }
 
@@ -82,6 +84,7 @@ public class races {
         }
 
     }
+
     public static void resetClientRace() {
         clientRace = null;
         System.out.println("DEBUG: Reset client race for new world");
@@ -157,6 +160,7 @@ public class races {
     private static void syncRaceToClient(ServerPlayer player, Race race) {
         net.CoffeDino.testmod.network.NetworkHandler.syncRaceToClient(player, race);
     }
+
     public static void clearPlayerRace(Player player) {
         if (getPlayerRace(player) == Race.BELIEVER) {
             BelieverAbilityHandler.onRaceChange(player);
@@ -165,6 +169,7 @@ public class races {
         setPlayerRace(player, null);
         System.out.println("DEBUG: Cleared race for player: " + player.getName().getString());
     }
+
     public static void onPlayerJoinWorld(Player player) {
         if (!player.level().isClientSide()) {
             Race race = getPlayerRace(player);
@@ -182,8 +187,8 @@ public class races {
         }
     }
 
-    public static float getHealthBonus(Race race){
-        return switch (race){
+    public static float getHealthBonus(Race race) {
+        return switch (race) {
             case SCULK -> sculkHealthBonus;
             case WARDER -> warderHealthBonus;
             case ENDER -> enderHealthBonus;
@@ -196,8 +201,6 @@ public class races {
             case VAMPIREBORN -> vampirebornHealthBonus;
         };
     }
-
-
 
 
     public static void applyRaceEffects(Player player, Race race) {
@@ -219,9 +222,8 @@ public class races {
     }
 
 
-
     private static void clearRaceEffects(Player player) {
-        if (player instanceof ServerPlayer){
+        if (player instanceof ServerPlayer) {
             player.removeEffect(MobEffects.DAMAGE_RESISTANCE);
             player.removeEffect(MobEffects.DAMAGE_BOOST);
             player.removeEffect(MobEffects.NIGHT_VISION);
@@ -293,8 +295,9 @@ public class races {
         player.refreshDimensions();
         System.out.println("DEBUG: Cleared size modifiers for " + player.getName().getString());
     }
-    private static void applyAngelbornTraits(Player player){
-        if(player instanceof ServerPlayer){
+
+    private static void applyAngelbornTraits(Player player) {
+        if (player instanceof ServerPlayer) {
             player.addEffect(new MobEffectInstance(
                     MobEffects.REGENERATION,
                     -1,
@@ -304,8 +307,9 @@ public class races {
             ));
         }
     }
-    private static void applyEtherealTraits(Player player){
-        if(player instanceof ServerPlayer){
+
+    private static void applyEtherealTraits(Player player) {
+        if (player instanceof ServerPlayer) {
             player.addEffect(new MobEffectInstance(
                     ModEffects.ETHER.getHolder().get(),
                     -1,
@@ -316,8 +320,9 @@ public class races {
             ));
         }
     }
-    private static void applyVampirebornTraits(Player player){
-        if(player instanceof ServerPlayer){
+
+    private static void applyVampirebornTraits(Player player) {
+        if (player instanceof ServerPlayer) {
             player.addEffect(new MobEffectInstance(
                     ModEffects.BLOOD_SURGE.getHolder().get(),
                     -1,
@@ -330,8 +335,8 @@ public class races {
     }
 
 
-    private static void applyCelestialTraits(Player player){
-        if(player instanceof ServerPlayer){
+    private static void applyCelestialTraits(Player player) {
+        if (player instanceof ServerPlayer) {
             player.addEffect(new MobEffectInstance(
                     MobEffects.INVISIBILITY,
                     -1,
@@ -342,8 +347,8 @@ public class races {
         }
     }
 
-    private static void applyLoverTraits(Player player){
-        if(player instanceof ServerPlayer){
+    private static void applyLoverTraits(Player player) {
+        if (player instanceof ServerPlayer) {
             player.addEffect(new MobEffectInstance(
                     MobEffects.HERO_OF_THE_VILLAGE,
                     -1,
@@ -354,8 +359,8 @@ public class races {
         }
     }
 
-    private static void applyBelieverTraits(Player player){
-        if(player instanceof ServerPlayer){
+    private static void applyBelieverTraits(Player player) {
+        if (player instanceof ServerPlayer) {
             player.addEffect(new MobEffectInstance(
                     MobEffects.LUCK,
                     -1,
@@ -367,9 +372,8 @@ public class races {
     }
 
 
-
     private static void applyEnderTraits(Player player) {
-        if(player instanceof ServerPlayer){
+        if (player instanceof ServerPlayer) {
             player.addEffect(new MobEffectInstance(
                     MobEffects.NIGHT_VISION,
                     -1,
@@ -382,7 +386,7 @@ public class races {
     }
 
     private static void applySculkTraits(Player player) {
-        if(player instanceof ServerPlayer){
+        if (player instanceof ServerPlayer) {
             player.addEffect(new MobEffectInstance(
                     MobEffects.DAMAGE_RESISTANCE,
                     -1,
@@ -394,7 +398,7 @@ public class races {
     }
 
     private static void applyWarderTraits(Player player) {
-        if(player instanceof ServerPlayer){
+        if (player instanceof ServerPlayer) {
             player.addEffect(new MobEffectInstance(
                     MobEffects.DAMAGE_BOOST,
                     -1,
@@ -406,7 +410,7 @@ public class races {
     }
 
     private static void applyPhantomTraits(Player player) {
-        if(player instanceof ServerPlayer){
+        if (player instanceof ServerPlayer) {
             player.addEffect(new MobEffectInstance(
                     MobEffects.JUMP,
                     -1,
@@ -416,6 +420,7 @@ public class races {
             ));
         }
     }
+
     private static final Map<UUID, Long> lastDamageTime = new HashMap<>();
     private static final long DAMAGE_COOLDOWN = 40;
 

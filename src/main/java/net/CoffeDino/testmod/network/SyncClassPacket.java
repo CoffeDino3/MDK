@@ -1,6 +1,6 @@
 package net.CoffeDino.testmod.network;
 
-import net.CoffeDino.testmod.TestingCoffeDinoMod;
+import net.CoffeDino.testmod.Lunacy;
 import net.CoffeDino.testmod.classes.PlayerClasses;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;
@@ -10,7 +10,7 @@ import net.minecraftforge.event.network.CustomPayloadEvent;
 
 public record SyncClassPacket(String classId) implements CustomPacketPayload {
     public static final Type<SyncClassPacket> TYPE = new Type<>(
-            ResourceLocation.fromNamespaceAndPath(TestingCoffeDinoMod.MOD_ID, "sync_class")
+            ResourceLocation.fromNamespaceAndPath(Lunacy.MOD_ID, "sync_class")
     );
 
     public SyncClassPacket(FriendlyByteBuf buf) {

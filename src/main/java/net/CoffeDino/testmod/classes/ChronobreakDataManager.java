@@ -1,6 +1,6 @@
 package net.CoffeDino.testmod.classes;
 
-import net.CoffeDino.testmod.TestingCoffeDinoMod;
+import net.CoffeDino.testmod.Lunacy;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
@@ -12,7 +12,7 @@ import java.util.Map;
 import java.util.UUID;
 
 public class ChronobreakDataManager extends SavedData {
-    private static final String DATA_NAME = TestingCoffeDinoMod.MOD_ID + "_chronobreak";
+    private static final String DATA_NAME = Lunacy.MOD_ID + "_chronobreak";
     private final Map<UUID, PlayerChronobreakData> playerData = new HashMap<>();
 
     @Override
@@ -37,7 +37,7 @@ public class ChronobreakDataManager extends SavedData {
                 PlayerChronobreakData playerData = PlayerChronobreakData.load(playerTag);
                 data.playerData.put(playerId, playerData);
             } catch (IllegalArgumentException e) {
-                TestingCoffeDinoMod.LOGGER.error("Invalid UUID in chronobreak data: {}", uuidString);
+                Lunacy.LOGGER.error("Invalid UUID in chronobreak data: {}", uuidString);
             }
         }
         return data;

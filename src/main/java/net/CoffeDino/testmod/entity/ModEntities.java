@@ -1,6 +1,6 @@
 package net.CoffeDino.testmod.entity;
 
-import net.CoffeDino.testmod.TestingCoffeDinoMod;
+import net.CoffeDino.testmod.Lunacy;
 import net.CoffeDino.testmod.entity.abilities.AngelbornAbilityEntity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
@@ -10,7 +10,7 @@ import net.minecraftforge.registries.RegistryObject;
 
 public class ModEntities {
     public static final DeferredRegister<EntityType<?>> ENTITIES =
-            DeferredRegister.create(ForgeRegistries.ENTITY_TYPES, TestingCoffeDinoMod.MOD_ID);
+            DeferredRegister.create(ForgeRegistries.ENTITY_TYPES, Lunacy.MOD_ID);
 
     public static final RegistryObject<EntityType<AngelbornAbilityEntity>> ANGELBORN_ABILITY =
             ENTITIES.register("angelborn_ability",

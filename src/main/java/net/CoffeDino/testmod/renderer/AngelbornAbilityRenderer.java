@@ -16,7 +16,7 @@ import org.joml.Matrix4f;
 
 public class AngelbornAbilityRenderer extends EntityRenderer<AngelbornAbilityEntity> {
     private static final ResourceLocation MAGIC_CIRCLE_TEXTURE =
-            ResourceLocation.fromNamespaceAndPath("testingcoffedinomod", "textures/entity/magic_circle.png");
+            ResourceLocation.fromNamespaceAndPath("lunacy", "textures/entity/magic_circle.png");
 
     public AngelbornAbilityRenderer(EntityRendererProvider.Context context) {
         super(context);

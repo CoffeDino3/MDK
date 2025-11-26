@@ -1,4 +1,4 @@
-[10Nov2025 17:29:48.533] [main/INFO] [cpw.mods.modlauncher.Launcher/MODLAUNCHER]: ModLauncher running: args [--launchTarget, forge_userdev_data, --assetIndex, 17, --assetsDir, C:\Users\Asus\.gradle\caches\forge_gradle\assets, --gameDir, ., --mod, testingcoffedinomod, --all, --output, D:\MDK\src\generated\resources, --existing, D:\MDK\src\main\resources, --mixin.config, testmod.mixins.json]
+[10Nov2025 17:29:48.533] [main/INFO] [cpw.mods.modlauncher.Launcher/MODLAUNCHER]: ModLauncher running: args [--launchTarget, forge_userdev_data, --assetIndex, 17, --assetsDir, C:\Users\Asus\.gradle\caches\forge_gradle\assets, --gameDir, ., --mod, lunacy, --all, --output, D:\MDK\src\generated\resources, --existing, D:\MDK\src\main\resources, --mixin.config, testmod.mixins.json]
 [10Nov2025 17:29:48.540] [main/INFO] [cpw.mods.modlauncher.Launcher/MODLAUNCHER]: JVM identified as Eclipse Adoptium OpenJDK 64-Bit Server VM 21.0.7+6-LTS
 [10Nov2025 17:29:48.542] [main/INFO] [cpw.mods.modlauncher.Launcher/MODLAUNCHER]: ModLauncher 10.2.1 starting: java version 21.0.7 by Eclipse Adoptium; OS Windows 11 arch amd64 version 10.0
 [10Nov2025 17:29:48.568] [main/DEBUG] [cpw.mods.modlauncher.LaunchServiceHandler/MODLAUNCHER]: Found launch services [forge_userdev_client,forge_dev_data,minecraft,forge_userdev_server_gametest,forge_dev_client,forge_userdev_data,forge_dev_server_gametest,testharness,forge_userdev_server,forge_client,forge_dev_server,forge_server]
@@ -60,7 +60,7 @@
 [10Nov2025 17:29:48.872] [main/DEBUG] [net.minecraftforge.fml.loading.moddiscovery.ModDiscoverer/CORE]: Found Dependency Locators : (JarInJar:null)
 [10Nov2025 17:29:49.294] [main/DEBUG] [net.minecraftforge.fml.loading.moddiscovery.ModFileInfo/LOADING]: Found valid mod file  with {minecraft} mods - versions {1.21}
 [10Nov2025 17:29:49.505] [main/DEBUG] [net.minecraftforge.fml.loading.moddiscovery.ModFileParser/LOADING]: Considering mod file candidate D:\MDK\build\sourcesSets\main
-[10Nov2025 17:29:49.530] [main/DEBUG] [net.minecraftforge.fml.loading.moddiscovery.ModFileInfo/LOADING]: Found valid mod file main with {testingcoffedinomod} mods - versions {0.0.1}
+[10Nov2025 17:29:49.530] [main/DEBUG] [net.minecraftforge.fml.loading.moddiscovery.ModFileInfo/LOADING]: Found valid mod file main with {lunacy} mods - versions {0.0.1}
 [10Nov2025 17:29:49.643] [main/DEBUG] [net.minecraftforge.fml.loading.moddiscovery.ModFileParser/LOADING]: Considering mod file candidate /
 [10Nov2025 17:29:49.648] [main/DEBUG] [net.minecraftforge.fml.loading.moddiscovery.ModFileInfo/LOADING]: Found valid mod file  with {forge} mods - versions {51.0.32}
 [10Nov2025 17:29:49.663] [main/DEBUG] [net.minecraftforge.fml.loading.moddiscovery.JarInJarDependencyLocator/]: Failed to load resource META-INF\jarjar\metadata.json from , it does not contain dependency information.
@@ -74,7 +74,7 @@
 [10Nov2025 17:29:49.714] [main/DEBUG] [net.minecraftforge.fml.loading.moddiscovery.ModFileInfo/LOADING]: Found valid mod file  with {minecraft} mods - versions {1.21}
 [10Nov2025 17:29:49.718] [main/DEBUG] [net.minecraftforge.fml.loading.moddiscovery.ModFile/LOADING]: Loading mod file / with languages [LanguageSpec[languageName=minecraft, acceptedVersions=1]]
 [10Nov2025 17:29:49.720] [main/DEBUG] [net.minecraftforge.fml.loading.moddiscovery.ModFileParser/LOADING]: Considering mod file candidate D:\MDK\build\sourcesSets\main
-[10Nov2025 17:29:49.725] [main/DEBUG] [net.minecraftforge.fml.loading.moddiscovery.ModFileInfo/LOADING]: Found valid mod file main with {testingcoffedinomod} mods - versions {0.0.1}
+[10Nov2025 17:29:49.725] [main/DEBUG] [net.minecraftforge.fml.loading.moddiscovery.ModFileInfo/LOADING]: Found valid mod file main with {lunacy} mods - versions {0.0.1}
 [10Nov2025 17:29:49.725] [main/DEBUG] [net.minecraftforge.fml.loading.moddiscovery.ModFile/LOADING]: Loading mod file D:\MDK\build\sourcesSets\main with languages [LanguageSpec[languageName=javafml, acceptedVersions=[0,)]]
 [10Nov2025 17:29:49.726] [main/DEBUG] [net.minecraftforge.fml.loading.moddiscovery.ModFileParser/LOADING]: Considering mod file candidate /
 [10Nov2025 17:29:49.727] [main/DEBUG] [net.minecraftforge.fml.loading.moddiscovery.ModFileInfo/LOADING]: Found valid mod file  with {forge} mods - versions {51.0.32}
@@ -156,19 +156,19 @@
 [10Nov2025 17:29:50.488] [main/DEBUG] [mixin/]: Instancing new MixinPlatformAgentDefault for SecureJarResource(forge)
 [10Nov2025 17:29:50.488] [main/DEBUG] [mixin/]: MixinPlatformAgentDefault accepted container SecureJarResource(forge)
 [10Nov2025 17:29:50.489] [main/DEBUG] [mixin/]: Processing prepare() for PlatformAgent[MixinPlatformAgentDefault:SecureJarResource(forge)]
-[10Nov2025 17:29:50.489] [main/DEBUG] [mixin/]: Adding mixin platform agents for container SecureJarResource(testingcoffedinomod)
-[10Nov2025 17:29:50.489] [main/DEBUG] [mixin/]: Instancing new MixinPlatformAgentMinecraftForge for SecureJarResource(testingcoffedinomod)
-[10Nov2025 17:29:50.489] [main/DEBUG] [mixin/]: MixinPlatformAgentMinecraftForge rejected container SecureJarResource(testingcoffedinomod)
-[10Nov2025 17:29:50.489] [main/DEBUG] [mixin/]: Instancing new MixinPlatformAgentDefault for SecureJarResource(testingcoffedinomod)
-[10Nov2025 17:29:50.489] [main/DEBUG] [mixin/]: MixinPlatformAgentDefault accepted container SecureJarResource(testingcoffedinomod)
-[10Nov2025 17:29:50.489] [main/DEBUG] [mixin/]: Processing prepare() for PlatformAgent[MixinPlatformAgentDefault:SecureJarResource(testingcoffedinomod)]
+[10Nov2025 17:29:50.489] [main/DEBUG] [mixin/]: Adding mixin platform agents for container SecureJarResource(lunacy)
+[10Nov2025 17:29:50.489] [main/DEBUG] [mixin/]: Instancing new MixinPlatformAgentMinecraftForge for SecureJarResource(lunacy)
+[10Nov2025 17:29:50.489] [main/DEBUG] [mixin/]: MixinPlatformAgentMinecraftForge rejected container SecureJarResource(lunacy)
+[10Nov2025 17:29:50.489] [main/DEBUG] [mixin/]: Instancing new MixinPlatformAgentDefault for SecureJarResource(lunacy)
+[10Nov2025 17:29:50.489] [main/DEBUG] [mixin/]: MixinPlatformAgentDefault accepted container SecureJarResource(lunacy)
+[10Nov2025 17:29:50.489] [main/DEBUG] [mixin/]: Processing prepare() for PlatformAgent[MixinPlatformAgentDefault:SecureJarResource(lunacy)]
 [10Nov2025 17:29:50.489] [main/DEBUG] [mixin/]: inject() running with 5 agents
 [10Nov2025 17:29:50.489] [main/DEBUG] [mixin/]: Processing inject() for PlatformAgent[MixinPlatformAgentDefault:ModLauncher Root Container(ModLauncher:4f56a0a2)]
 [10Nov2025 17:29:50.489] [main/DEBUG] [mixin/]: Processing inject() for PlatformAgent[MixinPlatformAgentDefault:SecureJarResource(mixin.synthetic)]
 [10Nov2025 17:29:50.489] [main/DEBUG] [mixin/]: Processing inject() for PlatformAgent[MixinPlatformAgentDefault:SecureJarResource(minecraft)]
 [10Nov2025 17:29:50.489] [main/DEBUG] [mixin/]: Processing inject() for PlatformAgent[MixinPlatformAgentDefault:SecureJarResource(forge)]
-[10Nov2025 17:29:50.490] [main/DEBUG] [mixin/]: Processing inject() for PlatformAgent[MixinPlatformAgentDefault:SecureJarResource(testingcoffedinomod)]
-[10Nov2025 17:29:50.490] [main/INFO] [cpw.mods.modlauncher.LaunchServiceHandler/MODLAUNCHER]: Launching target 'forge_userdev_data' with arguments [--gameDir, ., --assetsDir, C:\Users\Asus\.gradle\caches\forge_gradle\assets, --assetIndex, 17, --mod, testingcoffedinomod, --all, --output, D:\MDK\src\generated\resources, --existing, D:\MDK\src\main\resources]
+[10Nov2025 17:29:50.490] [main/DEBUG] [mixin/]: Processing inject() for PlatformAgent[MixinPlatformAgentDefault:SecureJarResource(lunacy)]
+[10Nov2025 17:29:50.490] [main/INFO] [cpw.mods.modlauncher.LaunchServiceHandler/MODLAUNCHER]: Launching target 'forge_userdev_data' with arguments [--gameDir, ., --assetsDir, C:\Users\Asus\.gradle\caches\forge_gradle\assets, --assetIndex, 17, --mod, lunacy, --all, --output, D:\MDK\src\generated\resources, --existing, D:\MDK\src\main\resources]
 [10Nov2025 17:29:50.511] [main/INFO] [mixin/]: Attempting to load Fernflower decompiler (Threaded mode)
 [10Nov2025 17:29:50.512] [main/INFO] [mixin/]: Fernflower could not be loaded, exported classes will not be decompiled. NoClassDefFoundError: org/jetbrains/java/decompiler/main/extern/IResultSaver
 [10Nov2025 17:29:50.516] [main/INFO] [mixin/]: Preparing mixins for MixinEnvironment[DEFAULT]
@@ -241,7 +241,7 @@
 [10Nov2025 17:29:55.399] [main/DEBUG] [net.minecraftforge.fml.javafmlmod.FMLJavaModLanguageProvider/LOADING]: Loading FMLModContainer from classloader TransformingClassLoader[TRANSFORMER]@1323457920 - got SecureModuleClassLoader[LAYER PLUGIN]@741191984
 [10Nov2025 17:29:55.400] [main/DEBUG] [net.minecraftforge.fml.javafmlmod.FMLModContainer/LOADING]: Creating FMLModContainer instance for net.minecraftforge.common.ForgeMod
 [10Nov2025 17:29:55.404] [main/DEBUG] [net.minecraftforge.fml.javafmlmod.FMLJavaModLanguageProvider/LOADING]: Loading FMLModContainer from classloader TransformingClassLoader[TRANSFORMER]@1323457920 - got SecureModuleClassLoader[LAYER PLUGIN]@741191984
-[10Nov2025 17:29:55.404] [main/DEBUG] [net.minecraftforge.fml.javafmlmod.FMLModContainer/LOADING]: Creating FMLModContainer instance for net.CoffeDino.testmod.TestingCoffeDinoMod
+[10Nov2025 17:29:55.404] [main/DEBUG] [net.minecraftforge.fml.javafmlmod.FMLModContainer/LOADING]: Creating FMLModContainer instance for net.CoffeDino.testmod.Lunacy
 [10Nov2025 17:29:55.436] [modloading-worker-0/DEBUG] [net.minecraftforge.versions.forge.ForgeVersion/CORE]: Forge Version package package net.minecraftforge.versions.forge, Forge, version 0.0 from TransformingClassLoader[TRANSFORMER]@1323457920
 [10Nov2025 17:29:55.436] [modloading-worker-0/DEBUG] [net.minecraftforge.versions.forge.ForgeVersion/CORE]: Found Forge version 51.0.32
 [10Nov2025 17:29:55.436] [modloading-worker-0/DEBUG] [net.minecraftforge.versions.forge.ForgeVersion/CORE]: Found Forge spec 0.0
@@ -258,8 +258,8 @@
 [10Nov2025 17:29:55.484] [modloading-worker-0/DEBUG] [io.netty.util.internal.PlatformDependent0/]: sun.misc.Unsafe.copyMemory: available
 [10Nov2025 17:29:55.484] [modloading-worker-0/DEBUG] [io.netty.util.internal.PlatformDependent0/]: sun.misc.Unsafe.storeFence: available
 [10Nov2025 17:29:55.484] [modloading-worker-0/DEBUG] [io.netty.util.internal.PlatformDependent0/]: java.nio.Buffer.address: available
-[10Nov2025 17:29:55.486] [modloading-worker-0/DEBUG] [net.minecraftforge.fml.config.ConfigTracker/CONFIG]: Config file testingcoffedinomod-common.toml for testingcoffedinomod tracking
-[10Nov2025 17:29:55.488] [modloading-worker-0/DEBUG] [net.minecraftforge.fml.javafmlmod.AutomaticEventSubscriber/LOADING]: Attempting to inject @EventBusSubscriber classes into the eventbus for testingcoffedinomod
+[10Nov2025 17:29:55.486] [modloading-worker-0/DEBUG] [net.minecraftforge.fml.config.ConfigTracker/CONFIG]: Config file lunacy-common.toml for lunacy tracking
+[10Nov2025 17:29:55.488] [modloading-worker-0/DEBUG] [net.minecraftforge.fml.javafmlmod.AutomaticEventSubscriber/LOADING]: Attempting to inject @EventBusSubscriber classes into the eventbus for lunacy
 [10Nov2025 17:29:55.490] [modloading-worker-0/DEBUG] [net.minecraftforge.fml.javafmlmod.AutomaticEventSubscriber/LOADING]: Auto-subscribing net.CoffeDino.testmod.abilities.AngelbornAbilityHandler to FORGE
 [10Nov2025 17:29:55.496] [modloading-worker-0/DEBUG] [net.minecraftforge.fml.javafmlmod.AutomaticEventSubscriber/LOADING]: Auto-subscribing net.CoffeDino.testmod.abilities.BelieverAbilityHandler to FORGE
 [10Nov2025 17:29:55.499] [modloading-worker-0/DEBUG] [net.minecraftforge.fml.javafmlmod.AutomaticEventSubscriber/LOADING]: Auto-subscribing net.CoffeDino.testmod.abilities.CelestialAbilityHandler to FORGE
@@ -368,7 +368,7 @@ java.lang.IllegalAccessException: class io.netty.util.internal.PlatformDependent
 [10Nov2025 17:29:55.591] [modloading-worker-0/DEBUG] [net.minecraftforge.fml.javafmlmod.AutomaticEventSubscriber/LOADING]: Auto-subscribing net.CoffeDino.testmod.handlers.GunUsageHandler to FORGE
 [10Nov2025 17:29:55.594] [modloading-worker-0/DEBUG] [net.minecraftforge.fml.javafmlmod.AutomaticEventSubscriber/LOADING]: Auto-subscribing net.CoffeDino.testmod.handlers.InventoryHandler to FORGE
 [10Nov2025 17:29:55.597] [modloading-worker-0/DEBUG] [net.minecraftforge.fml.javafmlmod.AutomaticEventSubscriber/LOADING]: Auto-subscribing net.CoffeDino.testmod.handlers.VillagerDeathHandler to FORGE
-[10Nov2025 17:29:55.599] [modloading-worker-0/DEBUG] [net.minecraftforge.fml.javafmlmod.AutomaticEventSubscriber/LOADING]: Auto-subscribing net.CoffeDino.testmod.TestingCoffeDinoMod$ClientModEvents to MOD
+[10Nov2025 17:29:55.599] [modloading-worker-0/DEBUG] [net.minecraftforge.fml.javafmlmod.AutomaticEventSubscriber/LOADING]: Auto-subscribing net.CoffeDino.testmod.Lunacy$ClientModEvents to MOD
 [10Nov2025 17:29:55.622] [main/DEBUG] [net.minecraftforge.registries.ObjectHolderRegistry/REGISTRIES]: Processing ObjectHolder annotations
 [10Nov2025 17:29:55.829] [main/DEBUG] [net.minecraftforge.registries.ObjectHolderRegistry/REGISTRIES]: Found 4047 ObjectHolder annotations
 [10Nov2025 17:29:55.831] [main/DEBUG] [net.minecraftforge.common.capabilities.CapabilityManager/CAPABILITIES]: Attempting to automatically register: Lnet/CoffeDino/testmod/capability/IRaceSize;
@@ -555,20 +555,20 @@ java.lang.IllegalAccessException: class io.netty.util.internal.PlatformDependent
 [10Nov2025 17:29:56.067] [main/DEBUG] [net.minecraftforge.registries.GameData/REGISTRIES]: Holder lookups applied: minecraft:painting_variant
 [10Nov2025 17:29:56.067] [main/DEBUG] [net.minecraftforge.registries.GameData/REGISTRIES]: Applying holder lookups: minecraft:worldgen/biome
 [10Nov2025 17:29:56.067] [main/DEBUG] [net.minecraftforge.registries.GameData/REGISTRIES]: Holder lookups applied: minecraft:worldgen/biome
-[10Nov2025 17:29:56.137] [main/INFO] [net.minecraftforge.data.loading.DatagenModLoader/]: Initializing Data Gatherer for mods [testingcoffedinomod]
+[10Nov2025 17:29:56.137] [main/INFO] [net.minecraftforge.data.loading.DatagenModLoader/]: Initializing Data Gatherer for mods [lunacy]
 [10Nov2025 17:29:56.256] [main/WARN] [net.minecraft.server.packs.VanillaPackResourcesBuilder/]: Assets URL 'union:/C:/Users/Asus/.gradle/caches/forge_gradle/minecraft_user_repo/net/minecraftforge/forge/1.21-51.0.32_mapped_parchment_2024.07.28-1.21/forge-1.21-51.0.32_mapped_parchment_2024.07.28-1.21-recomp.jar%230!/assets/.mcassetsroot' uses unexpected schema
 [10Nov2025 17:29:56.257] [main/WARN] [net.minecraft.server.packs.VanillaPackResourcesBuilder/]: Assets URL 'union:/C:/Users/Asus/.gradle/caches/forge_gradle/minecraft_user_repo/net/minecraftforge/forge/1.21-51.0.32_mapped_parchment_2024.07.28-1.21/forge-1.21-51.0.32_mapped_parchment_2024.07.28-1.21-recomp.jar%230!/data/.mcassetsroot' uses unexpected schema
 [10Nov2025 17:29:56.902] [main/INFO] [net.minecraft.data.DataGenerator/]: Starting provider: Loot Tables
 [10Nov2025 17:29:57.048] [main/INFO] [net.minecraft.data.DataGenerator/]: Loot Tables finished after 144 ms
 [10Nov2025 17:29:57.048] [main/INFO] [net.minecraft.data.DataGenerator/]: Starting provider: Recipes
 [10Nov2025 17:29:57.081] [main/INFO] [net.minecraft.data.DataGenerator/]: Recipes finished after 32 ms
-[10Nov2025 17:29:57.081] [main/INFO] [net.minecraft.data.DataGenerator/]: Starting provider: Tags for minecraft:block mod id testingcoffedinomod
-[10Nov2025 17:29:57.087] [main/INFO] [net.minecraft.data.DataGenerator/]: Tags for minecraft:block mod id testingcoffedinomod finished after 5 ms
-[10Nov2025 17:29:57.087] [main/INFO] [net.minecraft.data.DataGenerator/]: Starting provider: Tags for minecraft:item mod id testingcoffedinomod
-[10Nov2025 17:29:57.087] [main/INFO] [net.minecraft.data.DataGenerator/]: Tags for minecraft:item mod id testingcoffedinomod finished after 0 ms
-[10Nov2025 17:29:57.087] [main/INFO] [net.minecraft.data.DataGenerator/]: Starting provider: Item Models: testingcoffedinomod
-[10Nov2025 17:29:57.093] [main/INFO] [net.minecraft.data.DataGenerator/]: Item Models: testingcoffedinomod finished after 5 ms
-[10Nov2025 17:29:57.093] [main/INFO] [net.minecraft.data.DataGenerator/]: Starting provider: Block States: testingcoffedinomod
-[10Nov2025 17:29:57.191] [main/INFO] [net.minecraft.data.DataGenerator/]: Block States: testingcoffedinomod finished after 96 ms
+[10Nov2025 17:29:57.081] [main/INFO] [net.minecraft.data.DataGenerator/]: Starting provider: Tags for minecraft:block mod id lunacy
+[10Nov2025 17:29:57.087] [main/INFO] [net.minecraft.data.DataGenerator/]: Tags for minecraft:block mod id lunacy finished after 5 ms
+[10Nov2025 17:29:57.087] [main/INFO] [net.minecraft.data.DataGenerator/]: Starting provider: Tags for minecraft:item mod id lunacy
+[10Nov2025 17:29:57.087] [main/INFO] [net.minecraft.data.DataGenerator/]: Tags for minecraft:item mod id lunacy finished after 0 ms
+[10Nov2025 17:29:57.087] [main/INFO] [net.minecraft.data.DataGenerator/]: Starting provider: Item Models: lunacy
+[10Nov2025 17:29:57.093] [main/INFO] [net.minecraft.data.DataGenerator/]: Item Models: lunacy finished after 5 ms
+[10Nov2025 17:29:57.093] [main/INFO] [net.minecraft.data.DataGenerator/]: Starting provider: Block States: lunacy
+[10Nov2025 17:29:57.191] [main/INFO] [net.minecraft.data.DataGenerator/]: Block States: lunacy finished after 96 ms
 [10Nov2025 17:29:57.191] [main/INFO] [net.minecraft.data.DataGenerator/]: All providers took: 288 ms
 [10Nov2025 17:29:57.194] [main/INFO] [net.minecraft.data.HashCache/]: Caching: total files: 39, old count: 39, new count: 40, removed stale: 0, written: 0

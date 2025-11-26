@@ -91,6 +91,6 @@ public class WandItem extends Item {
     @Override
     public void appendHoverText(ItemStack pStack, TooltipContext pContext, List<Component> pTooltipComponents, TooltipFlag pTooltipFlag) {
         super.appendHoverText(pStack, pContext, pTooltipComponents, pTooltipFlag);
-        pTooltipComponents.add(Component.translatable("tooltip.testingcoffedinomod.the_wand.tooltip"));
+        pTooltipComponents.add(Component.translatable("tooltip.lunacy.the_wand.tooltip"));
     }
 }

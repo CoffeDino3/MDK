@@ -2,7 +2,7 @@
 package net.CoffeDino.testmod.client.gui;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import net.CoffeDino.testmod.TestingCoffeDinoMod;
+import net.CoffeDino.testmod.Lunacy;
 import net.CoffeDino.testmod.client.gui.components.ColoredButton;
 import net.CoffeDino.testmod.classes.PlayerClasses;
 import net.CoffeDino.testmod.network.ClassSelectionPacket;
@@ -20,7 +20,7 @@ import java.util.List;
 
 public class ClassSelectionScreen extends Screen {
     private static final ResourceLocation BACKGROUND =
-            ResourceLocation.fromNamespaceAndPath(TestingCoffeDinoMod.MOD_ID, "textures/gui/class_selection_bg.png");
+            ResourceLocation.fromNamespaceAndPath(Lunacy.MOD_ID, "textures/gui/class_selection_bg.png");
 
     private int currentClassIndex = 0;
     private List<PlayerClasses.PlayerClass> classList;

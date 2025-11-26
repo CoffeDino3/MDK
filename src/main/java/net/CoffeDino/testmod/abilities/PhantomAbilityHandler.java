@@ -1,6 +1,6 @@
 package net.CoffeDino.testmod.abilities;
 
-import net.CoffeDino.testmod.TestingCoffeDinoMod;
+import net.CoffeDino.testmod.Lunacy;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
@@ -13,7 +13,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-@Mod.EventBusSubscriber(modid = TestingCoffeDinoMod.MOD_ID)
+@Mod.EventBusSubscriber(modid = Lunacy.MOD_ID)
 public class PhantomAbilityHandler {
     private static final Map<UUID, PhantomAbilityInstance> ACTIVE_ABILITIES = new HashMap<>();
     private static final Map<UUID, Long> COOLDOWNS = new HashMap<>();
@@ -32,7 +32,7 @@ public class PhantomAbilityHandler {
         }
         ACTIVE_ABILITIES.put(playerId, new PhantomAbilityInstance((ServerPlayer) player));
         startCooldown(player);
-        TestingCoffeDinoMod.LOGGER.debug("Phantom ability activated for player: {}", player.getName().getString());
+        Lunacy.LOGGER.debug("Phantom ability activated for player: {}", player.getName().getString());
     }
 
     @SubscribeEvent
@@ -76,7 +76,7 @@ public class PhantomAbilityHandler {
             player.setDeltaMovement(currentMotion.x, LAUNCH_VELOCITY, currentMotion.z);
             player.hurtMarked = true;
 
-            TestingCoffeDinoMod.LOGGER.debug("Phantom launch: Velocity={}", LAUNCH_VELOCITY);
+            Lunacy.LOGGER.debug("Phantom launch: Velocity={}", LAUNCH_VELOCITY);
         }
 
         public boolean tick() {
@@ -91,15 +91,15 @@ public class PhantomAbilityHandler {
             } else {
                 handleGliding();
                 if (player.onGround()) {
-                    TestingCoffeDinoMod.LOGGER.debug("Phantom glide ended: landed on ground");
+                    Lunacy.LOGGER.debug("Phantom glide ended: landed on ground");
                     return true;
                 }
                 if (player.isInWater()) {
-                    TestingCoffeDinoMod.LOGGER.debug("Phantom glide ended: entered water");
+                    Lunacy.LOGGER.debug("Phantom glide ended: entered water");
                     return true;
                 }
                 if (player.isShiftKeyDown()) {
-                    TestingCoffeDinoMod.LOGGER.debug("Phantom glide ended: player sneaking");
+                    Lunacy.LOGGER.debug("Phantom glide ended: player sneaking");
                     return true;
                 }
             }
@@ -120,7 +120,7 @@ public class PhantomAbilityHandler {
                     Vec3 motion = player.getDeltaMovement();
                     player.setDeltaMovement(motion.x, BASE_DESCENT_SPEED, motion.z);
                     player.hurtMarked = true;
-                    TestingCoffeDinoMod.LOGGER.debug("Transitioned to gliding at tick {}, motionY={}", ticksActive, currentMotionY);
+                    Lunacy.LOGGER.debug("Transitioned to gliding at tick {}, motionY={}", ticksActive, currentMotionY);
                 }
             }
         }
@@ -157,7 +157,7 @@ public class PhantomAbilityHandler {
                 spawnGlideParticles();
             }
 
-            TestingCoffeDinoMod.LOGGER.debug("Gliding: Motion=({}, {}, {}), Pitch={}",
+            Lunacy.LOGGER.debug("Gliding: Motion=({}, {}, {}), Pitch={}",
                     String.format("%.3f", motionX), String.format("%.3f", verticalSpeed),
                     String.format("%.3f", motionZ), pitch);
         }

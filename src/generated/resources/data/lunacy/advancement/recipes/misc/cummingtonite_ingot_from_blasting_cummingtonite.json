@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_cummingtonite": {
+      "conditions": {
+        "items": [
+          {
+            "items": "lunacy:cummingtonite"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "lunacy:cummingtonite_ingot_from_blasting_cummingtonite"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_cummingtonite"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "lunacy:cummingtonite_ingot_from_blasting_cummingtonite"
+    ]
+  }
+}
