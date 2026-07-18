@@ -1,0 +1,6 @@
+{
+  "description": "effect.lunacy.mourning_funeral",
+  "icon": "lunacy:textures/mob_effect/mourning_funeral.png",
+  "color": "9120410",
+  "is_beneficial": false
+}

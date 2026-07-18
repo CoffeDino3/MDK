@@ -1,0 +1,40 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "lunacy:item/boront_axe"
+  },
+  "display": {
+    "firstperson_righthand": {
+      "rotation": [20, 90, -25],
+      "translation": [-0.7, 3.5, 1.13],
+      "scale": [1.5, 1.5, 0.68]
+    },
+    "firstperson_lefthand": {
+      "rotation": [20, -90, 25],
+      "translation": [-0.7, 3.5, 1.13],
+      "scale": [1.5, 1.5, 0.68]
+    },
+    "thirdperson_righthand": {
+      "rotation": [110, 90, -55],
+      "translation": [0, 7, 0.3],
+      "scale": [1.7, 1.7, 1]
+    },
+    "thirdperson_lefthand": {
+      "rotation": [110, -90, 55],
+      "translation": [0, 7, 0.3],
+      "scale": [1.7, 1.7, 1]
+    },
+
+    "ground": {
+      "translation": [0, 2, 0],
+      "scale": [1.5, 1.5, 1.5]
+    },
+    "gui": {
+      "rotation": [0, 180, 0],
+      "scale": [0.8, 0.8, 0.8]
+    },
+    "fixed": {
+      "scale": [0.8, 0.8, 0.8]
+    }
+  }
+}

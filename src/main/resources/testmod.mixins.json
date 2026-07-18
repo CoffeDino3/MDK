@@ -1,0 +1,18 @@
+{
+  "required": true,
+  "minVersion": "0.8.7",
+  "package": "com.CoffeDino.lunacy.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "refmap": "testmod.refmap.json",
+  "client": [
+    "CameraMixin",
+    "CameraAccessor",
+    "PlayerRendererMixin"
+  ],
+  "mixins": [
+    "LivingEntitySizeMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

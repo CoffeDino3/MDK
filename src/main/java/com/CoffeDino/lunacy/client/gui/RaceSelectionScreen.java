@@ -1,0 +1,219 @@
+package com.CoffeDino.lunacy.client.gui;
+
+import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.math.Axis;
+import com.CoffeDino.lunacy.Lunacy;
+import com.CoffeDino.lunacy.client.gui.components.ColoredButton;
+import com.CoffeDino.lunacy.network.NetworkHandler;
+import com.CoffeDino.lunacy.network.RaceSelectionPacket;
+import com.CoffeDino.lunacy.races.races;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Player;
+
+
+import java.util.List;
+
+public class RaceSelectionScreen extends Screen {
+
+    private static final ResourceLocation BACKGROUND =
+            ResourceLocation.fromNamespaceAndPath(Lunacy.MODID, "textures/gui/race_selection_bg2.png");
+    private int currentRaceIndex = 0;
+    private List<races.Race> raceList;
+    private Button selectButton;
+    private Button leftArrow;
+    private Button rightArrow;
+
+    public RaceSelectionScreen(){
+        super(Component.literal("Choose your Race!"));
+        this.raceList = List.of(
+                races.Race.SCULK,
+                races.Race.WARDER,
+                races.Race.ENDER,
+                races.Race.PHANTOM,
+                races.Race.LOVER,
+                races.Race.BELIEVER,
+                races.Race.VAMPIREBORN,
+                races.Race.ANGELBORN,
+                races.Race.ETHEREAL,
+                races.Race.CELESTIAL,
+                races.Race.GATEKEEPER
+        );
+    }
+
+    @Override
+    protected void init() {
+        super.init();
+
+        int centerX = this.width / 2;
+        int centerY = this.height / 2;
+
+        int uiCardWidth = 200;
+        int uiCardHeight = 220;
+
+        int cardLeft = centerX - uiCardWidth / 2;
+        int cardRight = centerX + uiCardWidth / 2;
+        int cardTop = centerY - uiCardHeight / 2;
+        int cardBottom = centerY + uiCardHeight / 2;
+
+        leftArrow = new ColoredButton(
+                cardLeft - 30, centerY-110, 30, 20,
+                Component.literal("<"),
+                b -> switchRace(-1),
+                0xA69678FF,
+                0xE07020FF
+        );
+        addRenderableWidget(leftArrow);
+        rightArrow = new ColoredButton(
+                cardRight,centerY-110, 30, 20,
+                Component.literal(">"),
+                b-> switchRace(1),
+                0xA69678FF,
+                0xE07020FF
+        );
+        addRenderableWidget(rightArrow);
+        selectButton = new ColoredButton(
+                centerX-95, cardBottom -30, 190, 20,
+                Component.literal("Select"),
+                b -> selectRace(),
+                0xA6000000,
+                0xCC000000
+        );
+        addRenderableWidget(selectButton);
+    }
+
+    private void switchRace(int direction){
+        currentRaceIndex = (currentRaceIndex + direction + raceList.size())% raceList.size();
+    }
+    @Override
+    public void renderBackground(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
+
+        guiGraphics.fillGradient(0, 0, this.width, this.height, 0xC0101010, 0xD0101010);
+        RenderSystem.setShader(GameRenderer::getPositionTexShader);
+        RenderSystem.setShaderTexture(0, BACKGROUND);
+        int centerX = this.width/2;
+        int centerY = this.height/2;
+        int cardWidth = 200;
+        int cardHeight = 220;
+        guiGraphics.blit(BACKGROUND, centerX - cardWidth /2, centerY - cardHeight/2,
+                0, 0, cardWidth, cardHeight, cardWidth, cardHeight);
+    }
+
+
+    @Override
+    public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks){
+
+        renderBackground(guiGraphics, mouseX, mouseY, partialTicks);
+
+        int centerX = this.width / 2;
+        int centerY = this.height / 2;
+
+        races.Race current = raceList.get(currentRaceIndex);
+        guiGraphics.pose().pushPose();
+        guiGraphics.pose().translate(0, 0, 100);
+
+        guiGraphics.pose().pushPose();
+        guiGraphics.pose().translate(centerX, centerY - 95, 0);
+        guiGraphics.pose().scale(1.5f, 1.5f, 1.5f);
+        guiGraphics.drawCenteredString(this.font, Component.literal(current.getDisplayName()), 0, 0, 0xFFFFFF);
+        guiGraphics.pose().popPose();
+
+        int descX = centerX - 7;
+        int descY = centerY - 60;
+        int descWidth = 100;
+        int descHeight = 120;
+
+        guiGraphics.fill(descX, descY, descX + descWidth, descY + descHeight, 0xAA000000);
+        guiGraphics.fill(descX - 1, descY - 1, descX + descWidth + 1, descY, 0xFFFFFFFF);
+        guiGraphics.fill(descX - 1, descY + descHeight, descX + descWidth + 1, descY + descHeight + 1, 0xFFFFFFFF);
+        guiGraphics.fill(descX - 1, descY, descX, descY + descHeight, 0xFFFFFFFF);
+        guiGraphics.fill(descX + descWidth, descY, descX + descWidth + 1, descY + descHeight, 0xFFFFFFFF);
+
+        String description = getRaceDescription(current);
+        guiGraphics.drawWordWrap(this.font, Component.literal(description),
+                descX + 6, descY + 6, descWidth - 10, 0xFFFFFF);
+        drawEntity(guiGraphics, centerX - 60, centerY + 50, 55);
+        guiGraphics.pose().popPose();
+
+        super.render(guiGraphics, mouseX, mouseY, partialTicks);
+
+    }
+
+    private String getRaceDescription(races.Race race) {
+        switch (race) {
+            case SCULK: return "Void-born and resilient, Sculks grow tougher with experience and can carry items safely within themselves.";
+            case WARDER: return "Born to fight, Warders manipulate dimensional energy to crush foes and obstacles alike.";
+            case ENDER: return "Slipping through space instantly, Enders strike unseen and vanish just as quickly.";
+            case PHANTOM: return "Swift aerial hunters, gliding above the battlefield and striking with precision.";
+            case VAMPIREBORN: return "Crimson predators who trade their own life for deadly power under the cover of night.";
+            case BELIEVER: return "Faith makes them unbreakable, creating a sanctuary even in the fiercest battles.";
+            case LOVER: return "Their love shields them and punishes those who dare harm them.";
+            case ANGELBORN: return "Emissaries of light, Angelborn heal quickly and smite enemies with divine precision.";
+            case ETHEREAL: return "Existing between realities, Ethereals are untouchable and strike back at those who hit them.";
+            case CELESTIAL: return "Masters of cosmic force, Celestials bend gravity to crush or manipulate foes.";
+            case GATEKEEPER: return "Guardians of the threshold, Gatekeepers can summon portals from the treasury to smite foes with numerous weapons.";
+            default: return "A mysterious race with unknown abilities.";
+        }
+    }
+
+
+    private void drawEntity(GuiGraphics graphics, int x, int y, int scale) {
+        Player player = Minecraft.getInstance().player;
+        if (player == null) return;
+
+        EntityRenderDispatcher dispatcher = Minecraft.getInstance().getEntityRenderDispatcher();
+
+        double mouseX = Minecraft.getInstance().mouseHandler.xpos();
+        double screenWidth = Minecraft.getInstance().getWindow().getScreenWidth();
+
+        float rotation = 90.0f - (float)(mouseX / screenWidth) * 180.0f;
+
+        RenderSystem.enableDepthTest();
+        graphics.pose().pushPose();
+
+        graphics.pose().translate(0, 0, 100);
+        graphics.pose().translate(x, y, 50);
+        graphics.pose().scale((float) scale, (float) scale, (float) scale);
+        graphics.pose().mulPose(Axis.XP.rotationDegrees(180.0F));
+        graphics.pose().mulPose(Axis.YP.rotationDegrees(rotation + 180.0f));
+
+        dispatcher.overrideCameraOrientation(Axis.YP.rotationDegrees(180.0F));
+        dispatcher.setRenderShadow(false);
+
+        graphics.flush();
+        RenderSystem.runAsFancy(() -> {
+            dispatcher.render(player, 0, 0, 0, 0F, 1F, graphics.pose(), graphics.bufferSource(), 15728880);
+        });
+        graphics.bufferSource().endBatch();
+
+        dispatcher.setRenderShadow(true);
+        graphics.pose().popPose();
+        RenderSystem.disableDepthTest();
+    }
+
+
+    private void selectRace(){
+        System.out.println("DEBUG: Select button pressed!");
+        races.Race race = raceList.get(currentRaceIndex);
+        System.out.println("DEBUG: Selected race: " + race.getId() + " - " + race.getDisplayName());
+        System.out.println("DEBUG: Sending packet to server...");
+        NetworkHandler.sendToServer(new RaceSelectionPacket(race.getId()));
+        System.out.println("DEBUG: Closing screen");
+        Minecraft.getInstance().setScreen(null);
+    }
+
+    @Override
+    public boolean shouldCloseOnEsc(){
+        return false;
+    }
+    @Override
+    public boolean isPauseScreen(){
+        return false;
+    }
+}

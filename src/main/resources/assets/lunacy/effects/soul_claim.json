@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:normal",
+  "description": {
+    "sections": [
+      {
+        "text": "Passively heals 1 health every 2 seconds and provides +1 additional healing per effect level."
+      }
+    ]
+  },
+  "instantenous_effects": [],
+  "color": "4B0082",
+  "beneficial": true,
+  "hidden": false,
+  "attribute_modifiers": [
+    {
+      "attribute": "minecraft:generic.attack_damage",
+      "modifier": {
+        "uuid": "1e8a3b2f-5d4c-4a7e-8b9d-6c5e4f3a2b1e",
+        "amount": 0.1,
+        "operation": "multiply_total"
+      }
+    }
+  ]
+}
