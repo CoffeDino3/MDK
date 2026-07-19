@@ -75,6 +75,13 @@ public class ModEntities {
                             .clientTrackingRange(64)
                             .updateInterval(1)
                             .build("boront_avatar"));
+    public static final DeferredHolder<EntityType<?>, EntityType<RocaBoulderEntity>> ROCA_BOULDER =
+            ENTITIES.register("roca_boulder",
+                    () -> EntityType.Builder.<RocaBoulderEntity>of(RocaBoulderEntity::new, MobCategory.MISC)
+                            .sized(0.5F, 0.5F)
+                            .clientTrackingRange(64)
+                            .updateInterval(10)
+                            .build("roca_boulder"));
 
 
 }

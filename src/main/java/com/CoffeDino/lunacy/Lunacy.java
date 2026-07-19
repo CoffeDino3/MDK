@@ -122,10 +122,17 @@ public class Lunacy {
             EntityRenderers.register(ModEntities.FIRE_SPEAR.get(), FireSpearRenderer::new);
             EntityRenderers.register(ModEntities.FLOATING_RAPIER.get(), FloatingRapierRenderer::new);
             EntityRenderers.register(ModEntities.THROWN_RAPIER.get(), ThrownRapierRenderer::new);
+            EntityRenderers.register(ModEntities.ROCA_BOULDER.get(), RocaBoulderRenderer::new);
             event.enqueueWork(() -> {
                 ItemProperties.register(ModItems.AGNIS_FURY.get(),
                         ResourceLocation.fromNamespaceAndPath(MODID, "charged"),
                         (stack, level, entity, seed) -> FireSpearItem.isCharged(stack) ? 1.0F : 0.0F);
+            });
+            event.enqueueWork(() -> {
+                ItemProperties.register(ModItems.GRUCK.get(),
+                        ResourceLocation.withDefaultNamespace("blocking"),
+                        (stack, level, entity, seed) ->
+                                entity != null && entity.isUsingItem() && entity.getUseItem() == stack ? 1.0F : 0.0F);
             });
         }
 

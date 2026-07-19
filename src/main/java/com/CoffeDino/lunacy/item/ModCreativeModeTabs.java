@@ -44,6 +44,8 @@ public class ModCreativeModeTabs {
                         output.accept(ModItems.AMETHYST_RAPIER.get());
                         output.accept(ModItems.OBSIDIA.get());
                         output.accept(ModItems.BORONT_AXE.get());
+                        output.accept(ModItems.ROCA.get());
+                        output.accept(ModItems.GRUCK.get());
                     })
                     .build());
 

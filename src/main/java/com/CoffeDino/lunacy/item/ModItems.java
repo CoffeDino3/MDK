@@ -5,6 +5,7 @@ import com.CoffeDino.lunacy.item.Custom.*;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.item.AxeItem;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.SwordItem;
 import net.minecraft.world.item.Tiers;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredHolder;
@@ -56,6 +57,17 @@ public class ModItems {
                             .attributes(AxeItem.createAttributes(Tiers.NETHERITE, 9.0F, -3.0F))
                             .durability(2031)
                             .fireResistant()));
+    public static final DeferredHolder<Item, RocaItem> ROCA = ITEMS.register("roca",
+            () -> new RocaItem(Tiers.NETHERITE,
+                    new Item.Properties()
+                            .attributes(SwordItem.createAttributes(Tiers.NETHERITE, 5.0F, -2.4F))
+                            .durability(2031)
+                            .fireResistant()));
+    public static final DeferredHolder<Item, GruckItem> GRUCK = ITEMS.register("gruck",
+            () -> new GruckItem(new Item.Properties().durability(10000)));
+
+
+
     public static void register(IEventBus eventBus) {
         ITEMS.register(eventBus);
     }

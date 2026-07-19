@@ -63,6 +63,17 @@ public class ModAttachments {
                     () -> AttachmentType.builder(() -> 0L)
                             .serialize(Codec.LONG)
                             .build());
+    public static final DeferredHolder<AttachmentType<?>, AttachmentType<Long>> ROCA_COOLDOWN_END =
+            ATTACHMENT_TYPES.register("roca_cooldown_end",
+                    () -> AttachmentType.builder(() -> 0L)
+                            .serialize(Codec.LONG)
+                            .build());
+
+    public static final DeferredHolder<AttachmentType<?>, AttachmentType<Long>> ROCA_STANCE_END =
+            ATTACHMENT_TYPES.register("roca_stance_end",
+                    () -> AttachmentType.builder(() -> 0L)
+                            .serialize(Codec.LONG)
+                            .build());
 
     public static void register(net.neoforged.bus.api.IEventBus eventBus) {
         ATTACHMENT_TYPES.register(eventBus);

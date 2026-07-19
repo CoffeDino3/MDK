@@ -43,6 +43,10 @@ public class ClassRestrictedWeaponHandler {
                 new Requirement(PlayerClass.ASSASSIN, "You are not an Assassin! The dagger rejects you."));
         REQUIREMENTS.put(BorontItem.class,
                 new Requirement(PlayerClass.VIKING, "You are not a Viking! The axe rejects you."));
+        REQUIREMENTS.put(RocaItem.class,
+                new Requirement(PlayerClass.SWORDSMAN, "You are not a Swordsman! The sword rejects you."));
+        REQUIREMENTS.put(GruckItem.class,
+                new Requirement(PlayerClass.GUARDIAN, "You are not a Guardian! The shield rejects you."));
     }
 
     @SubscribeEvent
