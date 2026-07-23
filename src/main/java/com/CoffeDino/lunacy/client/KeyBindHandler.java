@@ -127,6 +127,10 @@ public class KeyBindHandler {
 
                 if (!PlayerClasses.hasChosenClass(minecraft.player)) {
                     minecraft.setScreen(new ClassSelectionScreen());
+                } else if (PlayerClasses.getPlayerClass(minecraft.player) == PlayerClasses.PlayerClass.SPELLBLADE) {
+                    // server is the source of truth for whether an element is already assigned;
+                    // it'll only send OpenElementSelectionPacket back if one is still missing
+                    NetworkHandler.sendToServer(new RequestElementSelectionPacket());
                 }
             }
         }

@@ -14,6 +14,7 @@ import java.util.UUID;
 public class ClassDataManager extends SavedData {
     private static final String DATA_NAME = Lunacy.MODID + "_classes";
     private final Map<UUID, String> playerClasses = new HashMap<>();
+    private final Map<UUID, String> playerElements = new HashMap<>();
     private static final boolean DEBUG = false;
 
     @Override
@@ -26,6 +27,11 @@ public class ClassDataManager extends SavedData {
         if (DEBUG) {
             Lunacy.LOGGER.debug("ClassDataManager saved - {} player classes", playerClasses.size());
         }
+        CompoundTag elementsTag = new CompoundTag();
+        for (Map.Entry<UUID, String> entry : playerElements.entrySet()) {
+            elementsTag.putString(entry.getKey().toString(), entry.getValue());
+        }
+        tag.put("playerElements", elementsTag);
         return tag;
     }
 
@@ -44,7 +50,28 @@ public class ClassDataManager extends SavedData {
         if (DEBUG) {
             Lunacy.LOGGER.debug("ClassDataManager loaded - {} player classes", data.playerClasses.size());
         }
+        CompoundTag elementsTag = tag.getCompound("playerElements");
+        for (String uuidString : elementsTag.getAllKeys()) {
+            try {
+                UUID playerId = UUID.fromString(uuidString);
+                data.playerElements.put(playerId, elementsTag.getString(uuidString));
+            } catch (IllegalArgumentException e) {
+                Lunacy.LOGGER.error("Invalid UUID in element data: {}", uuidString);
+            }
+        }
         return data;
+    }
+    public void setPlayerElement(UUID playerId, String elementId) {
+        if (elementId == null || elementId.isEmpty()) {
+            playerElements.remove(playerId);
+        } else {
+            playerElements.put(playerId, elementId);
+        }
+        setDirty();
+    }
+
+    public String getPlayerElement(UUID playerId) {
+        return playerElements.get(playerId);
     }
 
     public void setPlayerClass(UUID playerId, String classId) {

@@ -199,12 +199,12 @@ public class RaceSelectionScreen extends Screen {
 
 
     private void selectRace(){
-        System.out.println("DEBUG: Select button pressed!");
+        Lunacy.LOGGER.debug("DEBUG: Select button pressed!");
         races.Race race = raceList.get(currentRaceIndex);
-        System.out.println("DEBUG: Selected race: " + race.getId() + " - " + race.getDisplayName());
-        System.out.println("DEBUG: Sending packet to server...");
+        Lunacy.LOGGER.debug("DEBUG: Selected race: " + race.getId() + " - " + race.getDisplayName());
+        Lunacy.LOGGER.debug("DEBUG: Sending packet to server...");
         NetworkHandler.sendToServer(new RaceSelectionPacket(race.getId()));
-        System.out.println("DEBUG: Closing screen");
+        Lunacy.LOGGER.debug("DEBUG: Closing screen");
         Minecraft.getInstance().setScreen(null);
     }
 

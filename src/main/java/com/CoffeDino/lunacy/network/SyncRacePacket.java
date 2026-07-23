@@ -25,12 +25,12 @@ public record SyncRacePacket(String raceId) implements CustomPacketPayload {
                 String raceId = packet.raceId();
                 if (raceId.isEmpty()) {
                     races.setClientRace(null);
-                    System.out.println("DEBUG: Cleared race on client");
+                    Lunacy.LOGGER.debug("DEBUG: Cleared race on client");
                 } else {
                     for (races.Race race : races.Race.values()) {
                         if (race.getId().equals(raceId)) {
                             races.setClientRace(race);
-                            System.out.println("DEBUG: Synced race to client: " + race.getDisplayName());
+                            Lunacy.LOGGER.debug("DEBUG: Synced race to client: " + race.getDisplayName());
                             break;
                         }
                     }

@@ -33,11 +33,44 @@ public class GruckItem extends ShieldItem {
 
     private static final float MIDAIR_KNOCKBACK_STRENGTH = 1.5F;
     private static final String NBT_NO_FALL_DAMAGE = "GruckNoFallDamage";
-    private static final String NBT_LAST_USE_TICK = "GruckLastUseTick";
-    private static final long MIDAIR_COOLDOWN_TICKS = 20;
+    private static final int MAX_MIDAIR_CHARGES = 3;
+    private static final long CHARGE_REGEN_TICKS = 60;
+
+    private static final String NBT_CHARGES = "GruckCharges";
+    private static final String NBT_LAST_REGEN_TICK = "GruckLastRegenTick";
 
     public GruckItem(Properties properties) {
         super(properties);
+    }
+    private static int getAndUpdateCharges(ServerLevel level, Player player) {
+        var data = player.getPersistentData();
+        long now = level.getGameTime();
+
+        int charges;
+        long lastRegen;
+
+        if (!data.contains(NBT_CHARGES)) {
+            charges = MAX_MIDAIR_CHARGES;
+            lastRegen = now;
+        } else {
+            charges = data.getInt(NBT_CHARGES);
+            lastRegen = data.getLong(NBT_LAST_REGEN_TICK);
+
+            if (charges < MAX_MIDAIR_CHARGES) {
+                long elapsed = now - lastRegen;
+                long gained = elapsed / CHARGE_REGEN_TICKS;
+                if (gained > 0) {
+                    charges = (int) Math.min(MAX_MIDAIR_CHARGES, charges + gained);
+                    lastRegen += gained * CHARGE_REGEN_TICKS;
+                }
+            } else {
+                lastRegen = now;
+            }
+        }
+
+        data.putInt(NBT_CHARGES, charges);
+        data.putLong(NBT_LAST_REGEN_TICK, lastRegen);
+        return charges;
     }
 
     @Override
@@ -48,14 +81,13 @@ public class GruckItem extends ShieldItem {
 
         if (midair) {
             if (level instanceof ServerLevel serverLevel) {
-                long now = serverLevel.getGameTime();
-                long lastUse = player.getPersistentData().getLong(NBT_LAST_USE_TICK);
+                int charges = getAndUpdateCharges(serverLevel, player);
 
-                if (now - lastUse < MIDAIR_COOLDOWN_TICKS) {
+                if (charges <= 0) {
                     return InteractionResultHolder.fail(stack);
                 }
 
-                player.getPersistentData().putLong(NBT_LAST_USE_TICK, now);
+                player.getPersistentData().putInt(NBT_CHARGES, charges - 1);
 
                 fireBeam(serverLevel, player, 10.0F);
 

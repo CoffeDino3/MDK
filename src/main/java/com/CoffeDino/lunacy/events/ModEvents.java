@@ -61,52 +61,52 @@ public class ModEvents {
         @SubscribeEvent
         public static void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent event) {
             if (event.getEntity() instanceof ServerPlayer serverPlayer) {
-                System.out.println("DEBUG: ===== SERVER PLAYER LOGIN START =====");
-                System.out.println("DEBUG: Player logged in on server - " + serverPlayer.getName().getString() + " UUID: " + serverPlayer.getUUID());
+                Lunacy.LOGGER.debug("DEBUG: ===== SERVER PLAYER LOGIN START =====");
+                Lunacy.LOGGER.debug("DEBUG: Player logged in on server - " + serverPlayer.getName().getString() + " UUID: " + serverPlayer.getUUID());
 
                 races.Race race = races.getPlayerRace(serverPlayer);
-                System.out.println("DEBUG: Retrieved race for player: " + (race != null ? race.getDisplayName() : "null"));
+                Lunacy.LOGGER.debug("DEBUG: Retrieved race for player: " + (race != null ? race.getDisplayName() : "null"));
 
 
                 if (race != null) {
                     races.onPlayerJoinWorld(serverPlayer);
                     NetworkHandler.syncRaceToClient(serverPlayer, race);
                     NetworkHandler.syncSizeToClient(serverPlayer, race.getHeight(), race.getWidth());
-                    System.out.println("DEBUG: Synced race to client on login: " + race.getDisplayName());
+                    Lunacy.LOGGER.debug("DEBUG: Synced race to client on login: " + race.getDisplayName());
                 } else {
-                    System.out.println("DEBUG: No race found for player, skipping race effects and sync");
+                    Lunacy.LOGGER.debug("DEBUG: No race found for player, skipping race effects and sync");
                     NetworkHandler.syncRaceToClient(serverPlayer, null);
                 }
                 PlayerClasses.PlayerClass playerClass = PlayerClasses.getPlayerClass(serverPlayer);
                 if (playerClass != null) {
                     NetworkHandler.syncClassToClient(serverPlayer, playerClass);
-                    System.out.println("DEBUG: Synced class to client on login: " + playerClass.getDisplayName());
+                    Lunacy.LOGGER.debug("DEBUG: Synced class to client on login: " + playerClass.getDisplayName());
                 }
                 reapplyPersistedCooldown(serverPlayer, ModAttachments.BORONT_COOLDOWN_END, BorontItem.class);
                 reapplyPersistedCooldown(serverPlayer, ModAttachments.OBSIDIA_COOLDOWN_END, ObsidiaItem.class);
                 reapplyPersistedCooldown(serverPlayer, ModAttachments.ROCA_COOLDOWN_END, RocaItem.class);
-                System.out.println("DEBUG: ===== SERVER PLAYER LOGIN END =====");
+                reapplyPersistedCooldown(serverPlayer, ModAttachments.CHARYBDIS_COOLDOWN_END, CharybdisItem.class);
+                reapplyPersistedCooldown(serverPlayer, ModAttachments.HELIOS_COOLDOWN_END, HeliosItem.class);
+                reapplyPersistedCooldown(serverPlayer, ModAttachments.JORO_COOLDOWN_END, JoroItem.class);
+                reapplyPersistedCooldown(serverPlayer, ModAttachments.ERINYES_COOLDOWN_END, ErinyesItem.class);
+                reapplyPersistedCooldown(serverPlayer, ModAttachments.MOIRAI_COOLDOWN_END, MoiraiItem.class);
+                reapplyPersistedCooldown(serverPlayer, ModAttachments.BOREAS_COOLDOWN_END, BoreasItem.class);
+                reapplyPersistedCooldown(serverPlayer, ModAttachments.PHAETON_COOLDOWN_END, PhaetonItem.class);
+                reapplyPersistedCooldown(serverPlayer, ModAttachments.PERUN_COOLDOWN_END, PerunItem.class);
+                reapplyPersistedCooldown(serverPlayer, ModAttachments.AMPHITRITE_COOLDOWN_END, AmphitriteItem.class);
+
+                Lunacy.LOGGER.debug("DEBUG: ===== SERVER PLAYER LOGIN END =====");
             }
         }
 
-        /**
-         * Vanilla ItemCooldowns live only on the transient ServerPlayer object and are never
-         * written to player NBT, so they're wiped on every relog. Item-specific attachments
-         * (BorontCooldownAttachments, ObsidiaCooldownAttachments, ...) persist each cooldown's
-         * expiry tick separately - this re-applies it here if time is still remaining, and clears
-         * the stored value if it already ran out while offline. One generic method instead of a
-         * copy-pasted reapply per item; add a new call above whenever another item needs this.
-         */
+
         private static void reapplyPersistedCooldown(ServerPlayer serverPlayer,
                                                      DeferredHolder<AttachmentType<?>, AttachmentType<Long>> cooldownAttachment,
                                                      Class<? extends Item> itemClass) {
             long cooldownEnd = serverPlayer.getData(cooldownAttachment);
             if (cooldownEnd <= 0) return;
-
-            // FIX: Use serverPlayer.serverLevel() instead of serverPlayer.level()
-            // serverLevel() is guaranteed to be non-null during login
             ServerLevel level = serverPlayer.serverLevel();
-            if (level == null) return; // Safety check
+            if (level == null) return;
 
             long now = level.getGameTime();
             long remaining = cooldownEnd - now;
@@ -129,7 +129,6 @@ public class ModEvents {
         public static void onPlayerLoggedOut(PlayerEvent.PlayerLoggedOutEvent event) {
             Player player = event.getEntity();
             if (!player.level().isClientSide) {
-                // Instantly clean up entities on the server if the player leaves the game
                 List<FloatingRapierEntity> rapiers = player.level().getEntitiesOfClass(FloatingRapierEntity.class,
                         player.getBoundingBox().inflate(100.0),
                         entity -> player.getUUID().equals(entity.getOwner() == null ? null : entity.getOwner().getUUID()));
@@ -137,21 +136,21 @@ public class ModEvents {
                 for (FloatingRapierEntity rapier : rapiers) {
                     rapier.discard();
                 }
-                System.out.println("DEBUG: Cleared floating rapiers for logging out player: " + player.getName().getString());
+                Lunacy.LOGGER.debug("DEBUG: Cleared floating rapiers for logging out player: " + player.getName().getString());
             }
         }
 
         @SubscribeEvent
         public static void onPlayerRespawn(PlayerEvent.PlayerRespawnEvent event) {
             Player player = event.getEntity();
-            System.out.println("DEBUG: Player respawned on server - " + player.getName().getString());
+            Lunacy.LOGGER.debug("DEBUG: Player respawned on server - " + player.getName().getString());
             races.onPlayerJoinWorld(player);
         }
 
         @SubscribeEvent
         public static void onPlayerChangedDimension(PlayerEvent.PlayerChangedDimensionEvent event) {
             Player player = event.getEntity();
-            System.out.println("DEBUG: Player changed dimension - " + player.getName().getString());
+            Lunacy.LOGGER.debug("DEBUG: Player changed dimension - " + player.getName().getString());
             races.onPlayerJoinWorld(player);
         }
     }
@@ -165,7 +164,7 @@ public class ModEvents {
     }
     @SubscribeEvent
     public static void onAttackEntity(net.neoforged.neoforge.event.entity.player.AttackEntityEvent event) {
-        System.out.println("DEBUG: AttackEntityEvent fired, canceled=" + event.isCanceled());
+        Lunacy.LOGGER.debug("DEBUG: AttackEntityEvent fired, canceled=" + event.isCanceled());
         if (event.getEntity() instanceof ServerPlayer serverPlayer
                 && event.getTarget() instanceof net.minecraft.world.entity.LivingEntity target) {
             com.CoffeDino.lunacy.item.Custom.RocaItem.tryTriggerBoulder(serverPlayer, target);
@@ -181,7 +180,7 @@ public class ModEvents {
         public static void registerLayers(EntityRenderersEvent.RegisterLayerDefinitions event) {
             event.registerLayerDefinition(ModModelLayers.GRUCK, ShieldModel::createLayer);
         }
-        @SubscribeEvent // mod bus, client only
+        @SubscribeEvent
         public static void registerClientExtensions(RegisterClientExtensionsEvent event) {
             event.registerItem(new IClientItemExtensions() {
                 private final BlockEntityWithoutLevelRenderer renderer = new GruckRenderer();
@@ -195,7 +194,7 @@ public class ModEvents {
         @SubscribeEvent
         public static void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent event) {
             Player player = event.getEntity();
-            System.out.println("DEBUG: Client received login event for: " + player.getName().getString());
+            Lunacy.LOGGER.debug("DEBUG: Client received login event for: " + player.getName().getString());
             hasCheckedRace = false;
 
             if (player == Minecraft.getInstance().player) {
@@ -216,7 +215,7 @@ public class ModEvents {
         @SubscribeEvent
         public static void onEntityJoinWorld(EntityJoinLevelEvent event) {
             if (event.getEntity() instanceof Player player && player == Minecraft.getInstance().player) {
-                System.out.println("DEBUG: Client entity join world for: " + player.getName().getString());
+                Lunacy.LOGGER.debug("DEBUG: Client entity join world for: " + player.getName().getString());
 
                 if (!hasCheckedRace) {
                     Minecraft.getInstance().execute(() -> {
@@ -236,22 +235,22 @@ public class ModEvents {
         private static void checkAndShowRaceScreen(Player player, String context) {
             hasCheckedRace = true;
 
-            System.out.println("DEBUG: ===== CLIENT RACE CHECK =====");
-            System.out.println("DEBUG: Context: " + context);
+            Lunacy.LOGGER.debug("DEBUG: ===== CLIENT RACE CHECK =====");
+            Lunacy.LOGGER.debug("DEBUG: Context: " + context);
 
             boolean hasChosenRace = races.hasChosenRace(player);
             races.Race currentRace = races.getPlayerRace(player);
 
-            System.out.println("DEBUG: Client - Has chosen race: " + hasChosenRace);
-            System.out.println("DEBUG: Client - Current race: " + (currentRace != null ? currentRace.getDisplayName() : "null"));
+            Lunacy.LOGGER.debug("DEBUG: Client - Has chosen race: " + hasChosenRace);
+            Lunacy.LOGGER.debug("DEBUG: Client - Current race: " + (currentRace != null ? currentRace.getDisplayName() : "null"));
 
             if (!hasChosenRace) {
-                System.out.println("DEBUG: Showing race selection screen from " + context);
+                Lunacy.LOGGER.debug("DEBUG: Showing race selection screen from " + context);
                 Minecraft.getInstance().setScreen(new RaceSelectionScreen());
             } else {
-                System.out.println("DEBUG: Race already chosen and synced: " + currentRace);
+                Lunacy.LOGGER.debug("DEBUG: Race already chosen and synced: " + currentRace);
             }
-            System.out.println("DEBUG: ===== CLIENT RACE CHECK END =====");
+            Lunacy.LOGGER.debug("DEBUG: ===== CLIENT RACE CHECK END =====");
         }
     }
 

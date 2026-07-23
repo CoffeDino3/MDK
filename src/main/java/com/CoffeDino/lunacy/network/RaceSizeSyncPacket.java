@@ -31,7 +31,7 @@ public record RaceSizeSyncPacket(float height, float width) implements CustomPac
             RaceSizeCapability raceSize = player.getData(ModAttachments.RACE_SIZE);
             raceSize.setRaceSize(packet.height(), packet.width());
             player.refreshDimensions();
-            System.out.println("[DEBUG] Synced size: " + packet.height() + "x" + packet.width());
+            Lunacy.LOGGER.debug("[DEBUG] Synced size: " + packet.height() + "x" + packet.width());
         });
     }
 

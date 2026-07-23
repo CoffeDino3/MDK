@@ -18,6 +18,10 @@ public class ModParticles {
     public static final DeferredHolder<ParticleType<?>, SimpleParticleType> CLOCK_PARTICLES =
             PARTICLE_TYPES.register("clock_particles",
                     () -> new SimpleParticleType(false));
+    public static final DeferredHolder<ParticleType<?>, PerunFlashParticleType> PERUN_FLASH =
+            PARTICLE_TYPES.register("perun_flash", () -> new PerunFlashParticleType(false));
+
+
 
     public static void register(IEventBus eventBus){
         PARTICLE_TYPES.register(eventBus);

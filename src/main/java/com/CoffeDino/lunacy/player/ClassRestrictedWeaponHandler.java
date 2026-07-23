@@ -47,6 +47,24 @@ public class ClassRestrictedWeaponHandler {
                 new Requirement(PlayerClass.SWORDSMAN, "You are not a Swordsman! The sword rejects you."));
         REQUIREMENTS.put(GruckItem.class,
                 new Requirement(PlayerClass.GUARDIAN, "You are not a Guardian! The shield rejects you."));
+        REQUIREMENTS.put(CharybdisItem.class,
+                new Requirement(PlayerClass.SPELLBLADE, "You are not a Spellblade! The blade rejects you."));
+        REQUIREMENTS.put(HeliosItem.class,
+                new Requirement(PlayerClass.SPELLBLADE, "You are not a Spellblade! The blade rejects you."));
+        REQUIREMENTS.put(JoroItem.class,
+                new Requirement(PlayerClass.SPELLBLADE, "You are not a Spellblade! The blade rejects you."));
+        REQUIREMENTS.put(ErinyesItem.class,
+                new Requirement(PlayerClass.SPELLBLADE, "You are not a Spellblade! The blade rejects you."));
+        REQUIREMENTS.put(MoiraiItem.class,
+                new Requirement(PlayerClass.SPELLBLADE, "You are not a Spellblade! The blade rejects you."));
+        REQUIREMENTS.put(BoreasItem.class,
+                new Requirement(PlayerClass.SPELLBLADE, "You are not a Spellblade! The blade rejects you."));
+        REQUIREMENTS.put(PhaetonItem.class,
+                new Requirement(PlayerClass.SPELLBLADE, "You are not a Spellblade! The blade rejects you."));
+        REQUIREMENTS.put(PerunItem.class,
+                new Requirement(PlayerClass.SPELLBLADE, "You are not a Spellblade! The blade rejects you."));
+        REQUIREMENTS.put(AmphitriteItem.class,
+                new Requirement(PlayerClass.SPELLBLADE, "You are not a Spellblade! The blade rejects you."));
     }
 
     @SubscribeEvent

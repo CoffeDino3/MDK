@@ -18,6 +18,6 @@ public class PlayerRespawnHandler {
             player.closeContainer();
         }
 
-        System.out.println("DEBUG: Player respawn handled for " + player.getName().getString());
+        Lunacy.LOGGER.debug("DEBUG: Player respawn handled for " + player.getName().getString());
     }
 }

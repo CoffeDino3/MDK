@@ -124,8 +124,23 @@ public class NetworkHandler {
                 DeactivateGatekeeperAbilityPacket.STREAM_CODEC,
                 DeactivateGatekeeperAbilityPacket::handle
         );
+        registrar.playToServer(
+                ElementSelectionPacket.TYPE,
+                ElementSelectionPacket.STREAM_CODEC,
+                ElementSelectionPacket::handle
+        );
+        registrar.playToServer(
+                RequestElementSelectionPacket.TYPE,
+                RequestElementSelectionPacket.STREAM_CODEC,
+                RequestElementSelectionPacket::handle
+        );
 
         // PLAY_TO_CLIENT packets
+        registrar.playToClient(
+                SyncPhaetonStatePacket.TYPE,
+                SyncPhaetonStatePacket.STREAM_CODEC,
+                SyncPhaetonStatePacket::handle
+        );
         registrar.playToClient(
                 SyncRacePacket.TYPE,
                 SyncRacePacket.STREAM_CODEC,
@@ -145,6 +160,11 @@ public class NetworkHandler {
                 SyncChronobreakCooldownPacket.TYPE,
                 SyncChronobreakCooldownPacket.STREAM_CODEC,
                 SyncChronobreakCooldownPacket::handle
+        );
+        registrar.playToClient(
+                OpenElementSelectionPacket.TYPE,
+                OpenElementSelectionPacket.STREAM_CODEC,
+                OpenElementSelectionPacket::handle
         );
     }
 
@@ -192,5 +212,14 @@ public class NetworkHandler {
 
     public static void openClassSelection() {
         PacketDistributor.sendToServer(new OpenClassSelectionPacket());
+    }
+    public static void openElementSelection() {
+        PacketDistributor.sendToServer(new OpenElementSelectionPacket());
+    }
+    public static void openElementSelectionForPlayer(ServerPlayer player) {
+        PacketDistributor.sendToPlayer(player, new OpenElementSelectionPacket());
+    }
+    public static void syncPhaetonStateToClient(ServerPlayer player, long riseEnd, long launchEnd, boolean diving) {
+        PacketDistributor.sendToPlayer(player, new SyncPhaetonStatePacket(riseEnd, launchEnd, diving));
     }
 }

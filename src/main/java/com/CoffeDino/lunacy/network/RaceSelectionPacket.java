@@ -25,7 +25,7 @@ public record RaceSelectionPacket(String raceId) implements CustomPacketPayload 
                 for (races.Race race : races.Race.values()) {
                     if (race.getId().equals(packet.raceId())) {
                         races.setPlayerRace(player, race);
-                        System.out.println("DEBUG: Race set on server for " + player.getName().getString());
+                        Lunacy.LOGGER.debug("DEBUG: Race set on server for " + player.getName().getString());
                         break;
                     }
                 }

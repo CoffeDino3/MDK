@@ -25,7 +25,7 @@ public record ClassSelectionPacket(String classId) implements CustomPacketPayloa
                 for (PlayerClasses.PlayerClass playerClass : PlayerClasses.PlayerClass.values()) {
                     if (playerClass.getId().equals(packet.classId())) {
                         PlayerClasses.setPlayerClass(player, playerClass);
-                        System.out.println("DEBUG: Class set on server for " + player.getName().getString());
+                        Lunacy.LOGGER.debug("DEBUG: Class set on server for " + player.getName().getString());
                         break;
                     }
                 }

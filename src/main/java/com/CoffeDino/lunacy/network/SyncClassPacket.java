@@ -32,7 +32,7 @@ public record SyncClassPacket(String classId) implements CustomPacketPayload {
                     }
                 }
                 PlayerClasses.setClientClass(playerClass);
-                System.out.println("DEBUG: Synced class to client: " + (playerClass != null ? playerClass.getDisplayName() : "null"));
+                Lunacy.LOGGER.debug("DEBUG: Synced class to client: " + (playerClass != null ? playerClass.getDisplayName() : "null"));
             }
         });
     }

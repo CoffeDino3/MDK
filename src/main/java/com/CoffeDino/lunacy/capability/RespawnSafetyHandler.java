@@ -14,14 +14,13 @@ public class RespawnSafetyHandler {
         if (event.getEntity() instanceof ServerPlayer player) {
             player.getData(ModAttachments.SCULK_STORAGE).startCooldown();
             player.refreshDimensions();
-            System.out.println("DEBUG: Respawn safety measures applied for " + player.getName().getString());
+            Lunacy.LOGGER.debug("DEBUG: Respawn safety measures applied for " + player.getName().getString());
         }
     }
 
     @SubscribeEvent
     public static void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent event) {
         if (event.getEntity() instanceof ServerPlayer player) {
-            // getData() auto-initializes the attachment — no-op here but kept for parity
             player.getData(ModAttachments.SCULK_STORAGE);
         }
     }

@@ -82,6 +82,72 @@ public class ModEntities {
                             .clientTrackingRange(64)
                             .updateInterval(10)
                             .build("roca_boulder"));
+    public static final DeferredHolder<EntityType<?>, EntityType<DarkSphereEntity>> DARK_SPHERE =
+            ENTITIES.register("dark_sphere",
+                    () -> EntityType.Builder.<DarkSphereEntity>of(DarkSphereEntity::new, MobCategory.MISC)
+                            .sized(0.5f, 0.5f)
+                            .clientTrackingRange(64)
+                            .updateInterval(1)
+                            .build("dark_sphere"));
+    public static final DeferredHolder<EntityType<?>, EntityType<HeliosSphereEntity>> HELIOS_SPHERE =
+            ENTITIES.register("helios_sphere",
+                    () -> EntityType.Builder.<HeliosSphereEntity>of(HeliosSphereEntity::new, MobCategory.MISC)
+                            .sized(0.5f, 0.5f)
+                            .clientTrackingRange(64)
+                            .updateInterval(1)
+                            .build("helios_sphere"));
+    public static final DeferredHolder<EntityType<?>, EntityType<BloodMistEntity>> BLOOD_MIST =
+            ENTITIES.register("blood_mist",
+                    () -> EntityType.Builder.<BloodMistEntity>of(BloodMistEntity::new, MobCategory.MISC)
+                            .sized(0.5f, 0.5f)
+                            .clientTrackingRange(64)
+                            .updateInterval(1)
+                            .build("blood_mist"));
+    public static final DeferredHolder<EntityType<?>, EntityType<BoreasStormEntity>> BOREAS_STORM =
+            ENTITIES.register("boreas_storm",
+                    () -> EntityType.Builder.<BoreasStormEntity>of(BoreasStormEntity::new, MobCategory.MISC)
+                            .sized(0.5f, 0.5f)
+                            .clientTrackingRange(64)
+                            .updateInterval(1)
+                            .build("boreas_storm"));
+    public static final DeferredHolder<EntityType<?>, EntityType<PerunOrbitalStrikeEntity>> PERUN_ORBITAL_STRIKE =
+            ENTITIES.register("perun_orbital_strike",
+                    () -> EntityType.Builder.<PerunOrbitalStrikeEntity>of(PerunOrbitalStrikeEntity::new, MobCategory.MISC)
+                            .sized(0.5f, 0.5f)
+                            .clientTrackingRange(64)
+                            .updateInterval(1)
+                            .build("perun_orbital_strike"));
+    public static final DeferredHolder<EntityType<?>, EntityType<PerunSkyBeamEntity>> PERUN_SKY_BEAM =
+            ENTITIES.register("perun_sky_beam",
+                    () -> EntityType.Builder.<PerunSkyBeamEntity>of(PerunSkyBeamEntity::new, MobCategory.MISC)
+                            .sized(0.1f, PerunSkyBeamEntity.BEAM_HEIGHT)
+                            .clientTrackingRange(64)
+                            .updateInterval(1)
+                            .build("perun_sky_beam"));
+    public static final DeferredHolder<EntityType<?>, EntityType<AmphitriteOrbEntity>> AMPHITRITE_ORB =
+            ENTITIES.register("amphitrite_orb",
+                    () -> EntityType.Builder.<AmphitriteOrbEntity>of(AmphitriteOrbEntity::new, MobCategory.MISC)
+                            .sized(0.3f, 0.3f)
+                            .clientTrackingRange(64)
+                            .updateInterval(1)
+                            .build("amphitrite_orb"));
+    public static final DeferredHolder<EntityType<?>, EntityType<MoiraiPortalEntity>> MOIRAI_PORTAL =
+            ENTITIES.register("moirai_portal",
+                    () -> EntityType.Builder.<MoiraiPortalEntity>of(MoiraiPortalEntity::new, MobCategory.MISC)
+                            .sized(0.1f, 0.1f)
+                            .clientTrackingRange(64)
+                            .updateInterval(1)
+                            .build("moirai_portal"));
+
+    public static final DeferredHolder<EntityType<?>, EntityType<MoiraiSweepEntity>> MOIRAI_SWEEP =
+            ENTITIES.register("moirai_sweep",
+                    () -> EntityType.Builder.<MoiraiSweepEntity>of(MoiraiSweepEntity::new, MobCategory.MISC)
+                            .sized(0.5f, 0.5f)
+                            .clientTrackingRange(64)
+                            .updateInterval(1)
+                            .build("moirai_sweep"));
+
+
 
 
 }

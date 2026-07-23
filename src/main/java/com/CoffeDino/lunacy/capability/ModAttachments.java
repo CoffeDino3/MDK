@@ -74,6 +74,83 @@ public class ModAttachments {
                     () -> AttachmentType.builder(() -> 0L)
                             .serialize(Codec.LONG)
                             .build());
+    public static final DeferredHolder<AttachmentType<?>, AttachmentType<Long>> CHARYBDIS_COOLDOWN_END =
+            ATTACHMENT_TYPES.register("charybdis_cooldown_end",
+                    () -> AttachmentType.builder(() -> 0L)
+                            .serialize(Codec.LONG)
+                            .build());
+
+    public static final DeferredHolder<AttachmentType<?>, AttachmentType<Long>> HELIOS_COOLDOWN_END =
+            ATTACHMENT_TYPES.register("helios_cooldown_end",
+                    () -> AttachmentType.builder(() -> 0L)
+                            .serialize(Codec.LONG)
+                            .build());
+
+    public static final DeferredHolder<AttachmentType<?>, AttachmentType<Long>> JORO_COOLDOWN_END =
+            ATTACHMENT_TYPES.register("joro_cooldown_end",
+                    () -> AttachmentType.builder(() -> 0L)
+                            .serialize(Codec.LONG)
+                            .build());
+    public static final DeferredHolder<AttachmentType<?>, AttachmentType<Long>> JORO_ARMED_END =
+            ATTACHMENT_TYPES.register("joro_armed_end",
+                    () -> AttachmentType.builder(() -> 0L).serialize(Codec.LONG).build());
+
+    public static final DeferredHolder<AttachmentType<?>, AttachmentType<Long>> JORO_LAST_DRILL_TICK =
+            ATTACHMENT_TYPES.register("joro_last_drill_tick",
+                    () -> AttachmentType.builder(() -> 0L).serialize(Codec.LONG).build());
+
+    public static final DeferredHolder<AttachmentType<?>, AttachmentType<Long>> ERINYES_COOLDOWN_END =
+            ATTACHMENT_TYPES.register("erinyes_cooldown_end",
+                    () -> AttachmentType.builder(() -> 0L)
+                            .serialize(Codec.LONG)
+                            .build());
+
+    public static final DeferredHolder<AttachmentType<?>, AttachmentType<Long>> MOIRAI_COOLDOWN_END =
+            ATTACHMENT_TYPES.register("moirai_cooldown_end",
+                    () -> AttachmentType.builder(() -> 0L)
+                            .serialize(Codec.LONG)
+                            .build());
+    public static final DeferredHolder<AttachmentType<?>, AttachmentType<Integer>> MOIRAI_CHARGES =
+            ATTACHMENT_TYPES.register("moirai_charges",
+                    () -> AttachmentType.builder(() -> 0)
+                            .serialize(Codec.INT)
+                            .build());
+
+    public static final DeferredHolder<AttachmentType<?>, AttachmentType<Long>> BOREAS_COOLDOWN_END =
+            ATTACHMENT_TYPES.register("boreas_cooldown_end",
+                    () -> AttachmentType.builder(() -> 0L)
+                            .serialize(Codec.LONG)
+                            .build());
+
+    public static final DeferredHolder<AttachmentType<?>, AttachmentType<Long>> PHAETON_COOLDOWN_END =
+            ATTACHMENT_TYPES.register("phaeton_cooldown_end",
+                    () -> AttachmentType.builder(() -> 0L)
+                            .serialize(Codec.LONG)
+                            .build());
+    public static final DeferredHolder<AttachmentType<?>, AttachmentType<Long>> PHAETON_LAUNCH_END =
+            ATTACHMENT_TYPES.register("phaeton_launch_end",
+                    () -> AttachmentType.builder(() -> 0L).serialize(Codec.LONG).build());
+
+    public static final DeferredHolder<AttachmentType<?>, AttachmentType<Boolean>> PHAETON_DIVING =
+            ATTACHMENT_TYPES.register("phaeton_diving",
+                    () -> AttachmentType.builder(() -> false).serialize(Codec.BOOL).build());
+    public static final DeferredHolder<AttachmentType<?>, AttachmentType<Long>> PHAETON_RISE_END =
+            ATTACHMENT_TYPES.register("phaeton_rise_end",
+                    () -> AttachmentType.builder(() -> 0L).serialize(Codec.LONG).build());
+    public static final DeferredHolder<AttachmentType<?>, AttachmentType<Long>> PERUN_COOLDOWN_END =
+            ATTACHMENT_TYPES.register("perun_cooldown_end",
+                    () -> AttachmentType.builder(() -> 0L)
+                            .serialize(Codec.LONG)
+                            .build());
+
+    public static final DeferredHolder<AttachmentType<?>, AttachmentType<Long>> AMPHITRITE_COOLDOWN_END =
+            ATTACHMENT_TYPES.register("amphitrite_cooldown_end",
+                    () -> AttachmentType.builder(() -> 0L)
+                            .serialize(Codec.LONG)
+                            .build());
+    public static final DeferredHolder<AttachmentType<?>, AttachmentType<Boolean>> AMPHITRITE_SUMMONED =
+            ATTACHMENT_TYPES.register("amphitrite_summoned",
+                    () -> AttachmentType.builder(() -> false).serialize(Codec.BOOL).build());
 
     public static void register(net.neoforged.bus.api.IEventBus eventBus) {
         ATTACHMENT_TYPES.register(eventBus);

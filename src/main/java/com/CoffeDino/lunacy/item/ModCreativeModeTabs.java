@@ -46,6 +46,15 @@ public class ModCreativeModeTabs {
                         output.accept(ModItems.BORONT_AXE.get());
                         output.accept(ModItems.ROCA.get());
                         output.accept(ModItems.GRUCK.get());
+                        output.accept(ModItems.CHARYBDIS.get());
+                        output.accept(ModItems.MOIRAI.get());
+                        output.accept(ModItems.PHAETON.get());
+                        output.accept(ModItems.PERUN.get());
+                        output.accept(ModItems.JORO.get());
+                        output.accept(ModItems.BOREAS.get());
+                        output.accept(ModItems.AMPHITRITE.get());
+                        output.accept(ModItems.ERINYES.get());
+                        output.accept(ModItems.HELIOS.get());
                     })
                     .build());
 

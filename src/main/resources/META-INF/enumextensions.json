@@ -1,0 +1,13 @@
+{
+  "entries": [
+    {
+      "enum": "net/minecraft/client/model/HumanoidModel$ArmPose",
+      "name": "LUNACY_JORO_RAISED",
+      "constructor": "(ZLnet/neoforged/neoforge/client/IArmPoseTransformer;)V",
+      "parameters": {
+        "class": "com/CoffeDino/lunacy/client/JoroClientExtensions",
+        "field": "RAISED_POSE"
+      }
+    }
+  ]
+}

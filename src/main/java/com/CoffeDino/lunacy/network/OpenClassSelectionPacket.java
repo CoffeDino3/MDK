@@ -16,9 +16,7 @@ public record OpenClassSelectionPacket() implements CustomPacketPayload {
 
     public static void handle(OpenClassSelectionPacket packet, IPayloadContext context) {
         context.enqueueWork(() -> {
-            // This packet just triggers the screen opening on client
-            // The actual screen opening is handled in the keybind
-            System.out.println("DEBUG: Open class selection packet received");
+            Lunacy.LOGGER.debug("DEBUG: Open class selection packet received");
         });
     }
 

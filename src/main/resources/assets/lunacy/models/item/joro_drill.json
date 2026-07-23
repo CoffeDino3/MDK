@@ -1,0 +1,46 @@
+{
+  "loader": "neoforge:obj",
+  "model": "lunacy:models/item/drill.obj",
+  "flip_v": true,
+  "textures": {
+    "texture0": "lunacy:item/joro_drill",
+    "particle": "lunacy:item/joro_drill"
+  },
+  "display": {
+    "firstperson_righthand": {
+      "rotation": [0, -90, 25],
+      "translation": [0, 7.5, 4],
+      "scale": [0.5, 0.7, 0.5]
+    },
+    "firstperson_lefthand":  {
+      "rotation": [0, 90, -25],
+      "translation": [0, 7.5, 4],
+      "scale": [0.5, 0.7, 0.5]
+    },
+    "thirdperson_righthand": {
+      "rotation": [-90, -90, 0],
+      "translation": [-4, 2.5, -5.5],
+      "scale": [0.5, 0.7, 0.5]
+    },
+    "thirdperson_lefthand":  {
+      "rotation": [-90, 90, 0],
+      "translation": [-4, 2.5, -5.5],
+      "scale": [0.5, 0.7, 0.5]
+    },
+    "gui":     {
+      "rotation": [0, 0, 0],
+      "translation": [3.3, -1, 0],
+      "scale": [0.5, 0.7, 0.5]
+    },
+    "ground":  {
+      "rotation": [0, 0, 0],
+      "translation": [0, 3, 0],
+      "scale": [1, 1, 1]
+    },
+    "fixed":   {
+      "rotation": [0, 0, 0],
+      "translation": [0, 0, 0],
+      "scale": [0.5, 0.5, 0.5]
+    }
+  }
+}

@@ -71,7 +71,7 @@ public class races {
 
     public static void resetClientRace() {
         clientRace = null;
-        System.out.println("DEBUG: Reset client race for new world");
+        Lunacy.LOGGER.debug("DEBUG: Reset client race for new world");
     }
 
     public static void setPlayerRace(Player player, Race race) {
@@ -88,7 +88,7 @@ public class races {
             RaceDataManager dataManager = RaceDataManager.get(serverPlayer);
             dataManager.setPlayerRace(player.getUUID(), race != null ? race.getId() : "");
             syncRaceToClient(serverPlayer, race);
-            System.out.println("DEBUG: Race set on server for " + player.getName().getString() + ": " + (race != null ? race.getDisplayName() : "null"));
+            Lunacy.LOGGER.debug("DEBUG: Race set on server for " + player.getName().getString() + ": " + (race != null ? race.getDisplayName() : "null"));
 
             if (race != null) {
                 applyRaceEffects(player, race);
@@ -98,13 +98,13 @@ public class races {
             }
         } else {
             clientRace = race;
-            System.out.println("DEBUG: Race set on client: " + (race != null ? race.getDisplayName() : "null"));
+            Lunacy.LOGGER.debug("DEBUG: Race set on client: " + (race != null ? race.getDisplayName() : "null"));
         }
     }
 
     public static void setClientRace(Race race) {
         clientRace = race;
-        System.out.println("DEBUG: Set client race: " + (race != null ? race.getDisplayName() : "null"));
+        Lunacy.LOGGER.debug("DEBUG: Set client race: " + (race != null ? race.getDisplayName() : "null"));
     }
 
     public static Race getPlayerRace(Player player) {
@@ -149,14 +149,14 @@ public class races {
         }
 
         setPlayerRace(player, null);
-        System.out.println("DEBUG: Cleared race for player: " + player.getName().getString());
+        Lunacy.LOGGER.debug("DEBUG: Cleared race for player: " + player.getName().getString());
     }
 
     public static void onPlayerJoinWorld(Player player) {
         if (!player.level().isClientSide()) {
             Race race = getPlayerRace(player);
             if (race != null) {
-                System.out.println("DEBUG: Applying race effects to " + player.getName().getString() + ": " + race.getDisplayName());
+                Lunacy.LOGGER.debug("DEBUG: Applying race effects to " + player.getName().getString() + ": " + race.getDisplayName());
                 applyRaceEffects(player, race);
             }
         }
@@ -221,7 +221,7 @@ public class races {
         clearHealthModifier(player);
         clearSizeModifiers(player);
 
-        System.out.println("DEBUG: Clearing race effects for " + player.getName().getString());
+        Lunacy.LOGGER.debug("DEBUG: Clearing race effects for " + player.getName().getString());
     }
 
     private static void applyHealthBonus(Player player, Race race) {
@@ -239,7 +239,7 @@ public class races {
                 if (player.getHealth() > player.getMaxHealth()) {
                     player.setHealth(player.getMaxHealth());
                 }
-                System.out.println("DEBUG: Applied " + healthBonus + " health bonus to " + player.getName().getString() + ". New max health: " + player.getMaxHealth());
+                Lunacy.LOGGER.debug("DEBUG: Applied " + healthBonus + " health bonus to " + player.getName().getString() + ". New max health: " + player.getMaxHealth());
             }
         }
     }
@@ -258,7 +258,7 @@ public class races {
         if (player instanceof ServerPlayer serverPlayer) {
             player.getData(ModAttachments.RACE_SIZE).setRaceSize(race.getHeight(), race.getWidth());
 
-            System.out.println("DEBUG: Applied size modifiers for " + race.getDisplayName() +
+            Lunacy.LOGGER.debug("DEBUG: Applied size modifiers for " + race.getDisplayName() +
                     " - Height: " + race.getHeight() + ", Width: " + race.getWidth());
             player.refreshDimensions();
             NetworkHandler.syncSizeToClient(serverPlayer, race.getHeight(), race.getWidth());
@@ -271,7 +271,7 @@ public class races {
     private static void clearSizeModifiers(Player player) {
         player.getData(ModAttachments.RACE_SIZE).resetRaceSize();
         player.refreshDimensions();
-        System.out.println("DEBUG: Cleared size modifiers for " + player.getName().getString());
+        Lunacy.LOGGER.debug("DEBUG: Cleared size modifiers for " + player.getName().getString());
     }
 
     private static void applyGatekeeperTraits(Player player) {

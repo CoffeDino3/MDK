@@ -1,18 +1,20 @@
 package com.CoffeDino.lunacy;
 
 import com.CoffeDino.lunacy.capability.ModAttachments;
+import com.CoffeDino.lunacy.particle.PerunFlashParticle;
+import net.minecraft.client.renderer.entity.player.PlayerRenderer;
+import net.minecraft.client.resources.PlayerSkin;
+import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import org.slf4j.Logger;
 
 import com.mojang.logging.LogUtils;
 
 import com.CoffeDino.lunacy.attributes.ModAttributes;
 import com.CoffeDino.lunacy.block.ModBlocks;
-import com.CoffeDino.lunacy.capability.ISculkStorage;
 import com.CoffeDino.lunacy.commands.ClassCommand;
 import com.CoffeDino.lunacy.commands.RaceCommand;
 import com.CoffeDino.lunacy.effects.ModEffects;
 import com.CoffeDino.lunacy.entity.ModEntities;
-import com.CoffeDino.lunacy.entity.abilities.GatekeeperProjectileEntity;
 import com.CoffeDino.lunacy.item.Custom.FireSpearItem;
 import com.CoffeDino.lunacy.item.ModCreativeModeTabs;
 import com.CoffeDino.lunacy.item.ModItems;
@@ -34,7 +36,6 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.ModContainer;
-import net.neoforged.fml.ModLoadingContext;
 import net.neoforged.fml.config.ModConfig;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
@@ -42,7 +43,6 @@ import net.neoforged.neoforge.client.event.RegisterParticleProvidersEvent;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
 import net.neoforged.neoforge.event.server.ServerStartingEvent;
-import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 
 @Mod(Lunacy.MODID)
@@ -52,6 +52,7 @@ public class Lunacy {
 
     public Lunacy(IEventBus modEventBus, ModContainer modContainer) {
         ModCreativeModeTabs.register(modEventBus);
+        LunacyGameRules.init();
         ModItems.register(modEventBus);
         ModBlocks.register(modEventBus);
         ModEffects.EFFECTS.register(modEventBus);
@@ -123,6 +124,15 @@ public class Lunacy {
             EntityRenderers.register(ModEntities.FLOATING_RAPIER.get(), FloatingRapierRenderer::new);
             EntityRenderers.register(ModEntities.THROWN_RAPIER.get(), ThrownRapierRenderer::new);
             EntityRenderers.register(ModEntities.ROCA_BOULDER.get(), RocaBoulderRenderer::new);
+            EntityRenderers.register(ModEntities.DARK_SPHERE.get(), DarkSphereRenderer::new);
+            EntityRenderers.register(ModEntities.HELIOS_SPHERE.get(), HeliosSphereRenderer::new);
+            EntityRenderers.register(ModEntities.BLOOD_MIST.get(), BloodMistRenderer::new);
+            EntityRenderers.register(ModEntities.BOREAS_STORM.get(), BoreasStormRenderer::new);
+            EntityRenderers.register(ModEntities.PERUN_SKY_BEAM.get(), PerunSkyBeamRenderer::new);
+            EntityRenderers.register(ModEntities.PERUN_ORBITAL_STRIKE.get(), PerunOrbitalStrikeRenderer::new);
+            EntityRenderers.register(ModEntities.AMPHITRITE_ORB.get(), AmphitriteOrbRenderer::new);
+            EntityRenderers.register(ModEntities.MOIRAI_PORTAL.get(), MoiraiPortalRenderer::new);
+            EntityRenderers.register(ModEntities.MOIRAI_SWEEP.get(), MoiraiSweepRenderer::new);
             event.enqueueWork(() -> {
                 ItemProperties.register(ModItems.AGNIS_FURY.get(),
                         ResourceLocation.fromNamespaceAndPath(MODID, "charged"),
@@ -135,11 +145,22 @@ public class Lunacy {
                                 entity != null && entity.isUsingItem() && entity.getUseItem() == stack ? 1.0F : 0.0F);
             });
         }
+        @SubscribeEvent
+        public static void onAddLayers(EntityRenderersEvent.AddLayers event) {
+            for (PlayerSkin.Model skinModel : event.getSkins()) {
+                PlayerRenderer renderer = event.getSkin(skinModel);
+                if (renderer != null) {
+                    renderer.addLayer(new PhaetonWingsLayer(renderer));
+                }
+            }
+        }
 
         @SubscribeEvent
         public static void registerParticleProvider(RegisterParticleProvidersEvent event) {
             event.registerSpriteSet(ModParticles.MOURNING_BUTTERFLY_PARTICLES.get(), MourningButterflyParticle.Provider::new);
             event.registerSpriteSet(ModParticles.CLOCK_PARTICLES.get(), ClockParticle.Provider::new);
+            event.registerSpriteSet(ModParticles.PERUN_FLASH.get(), PerunFlashParticle.Provider::new);
+
         }
     }
 }

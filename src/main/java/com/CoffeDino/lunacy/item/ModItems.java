@@ -65,6 +65,68 @@ public class ModItems {
                             .fireResistant()));
     public static final DeferredHolder<Item, GruckItem> GRUCK = ITEMS.register("gruck",
             () -> new GruckItem(new Item.Properties().durability(10000)));
+    public static final DeferredHolder<Item, CharybdisItem> CHARYBDIS = ITEMS.register("charybdis",
+            () -> new CharybdisItem(Tiers.NETHERITE,
+                    new Item.Properties()
+                            .attributes(SwordItem.createAttributes(Tiers.NETHERITE, 4.0F, -2.4F))
+                            .durability(2031)
+                            .fireResistant()));
+    public static final DeferredHolder<Item, HeliosItem> HELIOS = ITEMS.register("helios",
+            () -> new HeliosItem(Tiers.NETHERITE,
+                    new Item.Properties()
+                            .attributes(SwordItem.createAttributes(Tiers.NETHERITE, 4.0F, -2.4F))
+                            .durability(2031)
+                            .fireResistant()));
+
+    public static final DeferredHolder<Item, JoroItem> JORO = ITEMS.register("joro",
+            () -> new JoroItem(Tiers.NETHERITE,
+                    new Item.Properties()
+                            .attributes(SwordItem.createAttributes(Tiers.NETHERITE, 4.0F, -2.4F))
+                            .durability(2031)
+                            .fireResistant()));
+
+    public static final DeferredHolder<Item, ErinyesItem> ERINYES = ITEMS.register("erinyes",
+            () -> new ErinyesItem(Tiers.NETHERITE,
+                    new Item.Properties()
+                            .attributes(SwordItem.createAttributes(Tiers.NETHERITE, 4.0F, -2.4F))
+                            .durability(2031)
+                            .fireResistant()));
+
+    public static final DeferredHolder<Item, MoiraiItem> MOIRAI = ITEMS.register("moirai",
+            () -> new MoiraiItem(Tiers.NETHERITE,
+                    new Item.Properties()
+                            .attributes(SwordItem.createAttributes(Tiers.NETHERITE, 4.0F, -2.4F))
+                            .durability(2031)
+                            .fireResistant()));
+
+    public static final DeferredHolder<Item, BoreasItem> BOREAS = ITEMS.register("boreas",
+            () -> new BoreasItem(Tiers.NETHERITE,
+                    new Item.Properties()
+                            .attributes(SwordItem.createAttributes(Tiers.NETHERITE, 4.0F, -2.4F))
+                            .durability(2031)
+                            .fireResistant()));
+
+    public static final DeferredHolder<Item, PhaetonItem> PHAETON = ITEMS.register("phaeton",
+            () -> new PhaetonItem(Tiers.NETHERITE,
+                    new Item.Properties()
+                            .attributes(SwordItem.createAttributes(Tiers.NETHERITE, 4.0F, -2.4F))
+                            .durability(2031)
+                            .fireResistant()));
+
+    public static final DeferredHolder<Item, PerunItem> PERUN = ITEMS.register("perun",
+            () -> new PerunItem(Tiers.NETHERITE,
+                    new Item.Properties()
+                            .attributes(SwordItem.createAttributes(Tiers.NETHERITE, 4.0F, -2.4F))
+                            .durability(2031)
+                            .fireResistant()));
+
+    public static final DeferredHolder<Item, AmphitriteItem> AMPHITRITE = ITEMS.register("amphitrite",
+            () -> new AmphitriteItem(Tiers.NETHERITE,
+                    new Item.Properties()
+                            .attributes(SwordItem.createAttributes(Tiers.NETHERITE, 4.0F, -2.4F))
+                            .durability(2031)
+                            .fireResistant()));
+
 
 
 

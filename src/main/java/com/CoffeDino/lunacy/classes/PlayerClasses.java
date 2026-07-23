@@ -1,6 +1,7 @@
 package com.CoffeDino.lunacy.classes;
 
 import com.CoffeDino.lunacy.Lunacy;
+import com.CoffeDino.lunacy.LunacyGameRules;
 import com.CoffeDino.lunacy.network.NetworkHandler;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
@@ -41,7 +42,7 @@ public class PlayerClasses {
 
     public static void resetClientClass() {
         clientClass = null;
-        System.out.println("DEBUG: Reset client class for new world");
+        Lunacy.LOGGER.debug("DEBUG: Reset client class for new world");
     }
 
     public static void setPlayerClass(Player player, PlayerClass playerClass) {
@@ -51,20 +52,35 @@ public class PlayerClasses {
             ClassDataManager dataManager = ClassDataManager.get(serverPlayer);
             dataManager.setPlayerClass(player.getUUID(), playerClass != null ? playerClass.getId() : "");
             syncClassToClient(serverPlayer, playerClass);
-            System.out.println("DEBUG: Class set on server for " + player.getName().getString() + ": " + (playerClass != null ? playerClass.getDisplayName() : "null"));
+
+            if (playerClass == PlayerClass.SPELLBLADE && dataManager.getPlayerElement(player.getUUID()) == null) {
+                handleSpellbladeElementAssignment(serverPlayer, dataManager);
+            }
 
             if (playerClass != null) {
                 player.sendSystemMessage(Component.literal("Your class is: " + playerClass.getDisplayName()));
             }
         } else {
             clientClass = playerClass;
-            System.out.println("DEBUG: Class set on client: " + (playerClass != null ? playerClass.getDisplayName() : "null"));
+        }
+    }
+
+    private static void handleSpellbladeElementAssignment(ServerPlayer player, ClassDataManager dataManager) {
+        boolean random = player.serverLevel().getGameRules().getBoolean(LunacyGameRules.RANDOM_SPELLBLADE_ELEMENT);
+
+        if (random) {
+            SpellbladeElement[] elements = SpellbladeElement.values();
+            SpellbladeElement chosen = elements[player.getRandom().nextInt(elements.length)];
+            dataManager.setPlayerElement(player.getUUID(), chosen.getId());
+            player.sendSystemMessage(Component.literal("The arcane chose your element: " + chosen.getDisplayName()));
+        } else {
+            NetworkHandler.openElementSelectionForPlayer(player);
         }
     }
 
     public static void setClientClass(PlayerClass playerClass) {
         clientClass = playerClass;
-        System.out.println("DEBUG: Set client class: " + (playerClass != null ? playerClass.getDisplayName() : "null"));
+        Lunacy.LOGGER.debug("DEBUG: Set client class: " + (playerClass != null ? playerClass.getDisplayName() : "null"));
     }
 
     public static PlayerClass getPlayerClass(Player player) {
@@ -109,6 +125,6 @@ public class PlayerClasses {
 
     public static void clearPlayerClass(Player player) {
         setPlayerClass(player, null);
-        System.out.println("DEBUG: Cleared class for player: " + player.getName().getString());
+        Lunacy.LOGGER.debug("DEBUG: Cleared class for player: " + player.getName().getString());
     }
 }

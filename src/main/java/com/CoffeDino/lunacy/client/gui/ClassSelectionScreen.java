@@ -269,9 +269,9 @@ public class ClassSelectionScreen extends Screen {
             return;
         }
 
-        System.out.println("DEBUG: Class select button pressed!");
+        Lunacy.LOGGER.debug("DEBUG: Class select button pressed!");
         PlayerClasses.PlayerClass playerClass = classList.get(currentClassIndex);
-        System.out.println("DEBUG: Selected class: " + playerClass.getId() + " - " + playerClass.getDisplayName());
+        Lunacy.LOGGER.debug("DEBUG: Selected class: " + playerClass.getId() + " - " + playerClass.getDisplayName());
         NetworkHandler.sendToServer(new ClassSelectionPacket(playerClass.getId()));
         Minecraft.getInstance().setScreen(null);
     }
