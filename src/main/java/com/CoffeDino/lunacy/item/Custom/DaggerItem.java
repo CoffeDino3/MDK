@@ -2,6 +2,9 @@ package com.CoffeDino.lunacy.item.Custom;
 
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EquipmentSlotGroup;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
@@ -11,6 +14,9 @@ import net.minecraft.world.item.SwordItem;
 import net.minecraft.world.item.Tier;
 import net.minecraft.world.item.component.ItemAttributeModifiers;
 import net.minecraft.world.phys.Vec3;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 
 
 public class DaggerItem extends SwordItem {
@@ -19,6 +25,8 @@ public class DaggerItem extends SwordItem {
 
     private static final float BACKSTAB_MULTIPLIER = 2.0f;
     private static final float BACKSTAB_DOT_THRESHOLD = -0.5f;
+
+    private static final String NBT_PASSIVE_INVIS = "DaggerPassiveInvis";
 
     public DaggerItem(Tier tier, float attackDamage, float attackSpeed, Properties properties) {
         super(tier, properties);
@@ -49,6 +57,7 @@ public class DaggerItem extends SwordItem {
                 )
                 .build();
     }
+
     @Override
     public boolean hurtEnemy(ItemStack stack, LivingEntity target, LivingEntity attacker) {
         if (isBackstab(target, attacker) && target.level() instanceof ServerLevel serverLevel) {
@@ -77,5 +86,29 @@ public class DaggerItem extends SwordItem {
 
     protected float getBackstabDotThreshold() {
         return BACKSTAB_DOT_THRESHOLD;
+    }
+    @EventBusSubscriber(modid = "lunacy")
+    public static class PassiveInvisHandler {
+        @SubscribeEvent
+        public static void onPlayerTick(PlayerTickEvent.Post event) {
+            if (!(event.getEntity() instanceof ServerPlayer player)) return;
+
+            boolean holdingDagger = player.getMainHandItem().getItem() instanceof DaggerItem
+                    || player.getOffhandItem().getItem() instanceof DaggerItem;
+            boolean shouldBeInvisible = holdingDagger && player.isShiftKeyDown();
+
+            var data = player.getPersistentData();
+            boolean wasGranted = data.getBoolean(NBT_PASSIVE_INVIS);
+
+            if (shouldBeInvisible) {
+                player.addEffect(new MobEffectInstance(MobEffects.INVISIBILITY, 30, 0, true, false, false));
+                if (!wasGranted) {
+                    data.putBoolean(NBT_PASSIVE_INVIS, true);
+                }
+            } else if (wasGranted) {
+                player.removeEffect(MobEffects.INVISIBILITY);
+                data.putBoolean(NBT_PASSIVE_INVIS, false);
+            }
+        }
     }
 }

@@ -98,12 +98,12 @@ public class ClassDataManager extends SavedData {
     }
 
     public static ClassDataManager get(ServerPlayer player) {
-        if (player.serverLevel() == null) {
-            Lunacy.LOGGER.warn("Server level is null for player: {}", player.getName().getString());
+        if (player.getServer() == null) {
+            Lunacy.LOGGER.warn("Server is null for player: {}", player.getName().getString());
             return new ClassDataManager();
         }
 
-        DimensionDataStorage storage = player.serverLevel().getDataStorage();
+        DimensionDataStorage storage = player.getServer().overworld().getDataStorage();
         return storage.computeIfAbsent(
                 new Factory<>(
                         ClassDataManager::new,

@@ -13,11 +13,6 @@ import org.slf4j.LoggerFactory;
 public class SculkStorageEventHandler {
     private static final Logger LOGGER = LoggerFactory.getLogger(SculkStorageEventHandler.class);
 
-    /**
-     * AttachCapabilitiesEvent is gone — SCULK_STORAGE is a Data Attachment registered in
-     * ModAttachments and auto-initialized on first getData() call. No explicit attach needed.
-     */
-
     @SubscribeEvent
     public static void onPlayerClone(PlayerEvent.Clone event) {
         if (!event.isWasDeath()) return;
@@ -25,7 +20,6 @@ public class SculkStorageEventHandler {
         Player original = event.getOriginal();
         Player newPlayer = event.getEntity();
 
-        // No reviveCaps() / invalidateCaps() — NeoForge manages attachment lifetime.
         SculkStorage oldStorage = original.getData(ModAttachments.SCULK_STORAGE);
         SculkStorage newStorage = newPlayer.getData(ModAttachments.SCULK_STORAGE);
 

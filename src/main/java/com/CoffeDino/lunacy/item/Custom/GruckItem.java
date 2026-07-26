@@ -127,7 +127,8 @@ public class GruckItem extends ShieldItem {
             if (hit.isEmpty()) continue;
 
             LivingEntity target = (LivingEntity) candidate;
-            target.hurt(blocker.damageSources().magic(), beamDamage);
+            float dynamicDamage = target.getMaxHealth() * 0.10F;
+            target.hurt(blocker.damageSources().magic(), dynamicDamage);
             target.knockback(KNOCKBACK_STRENGTH,
                     blocker.getX() - target.getX(),
                     blocker.getZ() - target.getZ());
@@ -150,7 +151,6 @@ public class GruckItem extends ShieldItem {
     }
 
     private static void spawnBeamEffect(ServerLevel level, Vec3 start, Vec3 end, List<Vec3> impactPoints) {
-        // Clean color definitions
         DustParticleOptions whiteCore = new DustParticleOptions(new Vector3f(1.0F, 1.0F, 1.0F), 2.0F);
         DustParticleOptions redAura = new DustParticleOptions(new Vector3f(1.0F, 0.0F, 0.0F), 1.5F);
         DustParticleOptions redGlow = new DustParticleOptions(new Vector3f(1.0F, 0.2F, 0.0F), 1.2F);

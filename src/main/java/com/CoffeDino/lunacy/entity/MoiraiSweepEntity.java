@@ -111,7 +111,7 @@ public class MoiraiSweepEntity extends Entity {
     }
 
     private void spawnArcRing() {
-        float progress = this.tickCount / (float) BUILD_TICKS; // 0 -> 1 across the build window
+        float progress = this.tickCount / (float) BUILD_TICKS;
         float sweepFrom = -ARC_HALF_ANGLE_DEG;
         float sweepTo = -ARC_HALF_ANGLE_DEG + (2 * ARC_HALF_ANGLE_DEG * progress);
 

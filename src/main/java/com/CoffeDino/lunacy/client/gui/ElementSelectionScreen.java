@@ -24,26 +24,15 @@ public class ElementSelectionScreen extends Screen {
 
     private static final int BG_NATIVE_WIDTH = 799;
     private static final int BG_NATIVE_HEIGHT = 625;
-
-    // frameWidth at which the original fixed text sizes (1.8f title scale, etc.) looked right.
-    // textScale is derived from how far the current frame is from this reference, so text grows
-    // and shrinks in step with the panel as the window is resized.
     private static final int TEXT_REFERENCE_FRAME_WIDTH = 650;
-
-    // extra flat multiplier on top of textScale to bump overall text size up
     private static final float TEXT_SIZE_BOOST = 1.3f;
-    // additional multipliers layered on top of TEXT_SIZE_BOOST, applied separately
-    // so the title and description can be tuned independently
     private static final float TITLE_EXTRA_BOOST = 1.45f;
     private static final float DESC_EXTRA_BOOST = 1.1f;
-
     private int currentElementIndex = 0;
     private final List<SpellbladeElement> elementList = List.of(SpellbladeElement.values());
     private Button selectButton;
     private Button leftArrow;
     private Button rightArrow;
-
-    // computed once in init(), reused by render()
     private int frameX, frameY, frameWidth, frameHeight;
     private float textScale;
 
@@ -59,9 +48,7 @@ public class ElementSelectionScreen extends Screen {
 
         textScale = Math.min(1.6f, Math.max(0.6f, (float) frameWidth / TEXT_REFERENCE_FRAME_WIDTH)) * TEXT_SIZE_BOOST;
 
-        int arrowY = frameY + frameHeight / 2 - 12; // vertically centered on the panel
-
-        // outer edges of the arrow buttons now flush with the frame's left/right borders
+        int arrowY = frameY + frameHeight / 2 - 12;
         leftArrow = new ColoredButton(
                 frameX, arrowY, 25, 25,
                 Component.literal("◀"),
@@ -79,8 +66,6 @@ public class ElementSelectionScreen extends Screen {
                 0xE07020FF
         );
         addRenderableWidget(rightArrow);
-
-        // nudged up a bit (was frameHeight - 60) and recolored to an opaque purple
         selectButton = new ColoredButton(
                 this.width / 2 - 60, frameY + frameHeight - 72, 120, 20,
                 Component.literal("Select"),
@@ -132,18 +117,12 @@ public class ElementSelectionScreen extends Screen {
 
         guiGraphics.pose().pushPose();
         guiGraphics.pose().translate(0, 0, 100);
-
-        // title - name of current element, scaled with the panel, moved up slightly
         float titleScale = 1.8f * textScale * TITLE_EXTRA_BOOST;
         guiGraphics.pose().pushPose();
         guiGraphics.pose().translate(centerX, frameY + 65, 0);
         guiGraphics.pose().scale(titleScale, titleScale, titleScale);
         guiGraphics.drawCenteredString(this.font, Component.literal(current.getDisplayName()), 0, 0, accentColor);
         guiGraphics.pose().popPose();
-
-        // description, centered as a wrapped block, also scaled with the panel plus a slight buff.
-        // wrap width is computed in "unscaled" font units (i.e. divided by descScale) since the
-        // pose scale below stretches whatever we draw at (0,0) by descScale afterward.
         float descScale = textScale * DESC_EXTRA_BOOST;
         int descWidth = (int) (frameWidth * 0.6f);
         int unscaledDescWidth = (int) (descWidth / descScale);
@@ -164,7 +143,6 @@ public class ElementSelectionScreen extends Screen {
         super.render(guiGraphics, mouseX, mouseY, partialTicks);
     }
 
-    /** Wraps text to fit within maxWidth, returning lines meant to be drawn with drawCenteredString. */
     private List<String> wrapTextCentered(String text, int maxWidth) {
         List<String> lines = new ArrayList<>();
         String[] words = text.split(" ");

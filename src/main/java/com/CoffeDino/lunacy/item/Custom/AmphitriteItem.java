@@ -41,13 +41,13 @@ public class AmphitriteItem extends SpellbladeItem {
                 summonConstellation(level, player);
                 player.setData(ModAttachments.AMPHITRITE_SUMMONED.get(), true);
                 level.playSound(null, player.blockPosition(), SoundEvents.AMBIENT_UNDERWATER_ENTER,
-                        SoundSource.PLAYERS, 0.8f, 1.3f); // placeholder sfx
+                        SoundSource.PLAYERS, 0.8f, 1.3f);
             } else {
                 launchOrbs(level, player);
                 player.setData(ModAttachments.AMPHITRITE_SUMMONED.get(), false);
                 AmphitriteCooldownAttachments.applyCooldown(player, this, level.getGameTime());
                 level.playSound(null, player.blockPosition(), SoundEvents.TRIDENT_RIPTIDE_3.value(),
-                        SoundSource.PLAYERS, 1.0f, 1.1f); // placeholder sfx
+                        SoundSource.PLAYERS, 1.0f, 1.1f);
             }
         }
 

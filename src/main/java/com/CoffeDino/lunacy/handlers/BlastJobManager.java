@@ -6,10 +6,12 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -25,6 +27,7 @@ import java.util.List;
 public class BlastJobManager {
 
     private static final int COLUMNS_PER_TICK = 24;
+    private static final float BLAST_DAMAGE_PERCENT = 0.20f;
 
     private record ColumnTask(int x, int z, int topY, int bottomY, int surfaceY, double dist) {}
 
@@ -94,9 +97,36 @@ public class BlastJobManager {
         columnList.sort(Comparator.comparingDouble(ColumnTask::dist));
 
         Deque<ColumnTask> columns = new ArrayDeque<>(columnList);
+        applyConeDamage(level, player, origin, forward, range, startOffset, halfAngleDeg,
+                feetY, clearAbove, maxDownDepth, baseX, baseZ, intRange);
 
         ClearJob job = new ClearJob(level.dimension(), columns, feetY, lavaLifetimeTicks);
         ACTIVE_CLEAR_JOBS.add(job);
+    }
+
+    private static void applyConeDamage(ServerLevel level, Player player, Vec3 origin, Vec3 forward,
+                                        double range, double startOffset, double halfAngleDeg,
+                                        int feetY, int clearAbove, int maxDownDepth,
+                                        int baseX, int baseZ, int intRange) {
+        AABB coneBox = new AABB(baseX - intRange, feetY - maxDownDepth, baseZ - intRange,
+                baseX + intRange, feetY + clearAbove, baseZ + intRange);
+
+        List<LivingEntity> targets = level.getEntitiesOfClass(LivingEntity.class, coneBox,
+                e -> e != player && e.isAlive());
+
+        for (LivingEntity target : targets) {
+            double toX = target.getX() - origin.x;
+            double toZ = target.getZ() - origin.z;
+            double dist = Math.sqrt(toX * toX + toZ * toZ);
+            if (dist > range || dist < startOffset) continue;
+
+            double dot = (toX * forward.x + toZ * forward.z) / dist;
+            double angleDeg = Math.toDegrees(Math.acos(Mth.clamp(dot, -1.0, 1.0)));
+            if (angleDeg > halfAngleDeg) continue;
+
+            float damage = target.getMaxHealth() * BLAST_DAMAGE_PERCENT;
+            target.hurt(player.damageSources().playerAttack(player), damage);
+        }
     }
 
     @SubscribeEvent

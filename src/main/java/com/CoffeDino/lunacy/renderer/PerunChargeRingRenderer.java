@@ -105,7 +105,7 @@ public class PerunChargeRingRenderer {
             float age = skyBeam.tickCount + partialTick;
             for (int i = 0; i < RING_COUNT; i++) {
                 Vec3 ringPos = headPos.add(0, ringHeightAboveHead(i), 0);
-                float ringSize = BASE_SIZE + SIZE_STEP * i; // full size, charge already complete
+                float ringSize = BASE_SIZE + SIZE_STEP * i;
                 renderRing(poseStack, bufferSource, camPos, ringPos, ringSize, age, i, alpha);
                 drewAny = true;
             }

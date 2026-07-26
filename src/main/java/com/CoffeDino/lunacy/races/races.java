@@ -8,6 +8,7 @@ import com.CoffeDino.lunacy.effects.ModEffects;
 import com.CoffeDino.lunacy.network.NetworkHandler;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.Mth;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
@@ -185,6 +186,8 @@ public class races {
     }
 
     public static void applyRaceEffects(Player player, Race race) {
+        float previousHealthBonus = getCurrentHealthModifierAmount(player);
+
         clearRaceEffects(player);
         switch (race) {
             case ENDER -> applyEnderTraits(player);
@@ -199,7 +202,7 @@ public class races {
             case VAMPIREBORN -> applyVampirebornTraits(player);
             case GATEKEEPER -> applyGatekeeperTraits(player);
         }
-        applyHealthBonus(player, race);
+        applyHealthBonus(player, race, previousHealthBonus);
         applySizeModifiers(player, race);
     }
 
@@ -223,8 +226,14 @@ public class races {
 
         Lunacy.LOGGER.debug("DEBUG: Clearing race effects for " + player.getName().getString());
     }
+    private static float getCurrentHealthModifierAmount(Player player) {
+        AttributeInstance healthAttribute = player.getAttribute(Attributes.MAX_HEALTH);
+        if (healthAttribute == null) return 0f;
+        AttributeModifier existing = healthAttribute.getModifier(HEALTH_MODIFIER_ID);
+        return existing != null ? (float) existing.amount() : 0f;
+    }
 
-    private static void applyHealthBonus(Player player, Race race) {
+    private static void applyHealthBonus(Player player, Race race, float previousBonus) {
         if (player instanceof ServerPlayer) {
             AttributeInstance healthAttribute = player.getAttribute(Attributes.MAX_HEALTH);
             if (healthAttribute != null) {
@@ -236,9 +245,14 @@ public class races {
                         AttributeModifier.Operation.ADD_VALUE
                 );
                 healthAttribute.addTransientModifier(healthModifier);
-                if (player.getHealth() > player.getMaxHealth()) {
+                float delta = healthBonus - previousBonus;
+                if (delta != 0f) {
+                    float newHealth = Mth.clamp(player.getHealth() + delta, 0f, player.getMaxHealth());
+                    player.setHealth(newHealth);
+                } else if (player.getHealth() > player.getMaxHealth()) {
                     player.setHealth(player.getMaxHealth());
                 }
+
                 Lunacy.LOGGER.debug("DEBUG: Applied " + healthBonus + " health bonus to " + player.getName().getString() + ". New max health: " + player.getMaxHealth());
             }
         }

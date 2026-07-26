@@ -1,7 +1,7 @@
 package com.CoffeDino.lunacy.client;
 
 import com.CoffeDino.lunacy.Lunacy;
-import com.CoffeDino.lunacy.item.ModItems; // wherever your JoroItem is registered
+import com.CoffeDino.lunacy.item.ModItems;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;

@@ -14,7 +14,6 @@ public class PlayerDataStorage {
     @SubscribeEvent
     public static void onPlayerSave(PlayerEvent.SaveToFile event) {
         Player player = event.getEntity();
-        // getData() never returns null — attachment is auto-initialized
         SculkStorage storage = player.getData(ModAttachments.SCULK_STORAGE);
         LOGGER.debug("Saving sculk storage data for player");
     }

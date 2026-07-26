@@ -38,13 +38,11 @@ public class ViridyumGreatswordItem extends GreatswordItem {
     public void inventoryTick(ItemStack stack, Level level, Entity entity, int slotId, boolean isSelected) {
         if (!level.isClientSide && entity instanceof ServerPlayer player) {
             if (!hasChronobladeClass(player)) {
-                // Actual removal from inventory is handled centrally by
-                // ClassRestrictedWeaponHandler; just skip the chronobreak logic here.
                 return;
             }
 
             ChronobreakDataManager.PlayerChronobreakData data = ChronobreakDataManager.get(player).getOrCreatePlayerData(player.getUUID());
-            long currentTime = level.getGameTime();
+            long currentTime = player.getServer().getTickCount();
 
             if (!data.isOnCooldown() && currentTime - data.getLastSaveTime() >= COOLDOWN_TICKS) {
                 saveChronoData(player, currentTime);
@@ -62,10 +60,6 @@ public class ViridyumGreatswordItem extends GreatswordItem {
             updateClientCooldown(stack, level.getGameTime());
         }
     }
-
-    // onEntitySwing(ItemStack, LivingEntity) is deprecated-for-removal in NeoForge 1.21.1 — removed.
-    // Swing particles are handled via PlayerTickEvent.Post watching player.swinging in SwingHandler below.
-
     @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
@@ -78,7 +72,7 @@ public class ViridyumGreatswordItem extends GreatswordItem {
             }
 
             ChronobreakDataManager.PlayerChronobreakData data = ChronobreakDataManager.get(serverPlayer).getOrCreatePlayerData(serverPlayer.getUUID());
-            long currentTime = level.getGameTime();
+            long currentTime = serverPlayer.getServer().getTickCount();
 
             if (data.isOnCooldown()) {
                 long cooldownLeft = data.getCooldownEnd() - currentTime;
@@ -151,7 +145,7 @@ public class ViridyumGreatswordItem extends GreatswordItem {
             player.displayClientMessage(Component.literal("Chronobreak! Rewound to saved position.")
                     .withStyle(ChatFormatting.LIGHT_PURPLE), true);
             data.setOnCooldown(true);
-            data.setCooldownEnd(player.level().getGameTime() + COOLDOWN_TICKS);
+            data.setCooldownEnd(player.getServer().getTickCount() + COOLDOWN_TICKS);
             return true;
         }
         return false;
@@ -180,12 +174,6 @@ public class ViridyumGreatswordItem extends GreatswordItem {
         clientCooldownEnd = cooldownEnd;
     }
 
-    /**
-     * Replaces the deprecated onEntitySwing override.
-     * Watches player.swinging each client tick to detect arm swings while holding this sword.
-     * player.swinging is true for the duration of the swing animation.
-     * We use swingTime == 1 to fire exactly once per swing (the first tick it becomes active).
-     */
     @EventBusSubscriber(value = Dist.CLIENT, modid = "lunacy")
     public static class SwingHandler {
         @SubscribeEvent
@@ -193,7 +181,7 @@ public class ViridyumGreatswordItem extends GreatswordItem {
             Player player = event.getEntity();
             if (!player.level().isClientSide()) return;
             if (!player.swinging) return;
-            if (player.swingTime != 1) return; // fire only on the first tick of the swing
+            if (player.swingTime != 1) return;
 
             ItemStack held = player.getMainHandItem();
             if (!(held.getItem() instanceof ViridyumGreatswordItem)) return;

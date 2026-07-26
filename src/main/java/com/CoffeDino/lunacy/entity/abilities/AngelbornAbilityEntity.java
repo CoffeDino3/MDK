@@ -9,6 +9,7 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
@@ -35,6 +36,8 @@ public class AngelbornAbilityEntity extends Entity {
     private int beamTicks = 0;
     private static final int MAX_LIFETIME = 100;
     private static final int BEAM_DURATION = 40;
+    private static final float BEAM_DAMAGE_MULTIPLIER = 0.5f;
+    private static final float BEAM_DAMAGE_FLOOR = 3.0f;
 
     public AngelbornAbilityEntity(EntityType<?> entityType, Level level) {
         super(entityType, level);
@@ -233,14 +236,25 @@ public class AngelbornAbilityEntity extends Entity {
         spawnBeamParticles(start, end);
 
         if (beamTicks % 10 == 0 && !level().isClientSide()) {
-            boolean wasKilled = target.getHealth() <= 3.0f;
-            target.hurt(level().damageSources().indirectMagic(this, getOwner()), 3.0f);
+            Player owner = getOwner();
+            float beamDamage = getBeamDamage(owner);
+
+            boolean wasKilled = target.getHealth() <= beamDamage;
+            target.hurt(level().damageSources().indirectMagic(this, owner), beamDamage);
 
             if (!target.isAlive() || wasKilled) {
                 discard();
                 return;
             }
         }
+    }
+
+    private float getBeamDamage(Player owner) {
+        if (owner == null) {
+            return BEAM_DAMAGE_FLOOR;
+        }
+        float mainHandDamage = (float) owner.getAttributeValue(Attributes.ATTACK_DAMAGE);
+        return Math.max(BEAM_DAMAGE_FLOOR, mainHandDamage * BEAM_DAMAGE_MULTIPLIER);
     }
 
 

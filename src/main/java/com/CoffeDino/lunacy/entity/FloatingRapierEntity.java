@@ -215,18 +215,6 @@ public class FloatingRapierEntity extends Entity {
     public ItemStack getDisplayItem() {
         return entityData.get(DATA_ITEM);
     }
-
-    /**
-     * Re-numbers the remaining floating rapiers belonging to this player to fill 0..N-1
-     * contiguously, based on their current orbit index (so the rapier that was "next" in
-     * line slides forward). Since tick() already lerps position 25%/35% of the remaining
-     * distance every tick toward whatever slot its index maps to, just changing the index
-     * is enough to make it glide smoothly into the new formation slot rather than teleport -
-     * no extra interpolation bookkeeping is needed here.
-     *
-     * Call this right after discarding a floating rapier (melee detach, right-click throw,
-     * or any other future way one might be removed) so the rest of the flock closes ranks.
-     */
     public static void reflowFormation(Player player) {
         List<FloatingRapierEntity> remaining = player.level().getEntitiesOfClass(
                 FloatingRapierEntity.class,

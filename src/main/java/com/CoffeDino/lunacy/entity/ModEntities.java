@@ -28,12 +28,6 @@ public class ModEntities {
                             .clientTrackingRange(4)
                             .updateInterval(1)
                             .build("lament_bullet"));
-    public static final DeferredHolder<EntityType<?>, EntityType<FireSpearEntity>> FIRE_SPEAR = ENTITIES.register("fire_spear",
-            () -> EntityType.Builder.<FireSpearEntity>of(FireSpearEntity::new, MobCategory.MISC)
-                    .sized(0.5F, 0.5F)
-                    .clientTrackingRange(4)
-                    .updateInterval(20)
-                    .build("fire_spear"));
     public static final DeferredHolder<EntityType<?>, EntityType<GatekeeperPortalEntity>> GATEKEEPER_PORTAL =
             ENTITIES.register("gatekeeper_portal",
                     () -> EntityType.Builder.<GatekeeperPortalEntity>of(GatekeeperPortalEntity::new, MobCategory.MISC)

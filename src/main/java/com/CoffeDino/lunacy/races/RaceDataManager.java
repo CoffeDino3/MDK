@@ -73,12 +73,12 @@ public class RaceDataManager extends SavedData {
     }
 
     public static RaceDataManager get(ServerPlayer player) {
-        if (player.serverLevel() == null) {
-            Lunacy.LOGGER.warn("Server level is null for player: {}", player.getName().getString());
+        if (player.getServer() == null) {
+            Lunacy.LOGGER.warn("Server is null for player: {}", player.getName().getString());
             return new RaceDataManager();
         }
 
-        DimensionDataStorage storage = player.serverLevel().getDataStorage();
+        DimensionDataStorage storage = player.getServer().overworld().getDataStorage();
         RaceDataManager manager = storage.computeIfAbsent(
                 new SavedData.Factory<>(
                         RaceDataManager::new,

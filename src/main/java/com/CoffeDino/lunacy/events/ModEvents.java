@@ -4,6 +4,7 @@ import com.CoffeDino.lunacy.Lunacy;
 import com.CoffeDino.lunacy.capability.ModAttachments;
 import com.CoffeDino.lunacy.classes.PlayerClasses;
 import com.CoffeDino.lunacy.client.gui.RaceSelectionScreen;
+import com.CoffeDino.lunacy.domain.FireDomainManager;
 import com.CoffeDino.lunacy.entity.FloatingRapierEntity;
 import com.CoffeDino.lunacy.item.Custom.*;
 import com.CoffeDino.lunacy.item.ModItems;
@@ -94,6 +95,7 @@ public class ModEvents {
                 reapplyPersistedCooldown(serverPlayer, ModAttachments.PHAETON_COOLDOWN_END, PhaetonItem.class);
                 reapplyPersistedCooldown(serverPlayer, ModAttachments.PERUN_COOLDOWN_END, PerunItem.class);
                 reapplyPersistedCooldown(serverPlayer, ModAttachments.AMPHITRITE_COOLDOWN_END, AmphitriteItem.class);
+                reapplyPersistedCooldown(serverPlayer, ModAttachments.FIRE_SPEAR_COOLDOWN_END, com.CoffeDino.lunacy.item.Custom.FireSpearItem.class);
 
                 Lunacy.LOGGER.debug("DEBUG: ===== SERVER PLAYER LOGIN END =====");
             }
@@ -136,6 +138,8 @@ public class ModEvents {
                 for (FloatingRapierEntity rapier : rapiers) {
                     rapier.discard();
                 }
+                FireDomainManager.forceDespawnFor(player.getUUID());
+
                 Lunacy.LOGGER.debug("DEBUG: Cleared floating rapiers for logging out player: " + player.getName().getString());
             }
         }
@@ -145,13 +149,30 @@ public class ModEvents {
             Player player = event.getEntity();
             Lunacy.LOGGER.debug("DEBUG: Player respawned on server - " + player.getName().getString());
             races.onPlayerJoinWorld(player);
+            resyncClientState(player);
         }
+
 
         @SubscribeEvent
         public static void onPlayerChangedDimension(PlayerEvent.PlayerChangedDimensionEvent event) {
             Player player = event.getEntity();
             Lunacy.LOGGER.debug("DEBUG: Player changed dimension - " + player.getName().getString());
             races.onPlayerJoinWorld(player);
+            resyncClientState(player);
+        }
+        private static void resyncClientState(Player player) {
+            if (player instanceof ServerPlayer serverPlayer) {
+                races.Race race = races.getPlayerRace(serverPlayer);
+                NetworkHandler.syncRaceToClient(serverPlayer, race);
+                if (race != null) {
+                    NetworkHandler.syncSizeToClient(serverPlayer, race.getHeight(), race.getWidth());
+                }
+
+                PlayerClasses.PlayerClass playerClass = PlayerClasses.getPlayerClass(serverPlayer);
+                if (playerClass != null) {
+                    NetworkHandler.syncClassToClient(serverPlayer, playerClass);
+                }
+            }
         }
     }
 
@@ -176,7 +197,7 @@ public class ModEvents {
     @EventBusSubscriber(modid = Lunacy.MODID, value = Dist.CLIENT)
     public static class ClientEvents {
         private static boolean hasCheckedRace = false;
-        @SubscribeEvent // mod bus, client only
+        @SubscribeEvent
         public static void registerLayers(EntityRenderersEvent.RegisterLayerDefinitions event) {
             event.registerLayerDefinition(ModModelLayers.GRUCK, ShieldModel::createLayer);
         }
@@ -257,6 +278,7 @@ public class ModEvents {
     @SubscribeEvent
     public static void onPlayerDeath(LivingDeathEvent event) {
         if (event.getEntity() instanceof ServerPlayer player) {
+            FireDomainManager.forceDespawnFor(player.getUUID());
             ItemStack mainHand = player.getMainHandItem();
             ItemStack offHand = player.getOffhandItem();
 

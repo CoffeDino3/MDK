@@ -168,10 +168,6 @@ public class NetworkHandler {
         );
     }
 
-    // -------------------------------------------------------------------------
-    // Convenience send helpers (mirror the old Forge API)
-    // -------------------------------------------------------------------------
-
     public static void sendToServer(Object message) {
         PacketDistributor.sendToServer((net.minecraft.network.protocol.common.custom.CustomPacketPayload) message);
     }
@@ -197,8 +193,8 @@ public class NetworkHandler {
         PacketDistributor.sendToServer(new EnderTeleportPacket());
     }
 
-    public static void triggerBelieverAbility() {
-        PacketDistributor.sendToServer(new BelieverAbilityPacket());
+    public static void triggerBelieverAbility(boolean isShiftDown) {
+        PacketDistributor.sendToServer(new BelieverAbilityPacket(isShiftDown));
     }
 
     public static void syncClassToClient(ServerPlayer player, PlayerClasses.PlayerClass playerClass) {

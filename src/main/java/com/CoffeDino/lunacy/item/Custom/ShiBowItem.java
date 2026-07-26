@@ -28,8 +28,8 @@ public class ShiBowItem extends BowItem {
     private static final float FLAT_ATTACK_DAMAGE = 7.0F;
     private static final float ATTACK_SPEED = -2.4F;
 
-    private static final float ARROW_CHARGE_GAIN = 0.005F;
-    private static final float MELEE_CHARGE_GAIN = 0.003F;
+    private static final float ARROW_CHARGE_GAIN = 0.02F;
+    private static final float MELEE_CHARGE_GAIN = 0.01F;
     private static final float MAX_CHARGE = 0.50F;
 
     public ShiBowItem(Properties properties) {

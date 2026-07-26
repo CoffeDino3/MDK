@@ -63,7 +63,7 @@ public class MoiraiItem extends SpellbladeItem {
         LivingEntity target = findRandomTarget(level, player);
         if (target == null) {
             level.playSound(null, player.blockPosition(), SoundEvents.VILLAGER_WORK_FLETCHER,
-                    SoundSource.PLAYERS, 0.8f, 0.6f); // placeholder "nothing to cut" sfx
+                    SoundSource.PLAYERS, 0.8f, 0.6f);
             return;
         }
         Vec3 throughLine = target.position().subtract(player.position());

@@ -20,6 +20,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.tick.ServerTickEvent;
 import org.joml.Vector3f;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -34,7 +35,10 @@ public class CelestialAbilityHandler {
     private static final float GRAVITY_FIELD_RADIUS = 7.5f;
     private static final float GRAVITY_FIELD_HEIGHT = 20f;
     private static final float DAMAGE_PER_SECOND = 0.5f;
-    private static final float PUSH_PULL_DAMAGE = 8.0f;
+    private static final float PUSH_DAMAGE_MULTIPLIER = 2f;
+    private static final float PUSH_DAMAGE_FLOOR = 10.0f;
+    private static final float PULL_DAMAGE_MULTIPLIER = 1f;
+    private static final float PULL_DAMAGE_FLOOR = 6.0f;
     private static final float PUSH_FORCE = 3.0f;
     private static final float PULL_FORCE = 2.5f;
     private static final float SINK_SPEED = 0.3f;
@@ -251,12 +255,15 @@ public class CelestialAbilityHandler {
                     entity -> entity != player && entity.isAlive()
             );
 
+            float mainHandDamage = (float) player.getAttributeValue(Attributes.ATTACK_DAMAGE);
+            float pushDamage = Math.max(PUSH_DAMAGE_FLOOR, mainHandDamage * PUSH_DAMAGE_MULTIPLIER);
+
             for (LivingEntity entity : entities) {
                 Vec3 direction = entity.position().subtract(player.position()).normalize();
                 Vec3 pushForce = direction.scale(PUSH_FORCE);
                 entity.setDeltaMovement(pushForce.x, pushForce.y + 0.5, pushForce.z);
                 entity.hurtMarked = true;
-                entity.hurt(player.damageSources().magic(), PUSH_PULL_DAMAGE);
+                entity.hurt(player.damageSources().magic(), pushDamage);
                 level.sendParticles(
                         ParticleTypes.SWEEP_ATTACK,
                         entity.getX(), entity.getY() + 1, entity.getZ(),
@@ -275,6 +282,9 @@ public class CelestialAbilityHandler {
                     entity -> entity != player && entity.isAlive()
             );
 
+            float mainHandDamage = (float) player.getAttributeValue(Attributes.ATTACK_DAMAGE);
+            float pullDamage = Math.max(PULL_DAMAGE_FLOOR, mainHandDamage * PULL_DAMAGE_MULTIPLIER);
+
             for (LivingEntity entity : entities) {
                 Vec3 toPlayer = player.position().subtract(entity.position());
                 double distance = toPlayer.length();
@@ -284,7 +294,7 @@ public class CelestialAbilityHandler {
                     entity.setDeltaMovement(entity.getDeltaMovement().add(gentlePull));
                 }
                 entity.hurtMarked = true;
-                entity.hurt(player.damageSources().magic(), PUSH_PULL_DAMAGE);
+                entity.hurt(player.damageSources().magic(), pullDamage);
                 level.sendParticles(
                         ParticleTypes.DRAGON_BREATH,
                         entity.getX(), entity.getY() + 1, entity.getZ(),

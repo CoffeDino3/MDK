@@ -120,7 +120,6 @@ public class Lunacy {
             EntityRenderers.register(ModEntities.LAMENT_BULLET.get(), LamentBulletRenderer::new);
             LOGGER.debug("Lament bullet renderer registered");
             EntityRenderers.register(ModEntities.BORONT_AVATAR.get(), BorontAvatarRenderer::new);
-            EntityRenderers.register(ModEntities.FIRE_SPEAR.get(), FireSpearRenderer::new);
             EntityRenderers.register(ModEntities.FLOATING_RAPIER.get(), FloatingRapierRenderer::new);
             EntityRenderers.register(ModEntities.THROWN_RAPIER.get(), ThrownRapierRenderer::new);
             EntityRenderers.register(ModEntities.ROCA_BOULDER.get(), RocaBoulderRenderer::new);
@@ -133,11 +132,6 @@ public class Lunacy {
             EntityRenderers.register(ModEntities.AMPHITRITE_ORB.get(), AmphitriteOrbRenderer::new);
             EntityRenderers.register(ModEntities.MOIRAI_PORTAL.get(), MoiraiPortalRenderer::new);
             EntityRenderers.register(ModEntities.MOIRAI_SWEEP.get(), MoiraiSweepRenderer::new);
-            event.enqueueWork(() -> {
-                ItemProperties.register(ModItems.AGNIS_FURY.get(),
-                        ResourceLocation.fromNamespaceAndPath(MODID, "charged"),
-                        (stack, level, entity, seed) -> FireSpearItem.isCharged(stack) ? 1.0F : 0.0F);
-            });
             event.enqueueWork(() -> {
                 ItemProperties.register(ModItems.GRUCK.get(),
                         ResourceLocation.withDefaultNamespace("blocking"),

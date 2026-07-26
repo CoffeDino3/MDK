@@ -7,6 +7,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.phys.*;
@@ -28,8 +29,10 @@ public class VampirebornAbilityHandler {
     private static final DustParticleOptions RED_DUST = new DustParticleOptions(
             new Vector3f(0.8f, 0.0f, 0.0f), 1.0f);
 
-    private static final float BASE_DAMAGE = 9.5f;
-    private static final float DAMAGE_PER_EXTRA_PARTICLE = 2.0f;
+    private static final float BASE_DAMAGE_MULTIPLIER = 1.25f;
+    private static final float BASE_DAMAGE_FLOOR = 9.5f;
+    private static final float DAMAGE_PER_EXTRA_PARTICLE_MULTIPLIER = 0.3f;
+    private static final float DAMAGE_PER_EXTRA_PARTICLE_FLOOR = 2.0f;
     private static final float SELF_DAMAGE_PER_PARTICLE = 0.5f;
     private static final int MAX_RANGE = 50;
     private static final float AUTO_FIRE_HEALTH_THRESHOLD = 2.0f;
@@ -136,7 +139,11 @@ public class VampirebornAbilityHandler {
         public void fireProjectile() {
             if (particleCount == 0) return;
 
-            float totalDamage = BASE_DAMAGE + (Math.max(0, particleCount - 1) * DAMAGE_PER_EXTRA_PARTICLE);
+            float mainHandDamage = (float) player.getAttributeValue(Attributes.ATTACK_DAMAGE);
+            float baseDamage = Math.max(BASE_DAMAGE_FLOOR, mainHandDamage * BASE_DAMAGE_MULTIPLIER);
+            float perParticleDamage = Math.max(DAMAGE_PER_EXTRA_PARTICLE_FLOOR, mainHandDamage * DAMAGE_PER_EXTRA_PARTICLE_MULTIPLIER);
+
+            float totalDamage = baseDamage + (Math.max(0, particleCount - 1) * perParticleDamage);
             createProjectile(totalDamage);
 
             Lunacy.LOGGER.debug("Vampireborn fired with {} particles, damage: {}",

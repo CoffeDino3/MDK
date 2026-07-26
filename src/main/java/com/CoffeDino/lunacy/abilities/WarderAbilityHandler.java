@@ -8,6 +8,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -24,7 +25,8 @@ import java.util.*;
 public class WarderAbilityHandler {
     private static final Map<UUID, WarderAbilityInstance> ACTIVE_ABILITIES = new HashMap<>();
     private static final int ABILITY_DURATION = 100;
-    private static final float DAMAGE = 8.0f;
+    private static final float DAMAGE_MULTIPLIER = 1.5f;
+    private static final float DAMAGE_FLOOR = 8.0f;
     private static final float CIRCLE_RADIUS = 2.0f;
     private static final float CIRCLE_DISTANCE = 2.5f;
 
@@ -84,7 +86,6 @@ public class WarderAbilityHandler {
             Vec3 lookVec;
             Vec3 circleCenter;
             if (player.isShiftKeyDown()) {
-                // Crouching: point the ring straight down at the player's feet so they can tunnel downward.
                 lookVec = new Vec3(0, -1, 0);
                 circleCenter = player.position().add(0, -0.3, 0);
             } else {
@@ -167,7 +168,10 @@ public class WarderAbilityHandler {
                     double distanceInPlane = toEntity.subtract(lookVec.scale(toEntity.dot(lookVec))).length();
 
                     if (distanceInPlane <= CIRCLE_RADIUS) {
-                        entity.hurt(player.damageSources().playerAttack(player), DAMAGE);
+                        float mainHandDamage = (float) player.getAttributeValue(Attributes.ATTACK_DAMAGE);
+                        float ringDamage = Math.max(DAMAGE_FLOOR, mainHandDamage * DAMAGE_MULTIPLIER);
+
+                        entity.hurt(player.damageSources().playerAttack(player), ringDamage);
                         Vec3 knockback = toEntity.normalize().scale(0.3);
                         entity.setDeltaMovement(entity.getDeltaMovement().add(knockback));
                     }

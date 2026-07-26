@@ -29,7 +29,7 @@ public class GatekeeperPortalEntity extends Entity {
     private static final EntityDataAccessor<Float> DATA_YAW = SynchedEntityData.defineId(GatekeeperPortalEntity.class, EntityDataSerializers.FLOAT);
     private static final EntityDataAccessor<Float> DATA_PITCH = SynchedEntityData.defineId(GatekeeperPortalEntity.class, EntityDataSerializers.FLOAT);
     private float pendingHungerDrain = 0f;
-    private static final int LIFESPAN_TICKS = 300; // 15 seconds
+    private static final int LIFESPAN_TICKS = 300;
     private int age = 0;
 
     public GatekeeperPortalEntity(EntityType<?> entityType, Level level) {

@@ -50,12 +50,6 @@ public class EchoingEffect extends MobEffect {
         LivingEntity entity = event.getEntity();
         if (accumulatedDamage.containsKey(entity.getUUID())) {
             accumulatedDamage.merge(entity.getUUID(), event.getAmount(), Float::sum);
-            // Don't cancel the event outright - cancelling also suppresses everything
-            // downstream that depends on the hit actually landing (LivingDamageEvent.Post,
-            // weapon on-hit procs like the rapier's throw trigger, hurt sound, knockback,
-            // etc). Zeroing the amount instead still lets the attack "connect" for all of
-            // that, while banking the real damage for the payback burst instead of letting
-            // it actually reduce health.
             event.setAmount(0.0001f);
         }
     }
@@ -63,10 +57,6 @@ public class EchoingEffect extends MobEffect {
 
     public static void handleExpired(MobEffectEvent.Expired event) {
         if (event.getEffectInstance() == null) return;
-        // getEffect() returns a Holder<MobEffect> - compare the unwrapped MobEffect on both
-        // sides, not the Holder against the raw effect instance. Holder != EchoingEffect
-        // was ALWAYS true (different object types being compared by reference), so this
-        // early-return fired unconditionally and the payback below never ran, for any effect.
         if (event.getEffectInstance().getEffect().value() != ModEffects.ECHOING.value()) return;
 
         LivingEntity entity = event.getEntity();

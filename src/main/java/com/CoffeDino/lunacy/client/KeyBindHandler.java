@@ -128,8 +128,6 @@ public class KeyBindHandler {
                 if (!PlayerClasses.hasChosenClass(minecraft.player)) {
                     minecraft.setScreen(new ClassSelectionScreen());
                 } else if (PlayerClasses.getPlayerClass(minecraft.player) == PlayerClasses.PlayerClass.SPELLBLADE) {
-                    // server is the source of truth for whether an element is already assigned;
-                    // it'll only send OpenElementSelectionPacket back if one is still missing
                     NetworkHandler.sendToServer(new RequestElementSelectionPacket());
                 }
             }
@@ -214,7 +212,8 @@ public class KeyBindHandler {
             if (minecraft.player != null && minecraft.screen == null && minecraft.player.isAlive()) {
                 races.Race race = races.getPlayerRace(minecraft.player);
                 if (race == races.Race.BELIEVER) {
-                    NetworkHandler.sendToServer(new BelieverAbilityPacket());
+                    boolean shifting = minecraft.options.keyShift.isDown();
+                    NetworkHandler.sendToServer(new BelieverAbilityPacket(shifting));
                 }
             }
         }

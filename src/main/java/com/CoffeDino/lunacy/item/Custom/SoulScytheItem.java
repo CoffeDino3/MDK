@@ -12,6 +12,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -31,6 +32,9 @@ import java.util.List;
 public class SoulScytheItem extends ScytheItem {
     private static final int MAX_STACKS = 10;
     private static final float ATTACK_DAMAGE = 8.0f;
+    private static final float NEARBY_DAMAGE_BONUS = 0.15f;
+    private static final float STACK_DAMAGE_BONUS = 0.05f;
+    private static final int SOUL_CLAIM_REFRESH_TICKS = 200;
 
     public SoulScytheItem(Tier tier, Properties properties) {
         super(tier, ATTACK_DAMAGE, -2.4f, 4.0f, properties);
@@ -49,11 +53,26 @@ public class SoulScytheItem extends ScytheItem {
         AABB sweepArea = primaryTarget.getBoundingBox().inflate(sweepRange);
         List<LivingEntity> nearbyEntities = player.level().getEntitiesOfClass(LivingEntity.class, sweepArea,
                 entity -> entity != player && entity != primaryTarget && entity.isAlive());
+        ReaperSoulData data = null;
+        int soulStacks = 0;
+        if (player instanceof ServerPlayer serverPlayer) {
+            data = serverPlayer.getData(ModAttachments.REAPER_SOUL);
+            soulStacks = data.getSoulStacks();
+        }
 
-        float sweepDamage = getSweepDamage();
+        float multiplier = 1.0f
+                + (nearbyEntities.size() * NEARBY_DAMAGE_BONUS)
+                + (soulStacks * STACK_DAMAGE_BONUS);
+        float sweepDamage = getSweepDamage() * multiplier;
+
+        int kills = 0;
         for (LivingEntity entity : nearbyEntities) {
             if (player.hasLineOfSight(entity)) {
+                boolean aliveBefore = entity.isAlive();
                 entity.hurt(player.damageSources().playerAttack(player), sweepDamage);
+                if (aliveBefore && !entity.isAlive()) {
+                    kills++;
+                }
                 if (player.level() instanceof ServerLevel serverLevel) {
                     serverLevel.sendParticles(ParticleTypes.SWEEP_ATTACK,
                             entity.getX(), entity.getY() + entity.getBbHeight() / 2, entity.getZ(),
@@ -61,10 +80,23 @@ public class SoulScytheItem extends ScytheItem {
                 }
             }
         }
+        if (kills > 0 && data != null && player instanceof ServerPlayer serverPlayer) {
+            int newStacks = Math.min(MAX_STACKS, data.getSoulStacks() + kills);
+            data.setSoulStacks(newStacks);
+            data.setLastGainTime(serverPlayer.getServer().getTickCount());
+            int amplifier = Math.max(0, newStacks - 1);
+            serverPlayer.addEffect(new MobEffectInstance(ModEffects.SOUL_CLAIM, SOUL_CLAIM_REFRESH_TICKS, amplifier, false, false, false));
+            syncSoulStacksToStack(stack, newStacks);
+        }
     }
 
-    // PlayerTickEvent.Post fires once per player per tick (server-side safe).
-    // Use event.getEntity() to get the Player — NeoForge 1.21.1 tick events use getEntity(), not .player field.
+    private static void syncSoulStacksToStack(ItemStack stack, int stacks) {
+        CustomData current = stack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY);
+        CompoundTag tag = current.copyTag();
+        tag.putInt("SoulStacks", stacks);
+        stack.set(DataComponents.CUSTOM_DATA, CustomData.of(tag));
+    }
+
     @SubscribeEvent
     public static void onPlayerTick(PlayerTickEvent.Post event) {
         Player player = event.getEntity();
@@ -81,10 +113,6 @@ public class SoulScytheItem extends ScytheItem {
     @Override
     public void appendHoverText(ItemStack stack, TooltipContext ctx, List<Component> tip, TooltipFlag flag) {
         super.appendHoverText(stack, ctx, tip, flag);
-        tip.add(Component.literal("Wide sweep attack that hits multiple enemies").withStyle(ChatFormatting.BLUE));
-        tip.add(Component.literal("Soul Claim: 40% chance when entities die nearby").withStyle(ChatFormatting.DARK_PURPLE));
-        tip.add(Component.literal("Max Stacks: " + MAX_STACKS).withStyle(ChatFormatting.DARK_AQUA));
-        tip.add(Component.literal("Class: Reaper").withStyle(ChatFormatting.DARK_RED));
 
         CustomData data = stack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY);
         if (!data.isEmpty()) {

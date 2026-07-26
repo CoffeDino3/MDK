@@ -54,8 +54,6 @@ public class GunItem extends Item {
         player.startUsingItem(hand);
         return InteractionResultHolder.consume(itemstack);
     }
-
-    // NeoForge IItemExtension.canEquip uses LivingEntity, not Entity
     @Override
     public boolean canEquip(ItemStack stack, EquipmentSlot armorType, LivingEntity entity) {
         if (entity instanceof Player player) {

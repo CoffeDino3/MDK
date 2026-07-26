@@ -10,7 +10,7 @@ import net.neoforged.neoforge.attachment.IAttachmentSerializer;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.registries.NeoForgeRegistries;
-import com.mojang.serialization.Codec; // ADD THIS IMPORT
+import com.mojang.serialization.Codec;
 
 public class ModAttachments {
 
@@ -151,6 +151,11 @@ public class ModAttachments {
     public static final DeferredHolder<AttachmentType<?>, AttachmentType<Boolean>> AMPHITRITE_SUMMONED =
             ATTACHMENT_TYPES.register("amphitrite_summoned",
                     () -> AttachmentType.builder(() -> false).serialize(Codec.BOOL).build());
+    public static final DeferredHolder<AttachmentType<?>, AttachmentType<Long>> FIRE_SPEAR_COOLDOWN_END =
+            ATTACHMENT_TYPES.register("fire_spear_cooldown_end",
+                    () -> AttachmentType.builder(() -> 0L)
+                            .serialize(Codec.LONG)
+                            .build());
 
     public static void register(net.neoforged.bus.api.IEventBus eventBus) {
         ATTACHMENT_TYPES.register(eventBus);

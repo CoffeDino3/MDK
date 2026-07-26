@@ -67,7 +67,7 @@ public class SpellbladeItem extends SwordItem {
                 });
             }
             case VOID -> target.hurt(target.damageSources().magic(), percentHealthDamage(target, 0.03f));
-            case EARTH -> target.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 40, 4)); // near-root
+            case EARTH -> target.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 40, 4));
             case WIND -> {
                 double dx = target.getX() - attacker.getX();
                 double dz = target.getZ() - attacker.getZ();
@@ -76,7 +76,7 @@ public class SpellbladeItem extends SwordItem {
                     p.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, 60, 1));
                 }
             }
-            case LIGHT -> target.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, 30, 0)); // heal removed
+            case LIGHT -> target.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, 30, 0));
             case ETHER -> {
                 if (attacker.getRandom().nextFloat() < 0.15f) {
                     target.hurt(target.damageSources().magic(), percentHealthDamage(target, 0.06f));

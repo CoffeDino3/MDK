@@ -35,7 +35,6 @@ public class SpecialWandItem extends Item {
         Block currentBlock = level.getBlockState(pos).getBlock();
 
         if (!level.isClientSide()) {
-            // NeoForge: ForgeRegistries.BLOCKS → BuiltInRegistries.BLOCK
             List<Block> allBlocks = new ArrayList<>(BuiltInRegistries.BLOCK.stream().toList());
             allBlocks.remove(currentBlock);
 

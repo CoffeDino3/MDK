@@ -34,7 +34,7 @@ public class PhaetonItem extends SpellbladeItem {
     public static final double DIVE_SPEED = 3.2;
     public static final float EXPLOSION_POWER = 5.0f;
     private static final double DAMAGE_RADIUS = 6.0;
-    private static final float DAMAGE_PERCENT_OF_MAX_HEALTH = 0.35f; // tune this
+    private static final float DAMAGE_PERCENT_OF_MAX_HEALTH = 0.35f;
     public static final int IGNITE_RADIUS = 4;
     private static long clientRiseEnd = 0L;
     private static long clientLaunchEnd = 0L;

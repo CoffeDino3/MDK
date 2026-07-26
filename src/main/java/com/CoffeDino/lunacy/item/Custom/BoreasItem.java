@@ -29,7 +29,7 @@ public class BoreasItem extends SpellbladeItem {
         if (!level.isClientSide) {
             Vec3 spawnPos = player.position();
             level.addFreshEntity(new BoreasStormEntity(level, spawnPos, player));
-            level.playSound(null, player.blockPosition(), SoundEvents.WEATHER_RAIN, SoundSource.PLAYERS, 0.7f, 0.6f); // placeholder sfx
+            level.playSound(null, player.blockPosition(), SoundEvents.WEATHER_RAIN, SoundSource.PLAYERS, 0.7f, 0.6f);
             BoreasCooldownAttachments.applyCooldown(player, this, level.getGameTime());
         }
         return InteractionResultHolder.sidedSuccess(stack, level.isClientSide());

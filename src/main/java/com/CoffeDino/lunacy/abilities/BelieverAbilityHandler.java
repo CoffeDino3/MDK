@@ -4,9 +4,13 @@ import com.CoffeDino.lunacy.Lunacy;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.tick.ServerTickEvent;
@@ -22,15 +26,22 @@ public class BelieverAbilityHandler {
     private static final Map<UUID, Long> COOLDOWNS = new HashMap<>();
     private static final BlockState GLASS_LAYER = Blocks.YELLOW_STAINED_GLASS.defaultBlockState();
     private static final BlockState BARRIER_LAYER = Blocks.BARRIER.defaultBlockState();
+    private static final BlockState AIR = Blocks.AIR.defaultBlockState();
 
-    public static void toggleAbility(ServerPlayer player) {
+    public static void toggleAbility(ServerPlayer player, boolean isShiftDown) {
         if (player.level().isClientSide()) return;
 
         UUID playerId = player.getUUID();
+        BelieverBarrierInstance barrier = ACTIVE_BARRIERS.get(playerId);
 
-        if (ACTIVE_BARRIERS.containsKey(playerId)) {
-            deactivateAbility(player);
-            Lunacy.LOGGER.debug("Believer barrier manually deactivated for player: {}", player.getName().getString());
+        if (barrier != null) {
+            if (isShiftDown) {
+                barrier.exitBarrier();
+                Lunacy.LOGGER.debug("Player exited their believer barrier: {}", player.getName().getString());
+            } else {
+                deactivateAbility(player);
+                Lunacy.LOGGER.debug("Believer barrier manually deactivated for player: {}", player.getName().getString());
+            }
         } else {
             activateAbility(player);
         }
@@ -121,6 +132,7 @@ public class BelieverAbilityHandler {
         private final Set<BlockPos> barrierBlocks;
         private final Map<BlockPos, BlockState> originalBlocks;
         private BlockPos centerPos;
+        private AABB interiorBounds;
         private int ticksActive = 0;
         private boolean expired = false;
 
@@ -136,6 +148,12 @@ public class BelieverAbilityHandler {
             int startY = centerPos.getY()-1;
             int startX = centerPos.getX() - BARRIER_SIZE / 2;
             int startZ = centerPos.getZ() - BARRIER_SIZE / 2;
+
+            this.interiorBounds = new AABB(
+                    startX + 1, startY + 1, startZ + 1,
+                    startX + BARRIER_SIZE - 1, startY + BARRIER_SIZE - 1, startZ + BARRIER_SIZE - 1
+            );
+
             for (int x = 0; x < BARRIER_SIZE; x++) {
                 for (int y = 0; y < BARRIER_SIZE; y++) {
                     for (int z = 0; z < BARRIER_SIZE; z++) {
@@ -150,6 +168,12 @@ public class BelieverAbilityHandler {
                                 barrierBlocks.add(innerPos);
                             }
                             createOuterBarrierLayer(startX, startY, startZ, x, y, z);
+                        } else {
+                            BlockPos interiorPos = new BlockPos(startX + x, startY + y, startZ + z);
+                            if (isReplaceable(interiorPos)) {
+                                replaceBlock(interiorPos, AIR);
+                                barrierBlocks.add(interiorPos);
+                            }
                         }
                     }
                 }
@@ -237,17 +261,79 @@ public class BelieverAbilityHandler {
         }
 
         public void removeBarrier() {
+            evacuateInterior();
+
             for (BlockPos pos : barrierBlocks) {
                 BlockState originalState = originalBlocks.get(pos);
-                if (originalState != null) {
-                    level.setBlock(pos, originalState, 3);
-                } else {
-                    level.setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
-                }
+                BlockState targetState = originalState != null ? originalState : AIR;
+                level.setBlock(pos, targetState, 3);
             }
 
             barrierBlocks.clear();
             originalBlocks.clear();
+        }
+
+        private void evacuateInterior() {
+            if (interiorBounds == null) return;
+            if (player.isAlive() && !player.isRemoved() && interiorBounds.contains(player.position())) {
+                BlockPos safePos = findSafeExitPosition();
+                player.teleportTo(level, safePos.getX() + 0.5, safePos.getY(), safePos.getZ() + 0.5,
+                        player.getYRot(), player.getXRot());
+            }
+            List<LivingEntity> occupants = level.getEntitiesOfClass(
+                    LivingEntity.class, interiorBounds, entity -> entity != player);
+
+            for (LivingEntity occupant : occupants) {
+                BlockPos safePos = findSafeExitPosition();
+                occupant.teleportTo(safePos.getX() + 0.5, safePos.getY(), safePos.getZ() + 0.5);
+            }
+        }
+
+        public void exitBarrier() {
+            BlockPos safePos = findSafeExitPosition();
+            player.teleportTo(level, safePos.getX() + 0.5, safePos.getY(), safePos.getZ() + 0.5,
+                    player.getYRot(), player.getXRot());
+            player.displayClientMessage(
+                    net.minecraft.network.chat.Component.literal("You stepped outside your Believer's Barrier!"),
+                    true
+            );
+        }
+
+        private BlockPos findSafeExitPosition() {
+            int[][] directions = {{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
+            int radius = BARRIER_SIZE / 2 + 2;
+
+            for (int[] dir : directions) {
+                BlockPos candidate = new BlockPos(
+                        centerPos.getX() + dir[0] * radius,
+                        centerPos.getY(),
+                        centerPos.getZ() + dir[1] * radius
+                );
+                BlockPos safe = scanForSafeSpot(candidate);
+                if (safe != null) {
+                    return safe;
+                }
+            }
+            BlockPos above = new BlockPos(centerPos.getX(), centerPos.getY() + BARRIER_SIZE + 2, centerPos.getZ());
+            BlockPos safeAbove = scanForSafeSpot(above);
+            return safeAbove != null ? safeAbove : above;
+        }
+
+        private BlockPos scanForSafeSpot(BlockPos start) {
+            for (int yOffset = 0; yOffset < 10; yOffset++) {
+                BlockPos feet = start.above(yOffset);
+                BlockPos head = feet.above();
+                BlockPos ground = feet.below();
+
+                boolean feetClear = level.getBlockState(feet).getCollisionShape(level, feet).isEmpty();
+                boolean headClear = level.getBlockState(head).getCollisionShape(level, head).isEmpty();
+                boolean groundSolid = !level.getBlockState(ground).getCollisionShape(level, ground).isEmpty();
+
+                if (feetClear && headClear && groundSolid) {
+                    return feet;
+                }
+            }
+            return null;
         }
 
         public boolean tick() {
@@ -259,6 +345,11 @@ public class BelieverAbilityHandler {
             if (ticksActive >= NIGHT_DURATION_TICKS) {
                 expired = true;
                 return true;
+            }
+
+            if (ticksActive % 20 == 0 && interiorBounds.contains(player.position())) {
+                player.addEffect(new MobEffectInstance(MobEffects.DAMAGE_BOOST, 60, 1, false, true, true));
+                player.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 60, 1, false, true, true));
             }
 
             return false;
