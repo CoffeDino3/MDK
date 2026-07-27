@@ -1,6 +1,8 @@
 package com.CoffeDino.lunacy.item.Custom;
 
+import com.CoffeDino.lunacy.classes.PlayerClasses;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
@@ -22,10 +24,11 @@ import java.util.*;
 public class RapierItem extends SwordItem {
     private final float attackDamage;
     private final float attackSpeed;
-
     private static final double LUNGE_DISTANCE = 6.0;
     private static final float LUNGE_BONUS_DAMAGE = 3.0f;
     private static final int LUNGE_COOLDOWN_TICKS = 40;
+    private static final int RIPOSTE_WINDOW_TICKS = 15;
+    private static final float RIPOSTE_BONUS_MULTIPLIER = 0.4f;
 
     public RapierItem(Tier tier, float attackDamage, float attackSpeed, Properties properties) {
         super(tier, properties);
@@ -60,6 +63,10 @@ public class RapierItem extends SwordItem {
     @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
+        if (PlayerClasses.getPlayerClass(player) != PlayerClasses.PlayerClass.FENCER) {
+            player.displayClientMessage(Component.literal("Only Fencers can lunge with a rapier!"), true);
+            return InteractionResultHolder.fail(stack);
+        }
 
         if (player.getCooldowns().isOnCooldown(this)) {
             return InteractionResultHolder.fail(stack);
@@ -93,6 +100,12 @@ public class RapierItem extends SwordItem {
         return player.level().getGameTime() - lungeTick <= FALL_REDUCTION_WINDOW_TICKS;
     }
 
+    private static boolean isWithinRiposteWindow(Player player) {
+        Long lungeTick = lastLungeTick.get(player.getUUID());
+        if (lungeTick == null) return false;
+        return player.level().getGameTime() - lungeTick <= RIPOSTE_WINDOW_TICKS;
+    }
+
     private void checkLungeCollisions(ServerLevel level, Player player, ItemStack stack, Set<UUID> alreadyHit, double remainingDistance) {
         AABB path = player.getBoundingBox().inflate(0.5, 0.2, 0.5)
                 .expandTowards(player.getLookAngle().scale(remainingDistance));
@@ -116,10 +129,19 @@ public class RapierItem extends SwordItem {
     }
     @Override
     public boolean hurtEnemy(ItemStack stack, LivingEntity target, LivingEntity attacker) {
-        if (attacker instanceof Player player && isDualWieldingRapiers(player)) {
-            float baseDamage = (float) player.getAttributeValue(Attributes.ATTACK_DAMAGE);
-            float bonusDamage = baseDamage * 0.5f;
-            target.hurt(target.damageSources().mobAttack(attacker), bonusDamage);
+        if (attacker instanceof Player player) {
+            if (isDualWieldingRapiers(player)) {
+                float baseDamage = (float) player.getAttributeValue(Attributes.ATTACK_DAMAGE);
+                float bonusDamage = baseDamage * 0.5f;
+                target.hurt(target.damageSources().mobAttack(attacker), bonusDamage);
+            }
+
+            if (PlayerClasses.getPlayerClass(player) == PlayerClasses.PlayerClass.FENCER
+                    && isWithinRiposteWindow(player)) {
+                float baseDamage = (float) player.getAttributeValue(Attributes.ATTACK_DAMAGE);
+                float riposteDamage = baseDamage * RIPOSTE_BONUS_MULTIPLIER;
+                target.hurt(target.damageSources().playerAttack(player), riposteDamage);
+            }
         }
         return true;
     }

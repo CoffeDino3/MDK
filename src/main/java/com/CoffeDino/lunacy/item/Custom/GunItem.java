@@ -25,6 +25,7 @@ import net.neoforged.neoforge.event.entity.player.ItemEntityPickupEvent;
 public class GunItem extends Item {
 
     private static final int SHOT_COOLDOWN = 30;
+    private static final int ACCURATE_SHOT_COOLDOWN = 18;
 
     public GunItem(Properties properties) {
         super(properties);
@@ -81,7 +82,8 @@ public class GunItem extends Item {
                 if (hasBullets(player) && !player.getCooldowns().isOnCooldown(this)) {
                     shootBullet(level, player, isAccurate);
                     consumeBullet(player);
-                    player.getCooldowns().addCooldown(this, SHOT_COOLDOWN);
+                    int cooldown = isAccurate ? ACCURATE_SHOT_COOLDOWN : SHOT_COOLDOWN;
+                    player.getCooldowns().addCooldown(this, cooldown);
                     EquipmentSlot slot = player.getUsedItemHand() == InteractionHand.MAIN_HAND
                             ? EquipmentSlot.MAINHAND
                             : EquipmentSlot.OFFHAND;

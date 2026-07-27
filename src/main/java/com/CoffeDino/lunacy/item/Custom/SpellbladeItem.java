@@ -1,6 +1,7 @@
 package com.CoffeDino.lunacy.item.Custom;
 
 import com.CoffeDino.lunacy.classes.ClassDataManager;
+import com.CoffeDino.lunacy.classes.PlayerClasses;
 import com.CoffeDino.lunacy.classes.SpellbladeElement;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -12,6 +13,8 @@ import net.minecraft.world.item.SwordItem;
 import net.minecraft.world.item.Tier;
 
 public class SpellbladeItem extends SwordItem {
+    private static final float ARCANE_EDGE_BONUS_MULTIPLIER = 0.2f;
+
     private static float percentHealthDamage(LivingEntity target, float percent) {
         return Math.max(1.0f, target.getMaxHealth() * percent);
     }
@@ -23,7 +26,10 @@ public class SpellbladeItem extends SwordItem {
     @Override
     public boolean hurtEnemy(net.minecraft.world.item.ItemStack stack, LivingEntity target, LivingEntity attacker) {
         boolean result = super.hurtEnemy(stack, target, attacker);
-        if (attacker instanceof ServerPlayer serverPlayer) {
+        if (attacker instanceof ServerPlayer serverPlayer
+                && PlayerClasses.getPlayerClass(serverPlayer) == PlayerClasses.PlayerClass.SPELLBLADE) {
+            applyArcaneEdge(serverPlayer, target);
+
             ClassDataManager dataManager = ClassDataManager.get(serverPlayer);
             String elementId = dataManager.getPlayerElement(serverPlayer.getUUID());
             SpellbladeElement element = SpellbladeElement.fromId(elementId);
@@ -34,6 +40,12 @@ public class SpellbladeItem extends SwordItem {
         }
 
         return result;
+    }
+
+    private void applyArcaneEdge(Player player, LivingEntity target) {
+        float baseDamage = (float) player.getAttributeValue(Attributes.ATTACK_DAMAGE);
+        float bonusDamage = baseDamage * ARCANE_EDGE_BONUS_MULTIPLIER;
+        target.hurt(target.damageSources().magic(), bonusDamage);
     }
 
     private void applyElementalEffect(SpellbladeElement element, LivingEntity target, LivingEntity attacker) {

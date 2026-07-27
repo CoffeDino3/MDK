@@ -1,5 +1,6 @@
 package com.CoffeDino.lunacy.item.Custom;
 
+import com.CoffeDino.lunacy.classes.PlayerClasses;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -9,6 +10,7 @@ import net.minecraft.world.entity.EquipmentSlotGroup;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.SwordItem;
 import net.minecraft.world.item.Tier;
@@ -22,7 +24,6 @@ import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 public class DaggerItem extends SwordItem {
     private final float attackDamage;
     private final float attackSpeed;
-
     private static final float BACKSTAB_MULTIPLIER = 2.0f;
     private static final float BACKSTAB_DOT_THRESHOLD = -0.5f;
 
@@ -60,10 +61,22 @@ public class DaggerItem extends SwordItem {
 
     @Override
     public boolean hurtEnemy(ItemStack stack, LivingEntity target, LivingEntity attacker) {
-        if (isBackstab(target, attacker) && target.level() instanceof ServerLevel serverLevel) {
-            spawnBackstabParticles(serverLevel, target);
+        if (attacker instanceof Player player
+                && PlayerClasses.getPlayerClass(player) == PlayerClasses.PlayerClass.ASSASSIN
+                && isBackstab(target, attacker)) {
+            applyBackstabBonus(player, target);
         }
         return true;
+    }
+
+    private void applyBackstabBonus(Player player, LivingEntity target) {
+        float baseDamage = (float) player.getAttributeValue(Attributes.ATTACK_DAMAGE);
+        float bonusDamage = baseDamage * (BACKSTAB_MULTIPLIER - 1.0f);
+        target.hurt(target.damageSources().playerAttack(player), bonusDamage);
+
+        if (target.level() instanceof ServerLevel serverLevel) {
+            spawnBackstabParticles(serverLevel, target);
+        }
     }
 
     public boolean isBackstab(LivingEntity target, LivingEntity attacker) {
@@ -87,15 +100,17 @@ public class DaggerItem extends SwordItem {
     protected float getBackstabDotThreshold() {
         return BACKSTAB_DOT_THRESHOLD;
     }
+
     @EventBusSubscriber(modid = "lunacy")
     public static class PassiveInvisHandler {
         @SubscribeEvent
         public static void onPlayerTick(PlayerTickEvent.Post event) {
             if (!(event.getEntity() instanceof ServerPlayer player)) return;
+            boolean isAssassin = PlayerClasses.getPlayerClass(player) == PlayerClasses.PlayerClass.ASSASSIN;
 
             boolean holdingDagger = player.getMainHandItem().getItem() instanceof DaggerItem
                     || player.getOffhandItem().getItem() instanceof DaggerItem;
-            boolean shouldBeInvisible = holdingDagger && player.isShiftKeyDown();
+            boolean shouldBeInvisible = isAssassin && holdingDagger && player.isShiftKeyDown();
 
             var data = player.getPersistentData();
             boolean wasGranted = data.getBoolean(NBT_PASSIVE_INVIS);
