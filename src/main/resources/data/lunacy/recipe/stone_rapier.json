@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "B  ",
+    "B  ",
+    "B  "
+  ],
+  "key": {
+    "B": {
+      "tag": "minecraft:stone_tool_materials"
+    }
+  },
+  "result": {
+    "id": "lunacy:stone_rapier",
+    "count": 1
+  }
+}

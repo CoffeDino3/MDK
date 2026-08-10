@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "AAA",
+    "  A",
+    "   "
+  ],
+  "key": {
+    "A": {
+      "item": "minecraft:diamond"
+    }
+  },
+  "result": {
+    "id": "lunacy:diamond_gun",
+    "count": 1
+  }
+}

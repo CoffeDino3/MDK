@@ -94,6 +94,48 @@ public class Lunacy {
         //   event.accept(ModItems.THE_WAND.get());
         //   event.accept(ModItems.SPECIAL_WAND.get());
         // }
+        if (event.getTabKey() == CreativeModeTabs.COMBAT) {
+            event.accept(ModItems.WOOD_DAGGER.get());
+            event.accept(ModItems.STONE_DAGGER.get());
+            event.accept(ModItems.IRON_DAGGER.get());
+            event.accept(ModItems.GOLD_DAGGER.get());
+            event.accept(ModItems.DIAMOND_DAGGER.get());
+            event.accept(ModItems.NETHERITE_DAGGER.get());
+            event.accept(ModItems.WOOD_RAPIER.get());
+            event.accept(ModItems.STONE_RAPIER.get());
+            event.accept(ModItems.IRON_RAPIER.get());
+            event.accept(ModItems.GOLD_RAPIER.get());
+            event.accept(ModItems.DIAMOND_RAPIER.get());
+            event.accept(ModItems.NETHERITE_RAPIER.get());
+            event.accept(ModItems.WOOD_GREATSWORD.get());
+            event.accept(ModItems.STONE_GREATSWORD.get());
+            event.accept(ModItems.IRON_GREATSWORD.get());
+            event.accept(ModItems.GOLD_GREATSWORD.get());
+            event.accept(ModItems.DIAMOND_GREATSWORD.get());
+            event.accept(ModItems.NETHERITE_GREATSWORD.get());
+            event.accept(ModItems.WOOD_SCYTHE.get());
+            event.accept(ModItems.STONE_SCYTHE.get());
+            event.accept(ModItems.IRON_SCYTHE.get());
+            event.accept(ModItems.GOLD_SCYTHE.get());
+            event.accept(ModItems.DIAMOND_SCYTHE.get());
+            event.accept(ModItems.NETHERITE_SCYTHE.get());
+            event.accept(ModItems.WOOD_SPEAR.get());
+            event.accept(ModItems.STONE_SPEAR.get());
+            event.accept(ModItems.IRON_SPEAR.get());
+            event.accept(ModItems.GOLD_SPEAR.get());
+            event.accept(ModItems.DIAMOND_SPEAR.get());
+            event.accept(ModItems.NETHERITE_SPEAR.get());
+            event.accept(ModItems.WOOD_SPELLBLADE.get());
+            event.accept(ModItems.STONE_SPELLBLADE.get());
+            event.accept(ModItems.IRON_SPELLBLADE.get());
+            event.accept(ModItems.GOLD_SPELLBLADE.get());
+            event.accept(ModItems.DIAMOND_SPELLBLADE.get());
+            event.accept(ModItems.NETHERITE_SPELLBLADE.get());
+            event.accept(ModItems.IRON_GUN.get());
+            event.accept(ModItems.GOLD_GUN.get());
+            event.accept(ModItems.DIAMOND_GUN.get());
+            event.accept(ModItems.NETHERITE_GUN.get());
+        }
 
         if (event.getTabKey() == CreativeModeTabs.BUILDING_BLOCKS) {
             event.accept(ModBlocks.CUMMINGTONITE_BLOCK.get());

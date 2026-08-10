@@ -1,0 +1,33 @@
+{
+  "parent": "minecraft:item/handheld",
+  "textures": {
+    "layer0": "lunacy:item/rapiers/netherite"
+  },
+  "display": {
+    "firstperson_righthand": {
+      "rotation": [0, 90, 36],
+      "translation": [2, 6.5, 0],
+      "scale": [1, 1, 0.6]
+    },
+    "firstperson_lefthand": {
+      "rotation": [0, -90, -36],
+      "translation": [2, 6.5, 0],
+      "scale": [1, 1, 0.6]
+    },
+    "thirdperson_righthand": {
+      "rotation": [-130, 90, -180],
+      "translation": [0, 9.5, 1.5],
+      "scale": [1.5, 1.5, 0.6]
+    },
+    "thirdperson_lefthand": {
+      "rotation": [-130, -90, -180],
+      "translation": [0, 9.5, 1.5],
+      "scale": [1.5, 1.5, 0.6]
+    },
+    "ground": {
+      "rotation": [0, 0, -40],
+      "translation": [0, 0, 2.25],
+      "scale": [1.5, 1.5, 0.6]
+    }
+  }
+}

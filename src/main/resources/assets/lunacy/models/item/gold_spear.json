@@ -1,0 +1,33 @@
+{
+  "parent": "minecraft:item/handheld",
+  "textures": {
+    "layer0": "lunacy:item/spears/gold"
+  },
+  "display": {
+    "firstperson_righthand": {
+      "rotation": [77, -90, 36],
+      "translation": [-1, 6.75, 2.75],
+      "scale": [1, 1, 0.6]
+    },
+    "firstperson_lefthand": {
+      "rotation": [77, 90, -36],
+      "translation": [-1, 6.75, 2.75],
+      "scale": [1, 1, 0.6]
+    },
+    "thirdperson_righthand": {
+      "rotation": [136, 90, -180],
+      "translation": [0, 6.25, 1.25],
+      "scale": [1.8, 1.8, 0.8]
+    },
+    "thirdperson_lefthand": {
+      "rotation": [136, -90, -180],
+      "translation": [0, 6.25, 1.25],
+      "scale": [1.8, 1.8, 0.8]
+    },
+    "ground": {
+      "rotation": [0, 0, -40],
+      "translation": [0, 0, 2.25],
+      "scale": [1.8, 1.8, 0.8]
+    }
+  }
+}

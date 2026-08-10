@@ -1,0 +1,33 @@
+{
+  "parent": "minecraft:item/handheld",
+  "textures": {
+    "layer0": "lunacy:item/scythes/diamond"
+  },
+  "display": {
+    "firstperson_righthand": {
+      "rotation": [-34, -105, 0],
+      "translation": [2.5, 0, 0],
+      "scale": [1.51, 1.4, 0.8]
+    },
+    "firstperson_lefthand": {
+      "rotation": [-16, 78, -16],
+      "translation": [1.5, 0, 0],
+      "scale": [1.51, 1.4, 0.8]
+    },
+    "thirdperson_righthand": {
+      "rotation": [11, -90, 44],
+      "translation": [0.5, 4.75, 3],
+      "scale": [2,2,0.8]
+    },
+    "thirdperson_lefthand": {
+      "rotation": [11, 90, -44],
+      "translation": [0.5, 4.75, 3],
+      "scale": [2,2,0.8]
+    },
+    "ground": {
+      "rotation": [0, 0, -40],
+      "translation": [0, 0, 2.25],
+      "scale": [2, 2, 0.8]
+    }
+  }
+}

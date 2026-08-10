@@ -1,0 +1,33 @@
+{
+  "parent": "minecraft:item/handheld",
+  "textures": {
+    "layer0": "lunacy:item/spellblades/diamond"
+  },
+  "display": {
+    "firstperson_righthand": {
+      "rotation": [165, -90, 36],
+      "translation": [-1, 6.75, 2.75],
+      "scale": [0.8, 0.8, 0.6]
+    },
+    "firstperson_lefthand": {
+      "rotation": [165, 90, -36],
+      "translation": [-1, 6.75, 2.75],
+      "scale": [0.8, 0.8, 0.6]
+    },
+    "thirdperson_righthand": {
+      "rotation": [-45,-90,-180],
+      "translation": [0, 7.1, 1.25],
+      "scale": [1.3, 1.3, 0.8]
+    },
+    "thirdperson_lefthand": {
+      "rotation": [-45,90,-180],
+      "translation": [0, 7.1, 1.25],
+      "scale": [1.3, 1.3, 0.8]
+    },
+    "ground": {
+      "rotation": [0, 0, -40],
+      "translation": [0, 0, 2.25],
+      "scale": [1.3, 1.3, 0.8]
+    }
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "AAA",
+    "  A",
+    "   "
+  ],
+  "key": {
+    "A": {
+      "item": "minecraft:gold_ingot"
+    }
+  },
+  "result": {
+    "id": "lunacy:gold_gun",
+    "count": 1
+  }
+}

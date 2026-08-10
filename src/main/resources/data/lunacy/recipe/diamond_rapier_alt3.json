@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "  B",
+    "  B",
+    "  B"
+  ],
+  "key": {
+    "B": {
+      "item": "minecraft:diamond"
+    }
+  },
+  "result": {
+    "id": "lunacy:diamond_rapier",
+    "count": 1
+  }
+}

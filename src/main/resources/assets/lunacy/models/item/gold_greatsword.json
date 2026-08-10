@@ -1,0 +1,33 @@
+{
+  "parent": "minecraft:item/handheld",
+  "textures": {
+    "layer0": "lunacy:item/greatswords/gold"
+  },
+  "display": {
+    "firstperson_righthand": {
+      "rotation": [-180, 90, 35],
+      "translation": [2.5, 6.25, 0],
+      "scale": [1, 1, 0.8]
+    },
+    "firstperson_lefthand": {
+      "rotation": [-109, -90, 35],
+      "translation": [2.5, 6.25, 0],
+      "scale": [1, 1, 0.8]
+    },
+    "thirdperson_righthand": {
+      "rotation": [168, 90, 60],
+      "translation": [0, 13.75, 3.75],
+      "scale": [2,2,0.8]
+    },
+    "thirdperson_lefthand": {
+      "rotation": [168, -90, -60],
+      "translation": [0, 13.75, 3.75],
+      "scale": [2,2,0.8]
+    },
+    "ground": {
+      "rotation": [0, 0, -40],
+      "translation": [0, 0, 2.25],
+      "scale": [2, 2, 0.8]
+    }
+  }
+}
