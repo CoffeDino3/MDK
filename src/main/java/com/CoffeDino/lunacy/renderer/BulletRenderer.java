@@ -1,6 +1,6 @@
 package com.CoffeDino.lunacy.renderer;
 
-import com.CoffeDino.lunacy.entity.LamentBulletEntity;
+import com.CoffeDino.lunacy.entity.BulletEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -12,17 +12,17 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.phys.Vec3;
 
-public class LamentBulletRenderer extends ThrownItemRenderer<LamentBulletEntity> {
+public class BulletRenderer extends ThrownItemRenderer<BulletEntity> {
 
     private final ItemRenderer itemRenderer;
 
-    public LamentBulletRenderer(EntityRendererProvider.Context context) {
+    public BulletRenderer(EntityRendererProvider.Context context) {
         super(context, 1.0f, true);
         this.itemRenderer = context.getItemRenderer();
     }
 
     @Override
-    public void render(LamentBulletEntity entity, float entityYaw, float partialTicks,
+    public void render(BulletEntity entity, float entityYaw, float partialTicks,
                        PoseStack poseStack, MultiBufferSource buffer, int packedLight) {
         poseStack.pushPose();
 
@@ -40,7 +40,7 @@ public class LamentBulletRenderer extends ThrownItemRenderer<LamentBulletEntity>
     }
 
     @Override
-    public Vec3 getRenderOffset(LamentBulletEntity entity, float partialTicks) {
+    public Vec3 getRenderOffset(BulletEntity entity, float partialTicks) {
         return new Vec3(0, -0.1, 0);
     }
 }

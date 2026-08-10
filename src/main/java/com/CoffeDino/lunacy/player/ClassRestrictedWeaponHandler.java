@@ -37,7 +37,7 @@ public class ClassRestrictedWeaponHandler {
                 new Requirement(PlayerClass.REAPER, "You are not a Reaper! The scythe rejects you."));
         REQUIREMENTS.put(ViridyumGreatswordItem.class,
                 new Requirement(PlayerClass.CHRONOBLADE, "You are not a Chronoblade! The greatsword rejects you."));
-        REQUIREMENTS.put(GunItem.class,
+        REQUIREMENTS.put(LamentGunItem.class,
                 new Requirement(PlayerClass.GUNSMITH, "The gun slips from your hands as you are not a Gunsmith!"));
         REQUIREMENTS.put(ObsidiaItem.class,
                 new Requirement(PlayerClass.ASSASSIN, "You are not an Assassin! The dagger rejects you."));

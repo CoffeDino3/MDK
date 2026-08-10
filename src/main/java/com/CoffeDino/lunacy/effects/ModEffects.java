@@ -35,6 +35,16 @@ public class ModEffects {
             "echoing",
             EchoingEffect::new
     );
+    public static final DeferredHolder<MobEffect, LeadPoisoningEffect> LEAD_POISONING =
+            EFFECTS.register("lead_poisoning", LeadPoisoningEffect::new);
+    public static final DeferredHolder<MobEffect, ScorchedEffect> SCORCHED =
+            EFFECTS.register("scorched", ScorchedEffect::new);
+    public static final DeferredHolder<MobEffect, RootedEffect> ROOTED =
+            EFFECTS.register("rooted", RootedEffect::new);
+    public static final DeferredHolder<MobEffect, SoakedEffect> SOAKED =
+            EFFECTS.register("soaked", SoakedEffect::new);
+    public static final DeferredHolder<MobEffect, FallVulnerableEffect> FALL_VULNERABLE =
+            EFFECTS.register("fall_vulnerable", FallVulnerableEffect::new);
 
     public static Holder<MobEffect> getMourningFuneralHolder() {
         return MOURNING_FUNERAL;

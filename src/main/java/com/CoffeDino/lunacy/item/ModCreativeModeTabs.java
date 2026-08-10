@@ -95,6 +95,7 @@ public class ModCreativeModeTabs {
                         output.accept(ModItems.GOLD_GUN.get());
                         output.accept(ModItems.DIAMOND_GUN.get());
                         output.accept(ModItems.NETHERITE_GUN.get());
+                        output.accept(ModItems.BULLET.get());
                     })
                     .build());
 

@@ -140,6 +140,13 @@ public class ModEntities {
                             .clientTrackingRange(64)
                             .updateInterval(1)
                             .build("moirai_sweep"));
+    public static final DeferredHolder<EntityType<?>, EntityType<BulletEntity>> BULLET =
+            ENTITIES.register("bullet",
+                    () -> EntityType.Builder.<BulletEntity>of(BulletEntity::new, MobCategory.MISC)
+                            .sized(0.25f, 0.25f)
+                            .clientTrackingRange(4)
+                            .updateInterval(1)
+                            .build("bullet"));
 
 
 

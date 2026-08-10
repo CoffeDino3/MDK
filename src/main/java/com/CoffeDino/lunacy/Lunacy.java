@@ -1,6 +1,7 @@
 package com.CoffeDino.lunacy;
 
 import com.CoffeDino.lunacy.capability.ModAttachments;
+import com.CoffeDino.lunacy.network.ModDataComponents;
 import com.CoffeDino.lunacy.particle.PerunFlashParticle;
 import net.minecraft.client.renderer.entity.player.PlayerRenderer;
 import net.minecraft.client.resources.PlayerSkin;
@@ -45,6 +46,8 @@ import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
 import net.neoforged.neoforge.event.server.ServerStartingEvent;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 
+import static com.CoffeDino.lunacy.network.ModDataComponents.DATA_COMPONENTS;
+
 @Mod(Lunacy.MODID)
 public class Lunacy {
     public static final String MODID = "lunacy";
@@ -61,6 +64,7 @@ public class Lunacy {
         ModParticles.register(modEventBus);
         ModAttributes.ATTRIBUTES.register(modEventBus);
         ModAttachments.register(modEventBus);
+        DATA_COMPONENTS.register(modEventBus);
         com.CoffeDino.lunacy.player.ModAttachments.register(modEventBus);
 
         modEventBus.addListener(this::commonSetup);
@@ -174,6 +178,7 @@ public class Lunacy {
             EntityRenderers.register(ModEntities.AMPHITRITE_ORB.get(), AmphitriteOrbRenderer::new);
             EntityRenderers.register(ModEntities.MOIRAI_PORTAL.get(), MoiraiPortalRenderer::new);
             EntityRenderers.register(ModEntities.MOIRAI_SWEEP.get(), MoiraiSweepRenderer::new);
+            EntityRenderers.register(ModEntities.BULLET.get(), BulletRenderer::new);
             event.enqueueWork(() -> {
                 ItemProperties.register(ModItems.GRUCK.get(),
                         ResourceLocation.withDefaultNamespace("blocking"),

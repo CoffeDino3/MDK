@@ -3,7 +3,6 @@ package com.CoffeDino.lunacy.entity;
 import com.CoffeDino.lunacy.effects.ModEffects;
 import com.CoffeDino.lunacy.item.BulletEnhancement;
 import com.CoffeDino.lunacy.item.ModItems;
-import com.CoffeDino.lunacy.particle.ModParticles;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -19,25 +18,23 @@ import net.minecraft.world.phys.Vec3;
 
 import java.util.List;
 
-public class LamentBulletEntity extends ThrowableItemProjectile {
-    private final boolean isAccurate;
-    private Vec3 initialPosition;
-    private List<BulletEnhancement> enhancements = List.of(BulletEnhancement.NONE);
-    private float tagDamage = 5.0f;
-    private int piercedCount = 0;
+public class BulletEntity extends ThrowableItemProjectile {
 
-    public LamentBulletEntity(EntityType<? extends ThrowableItemProjectile> type, Level level) {
+    private List<BulletEnhancement> enhancements = List.of(BulletEnhancement.NONE);
+    private float baseDamage = 10.0f;
+    private int piercedCount = 0;
+    private Vec3 initialPosition;
+
+    public BulletEntity(EntityType<? extends ThrowableItemProjectile> type, Level level) {
         super(type, level);
-        this.isAccurate = false;
         this.initialPosition = this.position();
         this.noCulling = true;
     }
 
-    public LamentBulletEntity(Level level, LivingEntity shooter, boolean isAccurate, List<BulletEnhancement> enhancements, float tagDamage) {
-        super(ModEntities.LAMENT_BULLET.get(), shooter, level);
-        this.isAccurate = isAccurate;
+    public BulletEntity(Level level, LivingEntity shooter, List<BulletEnhancement> enhancements, float baseDamage) {
+        super(ModEntities.BULLET.get(), shooter, level);
         this.enhancements = enhancements.isEmpty() ? List.of(BulletEnhancement.NONE) : enhancements;
-        this.tagDamage = tagDamage;
+        this.baseDamage = baseDamage;
         this.initialPosition = this.position();
         this.setNoGravity(true);
         this.noCulling = true;
@@ -60,30 +57,7 @@ public class LamentBulletEntity extends ThrowableItemProjectile {
     private void spawnTrailParticles() {
         if (this.level() instanceof ServerLevel serverLevel) {
             Vec3 pos = this.position();
-            serverLevel.sendParticles(
-                    ParticleTypes.END_ROD,
-                    pos.x, pos.y, pos.z,
-                    2,
-                    0.05, 0.05, 0.05,
-                    0.01
-            );
-        }
-    }
-
-    private void impactBurst(Vec3 pos) {
-        if (this.level() instanceof ServerLevel serverLevel) {
-            serverLevel.sendParticles(ParticleTypes.WHITE_ASH,
-                    pos.x, pos.y, pos.z,
-                    10,
-                    0.2, 0.2, 0.2,
-                    0.1
-            );
-            serverLevel.sendParticles(ParticleTypes.END_ROD,
-                    pos.x, pos.y, pos.z,
-                    5,
-                    0.1, 0.1, 0.1,
-                    0.05
-            );
+            serverLevel.sendParticles(ParticleTypes.CRIT, pos.x, pos.y, pos.z, 1, 0.0, 0.0, 0.0, 0.0);
         }
     }
 
@@ -92,7 +66,6 @@ public class LamentBulletEntity extends ThrowableItemProjectile {
         super.onHitBlock(result);
 
         if (!this.level().isClientSide) {
-            impactBurst(result.getLocation());
             if (enhancements.contains(BulletEnhancement.EXPLOSIVE)) {
                 Vec3 pos = result.getLocation();
                 this.level().explode(this, pos.x, pos.y, pos.z, BulletEnhancement.EXPLOSIVE.getExplosionPower(), Level.ExplosionInteraction.NONE);
@@ -109,24 +82,20 @@ public class LamentBulletEntity extends ThrowableItemProjectile {
             return;
         }
 
-        target.hurt(this.damageSources().thrown(this, this.getOwner()), 0.0F);
-        MobEffectInstance existing = target.getEffect(ModEffects.MOURNING_FUNERAL);
-        int amplifier = existing != null ? existing.getAmplifier() + 1 : 0;
-        if (amplifier > 10) amplifier = 10;
-
-        target.addEffect(new MobEffectInstance(ModEffects.MOURNING_FUNERAL, 200, amplifier, false, true, true));
-
+        float multiplier = 1.0f;
         int maxPierce = 0;
         for (BulletEnhancement tag : enhancements) {
+            multiplier += (tag.getDamageMultiplier() - 1.0f);
             maxPierce = Math.max(maxPierce, tag.getPierceCount());
         }
 
+        float damage = baseDamage * multiplier;
+        target.hurt(this.damageSources().thrown(this, this.getOwner()), damage);
+
         if (this.level() instanceof ServerLevel serverLevel) {
-            Vec3 pos = result.getLocation();
-            impactBurst(pos);
-            serverLevel.sendParticles(ParticleTypes.END_ROD, pos.x, pos.y, pos.z, 10, 0.2, 0.2, 0.2, 0.1);
-            serverLevel.sendParticles(ModParticles.MOURNING_BUTTERFLY_PARTICLES.get(), pos.x, pos.y, pos.z, 10, 0.2, 0.2, 0.2, 0.05);
             applyEnhancementEffects(serverLevel, target, result);
+            Vec3 pos = result.getLocation();
+            serverLevel.sendParticles(ParticleTypes.CRIT, pos.x, pos.y, pos.z, 8, 0.15, 0.15, 0.15, 0.1);
         }
 
         piercedCount++;
@@ -153,7 +122,7 @@ public class LamentBulletEntity extends ThrowableItemProjectile {
                 }
                 case SOAKED -> {
                     target.clearFire();
-                    target.hurt(this.damageSources().thrown(this, this.getOwner()), tagDamage * 0.4f);
+                    target.hurt(this.damageSources().thrown(this, this.getOwner()), 2.0f);
                     target.addEffect(new MobEffectInstance(ModEffects.SOAKED, 60, 0));
                 }
                 case KNOCKBACK -> {
@@ -177,8 +146,8 @@ public class LamentBulletEntity extends ThrowableItemProjectile {
         int hits = 0;
         for (LivingEntity next : nearby) {
             if (hits >= count) break;
-            next.hurt(this.damageSources().thrown(this, this.getOwner()), tagDamage);
-            level.sendParticles(ParticleTypes.END_ROD, next.getX(), next.getY() + next.getBbHeight() * 0.5, next.getZ(), 6, 0.2, 0.2, 0.2, 0.1);
+            next.hurt(this.damageSources().thrown(this, this.getOwner()), baseDamage);
+            level.sendParticles(ParticleTypes.CRIT, next.getX(), next.getY() + next.getBbHeight() * 0.5, next.getZ(), 6, 0.2, 0.2, 0.2, 0.1);
             hits++;
         }
     }
@@ -190,7 +159,7 @@ public class LamentBulletEntity extends ThrowableItemProjectile {
         int hits = 0;
         for (LivingEntity next : nearby) {
             if (hits >= count) break;
-            next.hurt(this.damageSources().magic(), tagDamage * 0.5f);
+            next.hurt(this.damageSources().magic(), baseDamage * 0.5f);
             level.sendParticles(ParticleTypes.ELECTRIC_SPARK, next.getX(), next.getY() + next.getBbHeight() * 0.5, next.getZ(), 6, 0.2, 0.2, 0.2, 0.1);
             hits++;
         }
@@ -200,13 +169,13 @@ public class LamentBulletEntity extends ThrowableItemProjectile {
         List<LivingEntity> nearby = level.getEntitiesOfClass(LivingEntity.class, from.getBoundingBox().inflate(radius),
                 e -> e != from && e != this.getOwner() && e.isAlive());
         for (LivingEntity next : nearby) {
-            next.hurt(this.damageSources().magic(), tagDamage * 0.4f);
+            next.hurt(this.damageSources().magic(), baseDamage * 0.4f);
         }
         level.sendParticles(ParticleTypes.END_ROD, from.getX(), from.getY() + from.getBbHeight() * 0.5, from.getZ(), 12, 0.4, 0.4, 0.4, 0.05);
     }
 
-    public boolean isAccurate() {
-        return isAccurate;
+    public List<BulletEnhancement> getEnhancements() {
+        return enhancements;
     }
 
     @Override
@@ -216,6 +185,6 @@ public class LamentBulletEntity extends ThrowableItemProjectile {
 
     @Override
     protected Item getDefaultItem() {
-        return ModItems.LAMENT_BULLET.get();
+        return ModItems.BULLET.get();
     }
 }

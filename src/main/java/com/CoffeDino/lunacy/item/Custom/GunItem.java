@@ -1,13 +1,12 @@
 package com.CoffeDino.lunacy.item.Custom;
 
 import com.CoffeDino.lunacy.classes.PlayerClasses;
-import com.CoffeDino.lunacy.entity.LamentBulletEntity;
-import com.CoffeDino.lunacy.handlers.GunUsageHandler;
+import com.CoffeDino.lunacy.entity.BulletEntity;
+import com.CoffeDino.lunacy.item.BulletEnhancement;
 import com.CoffeDino.lunacy.item.ModItems;
-import com.CoffeDino.lunacy.particle.ModParticles;
-import net.minecraft.core.particles.ParticleTypes;
+import com.CoffeDino.lunacy.network.ModDataComponents;
+import com.CoffeDino.lunacy.handlers.GunUsageHandler;
 import net.minecraft.network.chat.Component;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
@@ -22,29 +21,36 @@ import net.minecraft.world.phys.Vec3;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.event.entity.player.ItemEntityPickupEvent;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+
 public class GunItem extends Item {
 
     private static final int SHOT_COOLDOWN = 30;
     private static final int ACCURATE_SHOT_COOLDOWN = 18;
+    private static final int SHOTS_BEFORE_OVERHEAT = 6;
+    private static final int OVERHEAT_COOLDOWN = 1200;
 
-    public GunItem(Properties properties) {
+    private static final Map<UUID, Integer> shotCounters = new HashMap<>();
+
+    private final float baseDamage;
+
+    public GunItem(Properties properties, float baseDamage) {
         super(properties);
+        this.baseDamage = baseDamage;
     }
 
     @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
         ItemStack itemstack = player.getItemInHand(hand);
 
-        if (PlayerClasses.getPlayerClass(player) != PlayerClasses.PlayerClass.GUNSMITH) {
-            player.displayClientMessage(Component.literal("Only Gunsmiths can use this weapon!"), true);
-            return InteractionResultHolder.fail(itemstack);
-        }
-
         if (hand == InteractionHand.MAIN_HAND && player.getOffhandItem().getItem() instanceof GunItem) {
             return InteractionResultHolder.pass(itemstack);
         }
 
-        if (!hasBullets(player)) {
+        if (!hasAmmo(player)) {
             return InteractionResultHolder.fail(itemstack);
         }
 
@@ -55,33 +61,21 @@ public class GunItem extends Item {
         player.startUsingItem(hand);
         return InteractionResultHolder.consume(itemstack);
     }
+
     @Override
     public boolean canEquip(ItemStack stack, EquipmentSlot armorType, LivingEntity entity) {
-        if (entity instanceof Player player) {
-            return PlayerClasses.getPlayerClass(player) == PlayerClasses.PlayerClass.GUNSMITH;
-        }
-        return false;
+        return true;
     }
 
-    @SubscribeEvent
-    public static void onItemPickup(ItemEntityPickupEvent.Pre event) {
-        ItemStack stack = event.getItemEntity().getItem();
-        if (stack.getItem() instanceof GunItem) {
-            if (PlayerClasses.getPlayerClass(event.getPlayer()) != PlayerClasses.PlayerClass.GUNSMITH) {
-                event.setCanPickup(net.neoforged.neoforge.common.util.TriState.FALSE);
-                event.getPlayer().displayClientMessage(Component.literal("You cannot pick up guns as you are not a Gunsmith!"), true);
-            }
-        }
-    }
 
     @Override
     public void onUseTick(Level level, LivingEntity livingEntity, ItemStack stack, int remainingUseDuration) {
         if (!level.isClientSide && livingEntity instanceof Player player) {
             boolean isAccurate = GunUsageHandler.isFullyAimed(player);
             if (isAccurate || player.getUsedItemHand() == InteractionHand.OFF_HAND) {
-                if (hasBullets(player) && !player.getCooldowns().isOnCooldown(this)) {
-                    shootBullet(level, player, isAccurate);
-                    consumeBullet(player);
+                if (hasAmmo(player) && !player.getCooldowns().isOnCooldown(this)) {
+                    fire(level, player, isAccurate);
+                    consumeAmmo(player);
                     int cooldown = isAccurate ? ACCURATE_SHOT_COOLDOWN : SHOT_COOLDOWN;
                     player.getCooldowns().addCooldown(this, cooldown);
                     EquipmentSlot slot = player.getUsedItemHand() == InteractionHand.MAIN_HAND
@@ -89,9 +83,35 @@ public class GunItem extends Item {
                             : EquipmentSlot.OFFHAND;
                     stack.hurtAndBreak(1, player, slot);
                     player.stopUsingItem();
+
+                    if (isOverheatEligible()) {
+                        handleOverheat(player);
+                    }
                 }
             }
         }
+    }
+
+    private void handleOverheat(Player player) {
+        int shots = shotCounters.merge(player.getUUID(), 1, Integer::sum);
+        if (shots >= SHOTS_BEFORE_OVERHEAT) {
+            shotCounters.remove(player.getUUID());
+            for (ItemStack invStack : player.getInventory().items) {
+                if (invStack.getItem() instanceof GunItem gun && gun.isOverheatEligible()) {
+                    player.getCooldowns().addCooldown(invStack.getItem(), OVERHEAT_COOLDOWN);
+                }
+            }
+            for (ItemStack invStack : player.getInventory().offhand) {
+                if (invStack.getItem() instanceof GunItem gun && gun.isOverheatEligible()) {
+                    player.getCooldowns().addCooldown(invStack.getItem(), OVERHEAT_COOLDOWN);
+                }
+            }
+        }
+    }
+
+    /** Override and return false for special/unique guns (e.g. LamentGunItem) that shouldn't overheat. */
+    protected boolean isOverheatEligible() {
+        return true;
     }
 
     @Override
@@ -99,61 +119,50 @@ public class GunItem extends Item {
         return 72000;
     }
 
-    private boolean hasBullets(Player player) {
+    protected boolean isValidAmmo(ItemStack stack) {
+        return stack.getItem() == ModItems.BULLET.get();
+    }
+
+    protected boolean hasAmmo(Player player) {
         for (ItemStack stack : player.getInventory().items) {
-            if (stack.getItem() == ModItems.LAMENT_BULLET.get()) {
-                return true;
-            }
+            if (isValidAmmo(stack)) return true;
         }
         return false;
     }
 
-    private void consumeBullet(Player player) {
+    protected ItemStack findAmmoStack(Player player) {
         for (int i = 0; i < player.getInventory().getContainerSize(); i++) {
             ItemStack stack = player.getInventory().getItem(i);
-            if (stack.getItem() == ModItems.LAMENT_BULLET.get()) {
-                stack.shrink(1);
-                break;
-            }
+            if (isValidAmmo(stack)) return stack;
         }
+        return ItemStack.EMPTY;
     }
 
-    private void shootBullet(Level level, Player player, boolean isAccurate) {
+    protected void consumeAmmo(Player player) {
+        ItemStack ammo = findAmmoStack(player);
+        if (!ammo.isEmpty()) ammo.shrink(1);
+    }
+
+    protected void fire(Level level, Player player, boolean isAccurate) {
         if (!level.isClientSide) {
-            LamentBulletEntity bullet = new LamentBulletEntity(level, player, isAccurate);
+            ItemStack ammo = findAmmoStack(player);
+            List<BulletEnhancement> enhancements = ammo.isEmpty()
+                    ? List.of(BulletEnhancement.NONE)
+                    : ammo.getOrDefault(ModDataComponents.BULLET_ENHANCEMENTS.get(), List.of(BulletEnhancement.NONE));
+
+            BulletEntity bullet = new BulletEntity(level, player, enhancements, baseDamage);
             Vec3 look = player.getLookAngle();
             float speed = isAccurate ? 3.0f : 1.5f;
             bullet.setDeltaMovement(look.x * speed, look.y * speed, look.z * speed);
             level.addFreshEntity(bullet);
-            spawnMourningButterflies(level, player);
-            level.playSound(null, player.getX(), player.getY(), player.getZ(),
-                    SoundEvents.FIREWORK_ROCKET_BLAST, SoundSource.PLAYERS,
-                    1.0F, 1.0F / (level.getRandom().nextFloat() * 0.4F + 1.2F) + 0.5F);
+            playShotSound(level, player);
         }
     }
 
-    private void spawnMourningButterflies(Level level, Player player) {
-        Vec3 look = player.getLookAngle();
-        Vec3 barrelPos = player.getEyePosition().add(look.x * 0.5, look.y * 0.5 - 0.2, look.z * 0.5);
-        int butterflyCount = 3 + level.random.nextInt(3);
-        for (int i = 0; i < butterflyCount; i++) {
-            double offsetX = (level.random.nextDouble() - 0.5) * 0.3;
-            double offsetY = (level.random.nextDouble() - 0.5) * 0.3;
-            double offsetZ = (level.random.nextDouble() - 0.5) * 0.3;
-            Vec3 spawnPos = barrelPos.add(offsetX, offsetY, offsetZ);
-            if (level instanceof ServerLevel serverLevel) {
-                serverLevel.sendParticles(ParticleTypes.END_ROD,
-                        spawnPos.x, spawnPos.y, spawnPos.z, 1, 0.1, 0.1, 0.1, 0.05);
-                if (level.random.nextBoolean()) {
-                    serverLevel.sendParticles(ModParticles.MOURNING_BUTTERFLY_PARTICLES.get(),
-                            spawnPos.x, spawnPos.y, spawnPos.z, 1, 0.05, 0.05, 0.05, 0.02);
-                }
-            }
-        }
-        if (level instanceof ServerLevel serverLevel) {
-            serverLevel.sendParticles(ParticleTypes.POOF,
-                    barrelPos.x, barrelPos.y, barrelPos.z, 3, 0.1, 0.1, 0.1, 0.05);
-        }
+    protected void playShotSound(Level level, Player player) {
+        level.playSound(null, player.getX(), player.getY(), player.getZ(),
+                SoundEvents.FIREWORK_ROCKET_BLAST, SoundSource.PLAYERS,
+                1.0F, 1.0F / (level.getRandom().nextFloat() * 0.4F + 1.2F) + 0.5F);
     }
 
     @Override

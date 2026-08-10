@@ -31,8 +31,8 @@ public class ModItems {
             () -> new SpecialWandItem(new Item.Properties().durability(10)));
     public static final DeferredHolder<Item, RaceResetScrollItem> RACE_RESET_SCROLL = ITEMS.register("race_reset_scroll",
             () -> new RaceResetScrollItem(new Item.Properties().stacksTo(1)));
-    public static final DeferredHolder<Item, GunItem> LAMENT_GUN = ITEMS.register("lament_gun",
-            () -> new GunItem(new Item.Properties().durability(500)));
+    public static final DeferredHolder<Item, LamentGunItem> LAMENT_GUN = ITEMS.register("lament_gun",
+            () -> new LamentGunItem(new Item.Properties().durability(500)));
 
     public static final DeferredHolder<Item, BulletItem> LAMENT_BULLET = ITEMS.register("lament_bullet",
             () -> new BulletItem(new Item.Properties().stacksTo(64)));
@@ -126,7 +126,6 @@ public class ModItems {
                             .attributes(SwordItem.createAttributes(Tiers.NETHERITE, 4.0F, -2.4F))
                             .durability(2031)
                             .fireResistant()));
-    // --- Daggers ---
     public static final DeferredHolder<Item, DaggerItem> WOOD_DAGGER = ITEMS.register("wood_dagger",
             () -> new DaggerItem(Tiers.WOOD, 2.0f, -1.6f, new Item.Properties().durability(59)));
     public static final DeferredHolder<Item, DaggerItem> STONE_DAGGER = ITEMS.register("stone_dagger",
@@ -139,8 +138,6 @@ public class ModItems {
             () -> new DaggerItem(Tiers.DIAMOND, 3.6f, -1.6f, new Item.Properties().durability(1561)));
     public static final DeferredHolder<Item, DaggerItem> NETHERITE_DAGGER = ITEMS.register("netherite_dagger",
             () -> new DaggerItem(Tiers.NETHERITE, 4.2f, -1.6f, new Item.Properties().durability(2031).fireResistant()));
-
-    // --- Rapiers ---
     public static final DeferredHolder<Item, RapierItem> WOOD_RAPIER = ITEMS.register("wood_rapier",
             () -> new RapierItem(Tiers.WOOD, 2.6f, -1.0f, new Item.Properties().durability(59)));
     public static final DeferredHolder<Item, RapierItem> STONE_RAPIER = ITEMS.register("stone_rapier",
@@ -153,8 +150,6 @@ public class ModItems {
             () -> new RapierItem(Tiers.DIAMOND, 4.8f, -1.0f, new Item.Properties().durability(1561)));
     public static final DeferredHolder<Item, RapierItem> NETHERITE_RAPIER = ITEMS.register("netherite_rapier",
             () -> new RapierItem(Tiers.NETHERITE, 5.6f, -1.0f, new Item.Properties().durability(2031).fireResistant()));
-
-    // --- Greatswords ---
     public static final DeferredHolder<Item, GreatswordItem> WOOD_GREATSWORD = ITEMS.register("wood_greatsword",
             () -> new GreatswordItem(Tiers.WOOD, 4.5f, -3.2f, new Item.Properties().durability(59)));
     public static final DeferredHolder<Item, GreatswordItem> STONE_GREATSWORD = ITEMS.register("stone_greatsword",
@@ -167,8 +162,6 @@ public class ModItems {
             () -> new GreatswordItem(Tiers.DIAMOND, 8.4f, -3.2f, new Item.Properties().durability(1561)));
     public static final DeferredHolder<Item, GreatswordItem> NETHERITE_GREATSWORD = ITEMS.register("netherite_greatsword",
             () -> new GreatswordItem(Tiers.NETHERITE, 9.8f, -3.2f, new Item.Properties().durability(2031).fireResistant()));
-
-    // --- Scythes ---
     public static final DeferredHolder<Item, ScytheItem> WOOD_SCYTHE = ITEMS.register("wood_scythe",
             () -> new ScytheItem(Tiers.WOOD, 3.3f, -2.6f, new Item.Properties().durability(59)));
     public static final DeferredHolder<Item, ScytheItem> STONE_SCYTHE = ITEMS.register("stone_scythe",
@@ -181,8 +174,6 @@ public class ModItems {
             () -> new ScytheItem(Tiers.DIAMOND, 6.0f, -2.6f, new Item.Properties().durability(1561)));
     public static final DeferredHolder<Item, ScytheItem> NETHERITE_SCYTHE = ITEMS.register("netherite_scythe",
             () -> new ScytheItem(Tiers.NETHERITE, 7.0f, -2.6f, new Item.Properties().durability(2031).fireResistant()));
-
-    // --- Spears ---
     public static final DeferredHolder<Item, SpearItem> WOOD_SPEAR = ITEMS.register("wood_spear",
             () -> new SpearItem(Tiers.WOOD, 3.0f, -2.0f, new Item.Properties().durability(59)));
     public static final DeferredHolder<Item, SpearItem> STONE_SPEAR = ITEMS.register("stone_spear",
@@ -195,8 +186,6 @@ public class ModItems {
             () -> new SpearItem(Tiers.DIAMOND, 5.4f, -2.0f, new Item.Properties().durability(1561)));
     public static final DeferredHolder<Item, SpearItem> NETHERITE_SPEAR = ITEMS.register("netherite_spear",
             () -> new SpearItem(Tiers.NETHERITE, 6.3f, -2.0f, new Item.Properties().durability(2031).fireResistant()));
-
-    // --- Spellblades ---
     public static final DeferredHolder<Item, SpellbladeItem> WOOD_SPELLBLADE = ITEMS.register("wood_spellblade",
             () -> new SpellbladeItem(Tiers.WOOD, 2.6f, -2.4f, new Item.Properties().durability(59)));
     public static final DeferredHolder<Item, SpellbladeItem> STONE_SPELLBLADE = ITEMS.register("stone_spellblade",
@@ -210,13 +199,15 @@ public class ModItems {
     public static final DeferredHolder<Item, SpellbladeItem> NETHERITE_SPELLBLADE = ITEMS.register("netherite_spellblade",
             () -> new SpellbladeItem(Tiers.NETHERITE, 5.6f, -2.4f, new Item.Properties().durability(2031).fireResistant()));
     public static final DeferredHolder<Item, GunItem> IRON_GUN = ITEMS.register("iron_gun",
-            () -> new GunItem(new Item.Properties().durability(250)));
+            () -> new GunItem(new Item.Properties().durability(250), 10.0f));
     public static final DeferredHolder<Item, GunItem> GOLD_GUN = ITEMS.register("gold_gun",
-            () -> new GunItem(new Item.Properties().durability(32)));
+            () -> new GunItem(new Item.Properties().durability(32), 12.0f));
     public static final DeferredHolder<Item, GunItem> DIAMOND_GUN = ITEMS.register("diamond_gun",
-            () -> new GunItem(new Item.Properties().durability(1561)));
+            () -> new GunItem(new Item.Properties().durability(1561), 20.0f));
     public static final DeferredHolder<Item, GunItem> NETHERITE_GUN = ITEMS.register("netherite_gun",
-            () -> new GunItem(new Item.Properties().durability(2031).fireResistant()));
+            () -> new GunItem(new Item.Properties().durability(2031).fireResistant(), 30.0f));
+    public static final DeferredHolder<Item, BulletItem> BULLET = ITEMS.register("bullet",
+            () -> new BulletItem(new Item.Properties().stacksTo(64)));
 
 
 

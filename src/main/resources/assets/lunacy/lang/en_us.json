@@ -11,9 +11,27 @@
   "item.lunacy.race_reset_scroll.tooltip": "Resets your race and allows you to choose a new one",
   "block.lunacy.cummingtonite_block": "Cummingtonite Block",
   "block.lunacy.cummingtonite_ingot_block": "Cummingtonite Ingot Block",
+  "bullet_enhancement.lunacy.explosive": "Explosive",
+  "bullet_enhancement.lunacy.heavy": "Heavy",
+  "bullet_enhancement.lunacy.toxic": "Toxic",
+  "bullet_enhancement.lunacy.piercing": "Piercing",
+  "bullet_enhancement.lunacy.ricochet": "Ricochet",
+  "bullet_enhancement.lunacy.ignite": "Ignite",
+  "bullet_enhancement.lunacy.rooted": "Rooted",
+  "bullet_enhancement.lunacy.soaked": "Soaked",
+  "bullet_enhancement.lunacy.knockback": "Windburst",
+  "bullet_enhancement.lunacy.static": "Static",
+  "bullet_enhancement.lunacy.volatile": "Volatile",
+  "effect.lunacy.lead_poisoning": "Lead Poisoning",
+  "effect.lunacy.scorched": "Scorched",
+  "effect.lunacy.rooted": "Rooted",
+  "effect.lunacy.soaked": "Soaked",
+  "effect.lunacy.fall_vulnerable": "Unbalanced",
+
 
   "item.lunacy.shi_bow": "Shi Bow",
   "item.lunacy.shi_arrow": "Shi Arrow",
+  "item.lunacy.bullet": "Bullet",
 
 
   "creativetab.lunacy.cummingtonite_items": "Cummingtonite Items",
