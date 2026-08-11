@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/cube_column",
+  "textures": {
+    "end": "lunacy:block/maple_bark",
+    "side": "lunacy:block/maple_bark"
+  }
+}

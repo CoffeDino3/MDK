@@ -1,0 +1,15 @@
+{
+  "replace": false,
+  "values": [
+    "lunacy:maple_log",
+    "lunacy:maple_wood",
+    "lunacy:stripped_maple_log",
+    "lunacy:maple_planks",
+    "lunacy:maple_slab",
+    "lunacy:maple_stairs",
+    "lunacy:maple_fence",
+    "lunacy:maple_fence_gate",
+    "lunacy:maple_door",
+    "lunacy:maple_trapdoor"
+  ]
+}

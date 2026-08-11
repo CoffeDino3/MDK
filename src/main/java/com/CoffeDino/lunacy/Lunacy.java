@@ -1,10 +1,20 @@
 package com.CoffeDino.lunacy;
 
 import com.CoffeDino.lunacy.capability.ModAttachments;
-import com.CoffeDino.lunacy.network.ModDataComponents;
 import com.CoffeDino.lunacy.particle.PerunFlashParticle;
+import com.CoffeDino.lunacy.worldgen.feature.ModFeatures;
 import net.minecraft.client.renderer.entity.player.PlayerRenderer;
 import net.minecraft.client.resources.PlayerSkin;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.dispenser.BlockSource;
+import net.minecraft.core.dispenser.BoatDispenseItemBehavior;
+import net.minecraft.core.dispenser.DefaultDispenseItemBehavior;
+import net.minecraft.tags.FluidTags;
+import net.minecraft.world.entity.vehicle.Boat;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.DispenserBlock;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import org.slf4j.Logger;
 
@@ -16,7 +26,6 @@ import com.CoffeDino.lunacy.commands.ClassCommand;
 import com.CoffeDino.lunacy.commands.RaceCommand;
 import com.CoffeDino.lunacy.effects.ModEffects;
 import com.CoffeDino.lunacy.entity.ModEntities;
-import com.CoffeDino.lunacy.item.Custom.FireSpearItem;
 import com.CoffeDino.lunacy.item.ModCreativeModeTabs;
 import com.CoffeDino.lunacy.item.ModItems;
 import com.CoffeDino.lunacy.menu.ModMenuTypes;
@@ -58,6 +67,7 @@ public class Lunacy {
         LunacyGameRules.init();
         ModItems.register(modEventBus);
         ModBlocks.register(modEventBus);
+        ModFeatures.FEATURES.register(modEventBus);
         ModEffects.EFFECTS.register(modEventBus);
         ModMenuTypes.MENUS.register(modEventBus);
         ModEntities.ENTITIES.register(modEventBus);
@@ -75,10 +85,43 @@ public class Lunacy {
 
         NeoForge.EVENT_BUS.register(this);
     }
-
     private void commonSetup(FMLCommonSetupEvent event) {
         event.enqueueWork(() -> {
-            LOGGER.info("Sculk Storage capability initialized");
+            DispenserBlock.registerBehavior(ModItems.MAPLE_BOAT.get(), new DefaultDispenseItemBehavior() {
+                private final DefaultDispenseItemBehavior defaultDispenseItemBehavior = new DefaultDispenseItemBehavior();
+                @Override
+                public ItemStack execute(BlockSource blockSource, ItemStack stack) {
+                    Direction direction = blockSource.state().getValue(DispenserBlock.FACING);
+                    Level level = blockSource.level();
+                    double x = blockSource.center().x() + (double) ((float) direction.getStepX() * 1.125F);
+                    double y = blockSource.center().y() + (double) ((float) direction.getStepY() * 1.125F);
+                    double z = blockSource.center().z() + (double) ((float) direction.getStepZ() * 1.125F);
+                    BlockPos spawnPos = blockSource.pos().relative(direction);
+                    double spawnYOffset;
+                    if (level.getFluidState(spawnPos).is(FluidTags.WATER)) {
+                        spawnYOffset = 1.0D;
+                    } else if (level.getFluidState(spawnPos.below()).is(FluidTags.WATER)) {
+                        spawnYOffset = 0.0D;
+                    } else {
+                        return this.defaultDispenseItemBehavior.dispense(blockSource, stack);
+                    }
+                    Boat boat = ModEntities.MAPLE_BOAT.get().create(level);
+                    if (boat != null) {
+                        boat.setPos(x, y + spawnYOffset, z);
+                        boat.setYRot(direction.toYRot());
+                        if (!level.isClientSide) {
+                            level.addFreshEntity(boat);
+                        }
+                        stack.shrink(1);
+                    }
+
+                    return stack;
+                }
+                @Override
+                protected void playSound(BlockSource blockSource) {
+                    blockSource.level().levelEvent(1000, blockSource.pos(), 0);
+                }
+            });
         });
     }
 
@@ -179,6 +222,8 @@ public class Lunacy {
             EntityRenderers.register(ModEntities.MOIRAI_PORTAL.get(), MoiraiPortalRenderer::new);
             EntityRenderers.register(ModEntities.MOIRAI_SWEEP.get(), MoiraiSweepRenderer::new);
             EntityRenderers.register(ModEntities.BULLET.get(), BulletRenderer::new);
+            EntityRenderers.register(ModEntities.MAPLE_BOAT.get(), MapleBoatRenderer::new);
+            EntityRenderers.register(ModEntities.MAPLE_CHEST_BOAT.get(), MapleChestBoatRenderer::new);
             event.enqueueWork(() -> {
                 ItemProperties.register(ModItems.GRUCK.get(),
                         ResourceLocation.withDefaultNamespace("blocking"),

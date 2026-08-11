@@ -108,8 +108,6 @@ public class GunItem extends Item {
             }
         }
     }
-
-    /** Override and return false for special/unique guns (e.g. LamentGunItem) that shouldn't overheat. */
     protected boolean isOverheatEligible() {
         return true;
     }

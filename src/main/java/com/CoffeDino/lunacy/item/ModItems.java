@@ -1,12 +1,10 @@
 package com.CoffeDino.lunacy.item;
 
 import com.CoffeDino.lunacy.Lunacy;
+import com.CoffeDino.lunacy.entity.ModEntities;
 import com.CoffeDino.lunacy.item.Custom.*;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.world.item.AxeItem;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.SwordItem;
-import net.minecraft.world.item.Tiers;
+import net.minecraft.world.item.*;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
@@ -208,6 +206,15 @@ public class ModItems {
             () -> new GunItem(new Item.Properties().durability(2031).fireResistant(), 30.0f));
     public static final DeferredHolder<Item, BulletItem> BULLET = ITEMS.register("bullet",
             () -> new BulletItem(new Item.Properties().stacksTo(64)));
+    public static final DeferredHolder<Item, ModBoatItem> MAPLE_BOAT =
+            ITEMS.register("maple_boat",
+                    () -> new ModBoatItem(false, ModEntities.MAPLE_BOAT, new Item.Properties().stacksTo(1)));
+    public static final DeferredHolder<Item, ModBoatItem> MAPLE_CHEST_BOAT =
+            ITEMS.register("maple_chest_boat",
+                    () -> new ModBoatItem(true, ModEntities.MAPLE_CHEST_BOAT, new Item.Properties().stacksTo(1)));
+    public static final DeferredHolder<Item, Item> MAPLE_BRANCH = ITEMS.register("maple_branch",
+            () -> new Item(new Item.Properties().stacksTo(64)));
+
 
 
 

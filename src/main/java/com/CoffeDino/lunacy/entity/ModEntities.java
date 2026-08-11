@@ -4,9 +4,11 @@ import com.CoffeDino.lunacy.Lunacy;
 import com.CoffeDino.lunacy.entity.abilities.AngelbornAbilityEntity;
 import com.CoffeDino.lunacy.entity.abilities.GatekeeperPortalEntity;
 import com.CoffeDino.lunacy.entity.abilities.GatekeeperProjectileEntity;
+import com.CoffeDino.lunacy.item.ModItems;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
+import net.minecraft.world.entity.vehicle.Boat;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
@@ -147,6 +149,17 @@ public class ModEntities {
                             .clientTrackingRange(4)
                             .updateInterval(1)
                             .build("bullet"));
+    public static final DeferredHolder<EntityType<?>, EntityType<MapleBoatEntity>> MAPLE_BOAT =
+            ENTITIES.register("maple_boat",
+                    () -> EntityType.Builder.<MapleBoatEntity>of(MapleBoatEntity::new, MobCategory.MISC)
+                            .sized(1.375F, 0.5625F)
+                            .clientTrackingRange(10)
+                            .build("maple_boat"));
+    public static final DeferredHolder<EntityType<?>, EntityType<MapleChestBoatEntity>> MAPLE_CHEST_BOAT =
+            ENTITIES.register("maple_chest_boat", () -> EntityType.Builder.<MapleChestBoatEntity>of(MapleChestBoatEntity::new, MobCategory.MISC)
+                    .sized(1.375F, 0.5625F)
+                    .clientTrackingRange(10)
+                    .build("maple_chest_boat"));
 
 
 

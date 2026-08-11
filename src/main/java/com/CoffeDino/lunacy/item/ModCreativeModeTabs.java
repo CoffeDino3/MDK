@@ -2,6 +2,7 @@ package com.CoffeDino.lunacy.item;
 
 import com.CoffeDino.lunacy.Lunacy;
 import com.CoffeDino.lunacy.block.ModBlocks;
+import com.CoffeDino.lunacy.item.Custom.ModBoatItem;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.CreativeModeTab;
@@ -101,12 +102,29 @@ public class ModCreativeModeTabs {
 
     public static final DeferredHolder<CreativeModeTab, CreativeModeTab> CUMMINGTONITE_BLOCKS_TAB = CREATIVE_MODE_TABS.register("cummingtonite_blocks_tab",
             () -> CreativeModeTab.builder()
-                    .icon(() -> new ItemStack(ModBlocks.CUMMINGTONITE_BLOCK.get().asItem()))
+                    .icon(() -> new ItemStack(ModBlocks.MAPLE_SAPLING.get().asItem()))
                     .withTabsBefore(CUMMINGTONITE_ITEMS_TAB.getId())
                     .title(Component.translatable("creativetab.lunacy.cummingtonite_blocks"))
                     .displayItems((parameters, output) -> {
                         output.accept(ModBlocks.CUMMINGTONITE_BLOCK.get().asItem());
                         output.accept(ModBlocks.CUMMINGTONITE_INGOT_BLOCK.get().asItem());
+                        output.accept(ModBlocks.MAPLE_LOG.get().asItem());
+                        output.accept(ModBlocks.MAPLE_WOOD.get().asItem());
+                        output.accept(ModBlocks.STRIPPED_MAPLE_LOG.get().asItem());
+                        output.accept(ModBlocks.MAPLE_PLANKS.get().asItem());
+                        output.accept(ModBlocks.MAPLE_LEAVES.get().asItem());
+                        output.accept(ModBlocks.MAPLE_SAPLING.get().asItem());
+                        output.accept(ModBlocks.MAPLE_SLAB.get().asItem());
+                        output.accept(ModBlocks.MAPLE_STAIRS.get().asItem());
+                        output.accept(ModBlocks.MAPLE_FENCE.get().asItem());
+                        output.accept(ModBlocks.MAPLE_FENCE_GATE.get().asItem());
+                        output.accept(ModBlocks.MAPLE_DOOR.get().asItem());
+                        output.accept(ModBlocks.MAPLE_TRAPDOOR.get().asItem());
+                        output.accept(ModBlocks.MAPLE_BUTTON.get().asItem());
+                        output.accept(ModBlocks.MAPLE_PRESSURE_PLATE.get().asItem());
+                        output.accept(ModItems.MAPLE_BOAT.get());
+                        output.accept(ModItems.MAPLE_CHEST_BOAT.get());
+                        output.accept(ModItems.MAPLE_BRANCH.get());
                     })
                     .build());
 
