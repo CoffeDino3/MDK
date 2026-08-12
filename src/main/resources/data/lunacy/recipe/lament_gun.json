@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "AAA",
+    " A ",
+    "   "
+  ],
+  "key": {
+    "A": {
+      "item": "lunacy:mourning_butterfly"
+    }
+  },
+  "result": {
+    "id": "lunacy:lament_gun",
+    "count": 1
+  }
+}

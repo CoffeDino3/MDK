@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:smelting",
+  "category": "misc",
+  "cookingtime": 250,
+  "experience": 0.4,
+  "group": "viridyum_ingot",
+  "ingredient": {
+    "item": "lunacy:viridyum_ore"
+  },
+  "result": {
+    "id": "lunacy:viridyum_ingot"
+  }
+}

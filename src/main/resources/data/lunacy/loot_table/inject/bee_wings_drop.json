@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:generic",
+  "pools": [
+    {
+      "rolls": 1,
+      "entries": [
+        { "type": "minecraft:item", "name": "lunacy:bee_wings" }
+      ],
+      "conditions": [
+        { "condition": "minecraft:random_chance", "chance": 0.25 }
+      ]
+    }
+  ]
+}

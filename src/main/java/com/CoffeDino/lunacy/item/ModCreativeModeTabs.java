@@ -24,6 +24,32 @@ public class ModCreativeModeTabs {
                         output.accept(ModItems.CUMMINGTONITE_INGOT.get());
                         output.accept(ModItems.STACK_STAR.get());
                         output.accept(ModItems.STORAGE_GEM.get());
+                        output.accept(ModItems.MAPLE_BOAT.get());
+                        output.accept(ModItems.MAPLE_CHEST_BOAT.get());
+                        output.accept(ModItems.MAPLE_BRANCH.get());
+                        output.accept(ModItems.ELEMENTAL_CORE.get());
+                        output.accept(ModItems.ELEMENTAL_CORE_BROWN.get());
+                        output.accept(ModItems.ELEMENTAL_CORE_CYAN.get());
+                        output.accept(ModItems.ELEMENTAL_CORE_YELLOW.get());
+                        output.accept(ModItems.ELEMENTAL_CORE_BLACK.get());
+                        output.accept(ModItems.ELEMENTAL_CORE_GREEN.get());
+                        output.accept(ModItems.ELEMENTAL_CORE_BLUE.get());
+                        output.accept(ModItems.ELEMENTAL_CORE_ORANGE.get());
+                        output.accept(ModItems.ELEMENTAL_CORE_RED.get());
+                        output.accept(ModItems.ELEMENTAL_CORE_PURPLE.get());
+                        output.accept(ModItems.SOUL.get());
+                        output.accept(ModItems.BUTTERFLY.get());
+                        output.accept(ModItems.BEE_WINGS.get());
+                        output.accept(ModItems.CARCASS.get());
+                        output.accept(ModItems.LAVA_GOO.get());
+                        output.accept(ModItems.SPRIGOT_ORE.get());
+                        output.accept(ModItems.SPRIGOT_INGOT.get());
+                        output.accept(ModItems.VIRIDYUM_ORE.get());
+                        output.accept(ModItems.VIRIDYUM_INGOT.get());
+                        output.accept(ModItems.BORONT_ORE.get());
+                        output.accept(ModItems.WITHERED_RIB.get());
+                        output.accept(ModItems.INTERNAL_CORE.get());
+                        output.accept(ModItems.MOURNING_BUTTERFLY.get());
                     })
                     .build());
 
@@ -122,9 +148,13 @@ public class ModCreativeModeTabs {
                         output.accept(ModBlocks.MAPLE_TRAPDOOR.get().asItem());
                         output.accept(ModBlocks.MAPLE_BUTTON.get().asItem());
                         output.accept(ModBlocks.MAPLE_PRESSURE_PLATE.get().asItem());
-                        output.accept(ModItems.MAPLE_BOAT.get());
-                        output.accept(ModItems.MAPLE_CHEST_BOAT.get());
-                        output.accept(ModItems.MAPLE_BRANCH.get());
+                        output.accept(ModBlocks.LAVA_OBSIDIAN.get());
+                        output.accept(ModBlocks.SPRIGOT_ORE_BLOCK.get());
+                        output.accept(ModBlocks.VIRIDYUM_ORE_BLOCK.get());
+                        output.accept(ModBlocks.BORONT_ORE_BLOCK.get());
+                        output.accept(ModBlocks.SPRIGOT_INGOT_BLOCK.get());
+                        output.accept(ModBlocks.VIRIDYUM_INGOT_BLOCK.get());
+                        output.accept(ModBlocks.BORONT_INGOT_BLOCK.get());
                     })
                     .build());
 

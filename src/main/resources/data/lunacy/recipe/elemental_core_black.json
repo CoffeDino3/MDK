@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    { "item": "lunacy:elemental_core" },
+    { "item": "minecraft:obsidian" }
+  ],
+  "result": {
+    "id": "lunacy:elemental_core_black",
+    "count": 1
+  }
+}

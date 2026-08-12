@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "AA ",
+    "AA ",
+    " B "
+  ],
+  "key": {
+    "A": {
+      "item": "lunacy:viridyum_ingot"
+    },
+    "B": {
+      "item": "minecraft:stick"
+    }
+  },
+  "result": {
+    "id": "lunacy:viridyum_greatsword",
+    "count": 1
+  }
+}

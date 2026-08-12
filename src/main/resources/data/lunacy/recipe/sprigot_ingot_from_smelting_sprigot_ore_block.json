@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:smelting",
+  "category": "misc",
+  "cookingtime": 250,
+  "experience": 0.4,
+  "group": "sprigot_ingot",
+  "ingredient": {
+    "item": "lunacy:sprigot_ore_block"
+  },
+  "result": {
+    "id": "lunacy:sprigot_ore"
+  }
+}

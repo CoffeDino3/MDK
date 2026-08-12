@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:blasting",
+  "category": "misc",
+  "cookingtime": 150,
+  "experience": 0.6,
+  "group": "viridyum_ingot",
+  "ingredient": {
+    "item": "lunacy:viridyum_ore_block"
+  },
+  "result": {
+    "id": "lunacy:viridyum_ore"
+  }
+}

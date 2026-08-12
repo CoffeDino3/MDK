@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "transportation",
+  "ingredients": [
+    { "item": "minecraft:chest" },
+    { "item": "lunacy:maple_boat" }
+  ],
+  "result": {
+    "id": "lunacy:maple_chest_boat",
+    "count": 1
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "redstone",
+  "pattern": [
+    "##",
+    "##",
+    "##"
+  ],
+  "key": {
+    "#": { "item": "lunacy:maple_planks" }
+  },
+  "result": {
+    "id": "lunacy:maple_door",
+    "count": 3
+  }
+}

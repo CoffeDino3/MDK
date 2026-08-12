@@ -37,10 +37,9 @@ public class ModBlocks {
     public static final DeferredHolder<Block, Block> CUMMINGTONITE_BLOCK = registerBlock("cummingtonite_block",
             () -> new DropExperienceBlock(UniformInt.of(2, 4), BlockBehaviour.Properties.of()
                     .strength(4F).requiresCorrectToolForDrops()));
-
     public static final DeferredHolder<Block, Block> CUMMINGTONITE_INGOT_BLOCK = registerBlock("cummingtonite_ingot_block",
             () -> new Block(BlockBehaviour.Properties.of()
-                    .strength(5F).requiresCorrectToolForDrops().sound(SoundType.ANCIENT_DEBRIS)));
+                    .strength(4F).requiresCorrectToolForDrops()));
     public static final DeferredHolder<Block, Block> MAPLE_LOG = registerBlock("maple_log",
             () -> new RotatedPillarBlock(BlockBehaviour.Properties.of()
                     .mapColor(MapColor.WOOD)
@@ -161,6 +160,28 @@ public class ModBlocks {
                             .sound(SoundType.WOOD)
                             .pushReaction(net.minecraft.world.level.material.PushReaction.DESTROY)
                             .ignitedByLava()));
+    public static final DeferredHolder<Block, Block> SPRIGOT_ORE_BLOCK = registerBlock("sprigot_ore_block",
+            () -> new DropExperienceBlock(UniformInt.of(2, 4), BlockBehaviour.Properties.of()
+                    .strength(4F).requiresCorrectToolForDrops()));
+    public static final DeferredHolder<Block, Block> BORONT_ORE_BLOCK = registerBlock("boront_ore_block",
+            () -> new DropExperienceBlock(UniformInt.of(2, 4), BlockBehaviour.Properties.of()
+                    .strength(4F).requiresCorrectToolForDrops()));
+    public static final DeferredHolder<Block, Block> VIRIDYUM_ORE_BLOCK = registerBlock("viridyum_ore_block",
+            () -> new DropExperienceBlock(UniformInt.of(2, 4), BlockBehaviour.Properties.of()
+                    .strength(4F).requiresCorrectToolForDrops()));
+    public static final DeferredHolder<Block, Block> LAVA_OBSIDIAN = registerBlock("lava_obsidian",
+            () -> new Block(BlockBehaviour.Properties.of()
+                    .strength(70F).requiresCorrectToolForDrops()));
+    public static final DeferredHolder<Block, Block> SPRIGOT_INGOT_BLOCK = registerBlock("sprigot_ingot_block",
+            () -> new Block(BlockBehaviour.Properties.of()
+                    .strength(4F).requiresCorrectToolForDrops()));
+    public static final DeferredHolder<Block, Block> BORONT_INGOT_BLOCK = registerBlock("boront_ingot_block",
+            () -> new Block(BlockBehaviour.Properties.of()
+                    .strength(4F).requiresCorrectToolForDrops()));
+    public static final DeferredHolder<Block, Block> VIRIDYUM_INGOT_BLOCK = registerBlock("viridyum_ingot_block",
+            () -> new Block(BlockBehaviour.Properties.of()
+                    .strength(4F).requiresCorrectToolForDrops()));
+
 
 
     private static <T extends Block> DeferredHolder<Block, T> registerBlock(String name, Supplier<T> block) {

@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "redstone",
+  "pattern": [
+    "#W#",
+    "#W#"
+  ],
+  "key": {
+    "#": { "item": "minecraft:stick" },
+    "W": { "item": "lunacy:maple_planks" }
+  },
+  "result": {
+    "id": "lunacy:maple_fence_gate",
+    "count": 1
+  }
+}

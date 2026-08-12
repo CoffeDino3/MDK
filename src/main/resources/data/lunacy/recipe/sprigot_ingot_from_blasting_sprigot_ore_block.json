@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:blasting",
+  "category": "misc",
+  "cookingtime": 150,
+  "experience": 0.6,
+  "group": "sprigot_ingot",
+  "ingredient": {
+    "item": "lunacy:sprigot_ore_block"
+  },
+  "result": {
+    "id": "lunacy:sprigot_ore"
+  }
+}

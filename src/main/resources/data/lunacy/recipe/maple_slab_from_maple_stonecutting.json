@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": { "item": "lunacy:maple_planks" },
+  "result": {
+    "id": "lunacy:maple_slab",
+    "count": 2
+  }
+}

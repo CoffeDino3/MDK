@@ -213,7 +213,56 @@ public class ModItems {
             ITEMS.register("maple_chest_boat",
                     () -> new ModBoatItem(true, ModEntities.MAPLE_CHEST_BOAT, new Item.Properties().stacksTo(1)));
     public static final DeferredHolder<Item, Item> MAPLE_BRANCH = ITEMS.register("maple_branch",
+            () -> new Item(new Item.Properties().stacksTo(1)));
+    public static final DeferredHolder<Item, Item> ELEMENTAL_CORE = ITEMS.register("elemental_core",
+            () -> new Item(new Item.Properties().stacksTo(1)));
+    public static final DeferredHolder<Item, Item> ELEMENTAL_CORE_BLACK = ITEMS.register("elemental_core_black",
+            () -> new Item(new Item.Properties().stacksTo(1)));
+    public static final DeferredHolder<Item, Item> ELEMENTAL_CORE_BLUE = ITEMS.register("elemental_core_blue",
+            () -> new Item(new Item.Properties().stacksTo(1)));
+    public static final DeferredHolder<Item, Item> ELEMENTAL_CORE_BROWN = ITEMS.register("elemental_core_brown",
+            () -> new Item(new Item.Properties().stacksTo(1)));
+    public static final DeferredHolder<Item, Item> ELEMENTAL_CORE_CYAN = ITEMS.register("elemental_core_cyan",
+            () -> new Item(new Item.Properties().stacksTo(1)));
+    public static final DeferredHolder<Item, Item> ELEMENTAL_CORE_GREEN = ITEMS.register("elemental_core_green",
+            () -> new Item(new Item.Properties().stacksTo(1)));
+    public static final DeferredHolder<Item, Item> ELEMENTAL_CORE_ORANGE = ITEMS.register("elemental_core_orange",
+            () -> new Item(new Item.Properties().stacksTo(1)));
+    public static final DeferredHolder<Item, Item> ELEMENTAL_CORE_PURPLE = ITEMS.register("elemental_core_purple",
+            () -> new Item(new Item.Properties().stacksTo(1)));
+    public static final DeferredHolder<Item, Item> ELEMENTAL_CORE_RED = ITEMS.register("elemental_core_red",
+            () -> new Item(new Item.Properties().stacksTo(1)));
+    public static final DeferredHolder<Item, Item> ELEMENTAL_CORE_YELLOW = ITEMS.register("elemental_core_yellow",
+            () -> new Item(new Item.Properties().stacksTo(1)));
+    public static final DeferredHolder<Item, Item> BEE_WINGS = ITEMS.register("bee_wings",
             () -> new Item(new Item.Properties().stacksTo(64)));
+    public static final DeferredHolder<Item, Item> BORONT_ORE = ITEMS.register("boront_ore",
+            () -> new Item(new Item.Properties().stacksTo(64)));
+    public static final DeferredHolder<Item, Item> BUTTERFLY = ITEMS.register("butterfly",
+            () -> new Item(new Item.Properties().stacksTo(64)));
+    public static final DeferredHolder<Item, Item> CARCASS = ITEMS.register("carcass",
+            () -> new Item(new Item.Properties().stacksTo(64)));
+    public static final DeferredHolder<Item, Item> LAVA_GOO = ITEMS.register("lava_goo",
+            () -> new Item(new Item.Properties().stacksTo(64)));
+    public static final DeferredHolder<Item, Item> SOUL = ITEMS.register("soul",
+            () -> new Item(new Item.Properties().stacksTo(64)));
+    public static final DeferredHolder<Item, Item> SPRIGOT_ORE = ITEMS.register("sprigot_ore",
+            () -> new Item(new Item.Properties().stacksTo(64)));
+    public static final DeferredHolder<Item, Item> SPRIGOT_INGOT = ITEMS.register("sprigot_ingot",
+            () -> new Item(new Item.Properties().stacksTo(64)));
+    public static final DeferredHolder<Item, Item> VIRIDYUM_ORE = ITEMS.register("viridyum_ore",
+            () -> new Item(new Item.Properties().stacksTo(64)));
+    public static final DeferredHolder<Item, Item> VIRIDYUM_INGOT = ITEMS.register("viridyum_ingot",
+            () -> new Item(new Item.Properties().stacksTo(64)));
+    public static final DeferredHolder<Item, Item> WITHERED_RIB = ITEMS.register("withered_rib",
+            () -> new Item(new Item.Properties().stacksTo(64)));
+    public static final DeferredHolder<Item, Item> INTERNAL_CORE = ITEMS.register("internal_core",
+            () -> new Item(new Item.Properties().stacksTo(1)));
+    public static final DeferredHolder<Item, Item> MOURNING_BUTTERFLY = ITEMS.register("mourning_butterfly",
+            () -> new Item(new Item.Properties().stacksTo(64)));
+
+
+
 
 
 

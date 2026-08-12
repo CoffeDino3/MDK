@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "AAB",
+    "   ",
+    "   "
+  ],
+  "key": {
+    "A": {
+      "item": "lunacy:lava_obsidian"
+    },
+    "B": {
+      "item": "minecraft:stick"
+    }
+  },
+  "result": {
+    "id": "lunacy:obsidia",
+    "count": 1
+  }
+}

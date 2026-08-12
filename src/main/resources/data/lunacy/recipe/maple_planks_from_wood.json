@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "building",
+  "ingredients": [
+    { "item": "lunacy:maple_wood" }
+  ],
+  "result": {
+    "id": "lunacy:maple_planks",
+    "count": 4
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "BA ",
+    "B C",
+    "BA "
+  ],
+  "key": {
+    "A": {
+      "item": "lunacy:maple_branch"
+    },
+    "B": {
+      "item": "minecraft:string"
+    },
+    "C": {
+      "item": "lunacy:maple_wood"
+    }
+  },
+  "result": {
+    "id": "lunacy:shi_bow",
+    "count": 1
+  }
+}

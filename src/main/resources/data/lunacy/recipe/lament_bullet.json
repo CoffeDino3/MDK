@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    { "item": "lunacy:mourning_butterfly" },
+    { "item": "lunacy:bullet" }
+  ],
+  "result": {
+    "id": "lunacy:lament_bullet",
+    "count": 1
+  }
+}

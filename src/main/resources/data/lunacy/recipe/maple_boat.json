@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "transportation",
+  "pattern": [
+    "# #",
+    "###",
+    "   "
+  ],
+  "key": {
+    "#": { "item": "lunacy:maple_planks" }
+  },
+  "result": {
+    "id": "lunacy:maple_boat",
+    "count": 1
+  }
+}

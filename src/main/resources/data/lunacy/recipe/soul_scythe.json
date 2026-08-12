@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "AAB",
+    "  C",
+    "  C"
+  ],
+  "key": {
+    "A": {
+      "item": "lunacy:withered_rib"
+    },
+    "B": {
+      "item": "lunacy:soul"
+    },
+    "C": {
+      "item": "minecraft:bone"
+    }
+  },
+  "result": {
+    "id": "lunacy:soul_scythe",
+    "count": 1
+  }
+}

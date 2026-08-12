@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "building",
+  "ingredients": [
+    { "item": "lunacy:stripped_maple_log" }
+  ],
+  "result": {
+    "id": "lunacy:maple_planks",
+    "count": 4
+  }
+}

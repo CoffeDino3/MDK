@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    " A ",
+    "CBD",
+    "   "
+  ],
+  "key": {
+    "A": { "item": "lunacy:butterfly" },
+    "B": { "item": "lunacy:carcass" },
+    "C": { "item": "lunacy:bee_wings" },
+    "D": { "item": "lunacy:soul" }
+  },
+  "result": {
+    "id": "lunacy:mourning_butterfly",
+    "count": 4
+  }
+}

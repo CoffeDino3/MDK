@@ -1,6 +1,13 @@
 {
   "values": [
     "lunacy:cummingtonite_block",
-    "lunacy:cummingtonite_ingot_block"
+    "lunacy:cummingtonite_ingot_block",
+    "lunacy:sprigot_ore_block",
+    "lunacy:viridyum_ore_block",
+    "lunacy:boront_ore_block",
+    "lunacy:sprigot_ingot_block",
+    "lunacy:viridyum_ingot_block",
+    "lunacy:boront_ingot_block",
+    "lunacy:lava_obsidian"
   ]
 }

@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "pattern": [
+    "#  ",
+    "## ",
+    "###"
+  ],
+  "key": {
+    "#": { "item": "lunacy:maple_planks" }
+  },
+  "result": {
+    "id": "lunacy:maple_stairs",
+    "count": 4
+  }
+}

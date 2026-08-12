@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "redstone",
+  "ingredients": [
+    { "item": "lunacy:maple_planks" }
+  ],
+  "result": {
+    "id": "lunacy:maple_button",
+    "count": 1
+  }
+}

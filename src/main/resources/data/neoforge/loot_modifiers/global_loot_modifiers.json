@@ -1,0 +1,29 @@
+{
+  "replace": false,
+  "entries": [
+    "lunacy:withered_rib_from_wither_skeleton",
+    "lunacy:soul_from_zombie",
+    "lunacy:soul_from_husk",
+    "lunacy:soul_from_drowned",
+    "lunacy:soul_from_skeleton",
+    "lunacy:soul_from_stray",
+    "lunacy:soul_from_wither_skeleton",
+    "lunacy:soul_from_zombie_villager",
+    "lunacy:soul_from_zombified_piglin",
+    "lunacy:soul_from_phantom",
+    "lunacy:lava_goo_from_magma_cube",
+    "lunacy:lava_goo_from_bastion_treasure",
+    "lunacy:lava_goo_from_ruined_portal",
+    "lunacy:soul_from_desert_pyramid",
+    "lunacy:soul_from_bastion_treasure",
+    "lunacy:soul_from_end_city_treasure",
+    "lunacy:internal_core_from_desert_pyramid",
+    "lunacy:internal_core_from_bastion_treasure",
+    "lunacy:internal_core_from_end_city_treasure",
+    "lunacy:bee_wings_from_bee",
+    "lunacy:butterfly_from_frog",
+    "lunacy:carcass_from_endermite",
+    "lunacy:carcass_from_silverfish"
+  ]
+}
+

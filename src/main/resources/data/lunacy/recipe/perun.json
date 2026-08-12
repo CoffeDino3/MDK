@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "A  ",
+    "B  ",
+    "C  "
+  ],
+  "key": {
+    "A": {
+      "item": "lunacy:sprigot_ingot"
+    },
+    "B": {
+      "item": "lunacy:elemental_core_cyan"
+    },
+    "C": {
+      "item": "minecraft:stick"
+    }
+  },
+  "result": {
+    "id": "lunacy:perun",
+    "count": 1
+  }
+}
