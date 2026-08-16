@@ -1,0 +1,34 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "lunacy:roca"
+      }
+    },
+    "has_cummingtonite_ingot": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "lunacy:cummingtonite_ingot"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_cummingtonite_ingot"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "lunacy:roca",
+      "lunacy:roca_alt2",
+      "lunacy:roca_alt3"
+    ]
+  }
+}

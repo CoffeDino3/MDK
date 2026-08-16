@@ -7,7 +7,8 @@
   "item.lunacy.storage_gem": "Storage gem",
   "item.lunacy.lament_gun": "Lament",
   "item.lunacy.lament_bullet": "Solemn bullet",
-  "item.lunacy.race_reset_scroll": "Race Reset Scroll",
+  "item.lunacy.race_reset_scroll": "Race change scroll",
+  "item.lunacy.class_change_scroll": "Class change scroll",
   "item.lunacy.race_reset_scroll.tooltip": "Resets your race and allows you to choose a new one",
   "block.lunacy.cummingtonite_block": "Cummingtonite Block",
   "block.lunacy.cummingtonite_ingot_block": "Cummingtonite Ingot Block",
@@ -27,11 +28,15 @@
   "effect.lunacy.rooted": "Rooted",
   "effect.lunacy.soaked": "Soaked",
   "effect.lunacy.fall_vulnerable": "Unbalanced",
+  "categore.lunacy.abilities": "Abilities",
 
 
   "item.lunacy.shi_bow": "Shi Bow",
   "item.lunacy.shi_arrow": "Shi Arrow",
   "item.lunacy.bullet": "Bullet",
+  "gamerule.lunacyRandomSpellbladeElement": "Random Spellblade element",
+  "key.lunacy.player_data": "Open player daya screen",
+  "key.lunacy.race_ability": "Race Ability",
 
 
   "creativetab.lunacy.cummingtonite_items": "Lunacy items",
@@ -94,6 +99,14 @@
   "effect.lunacy.soul_claim": "Soul Claim",
   "key.lunacy.class_selection": "Open Class Selection",
   "category.lunacy.general": "Lunacy",
+  "effect.lunacy.believer_cooldown": "Believer's Barrier Cooldown",
+  "effect.lunacy.celestial_cooldown": "Celestial Cooldown",
+  "effect.lunacy.ethereal_cooldown": "Ethereal Form Cooldown",
+  "effect.lunacy.lover_cooldown": "Lover's Bond Cooldown",
+  "effect.lunacy.phantom_cooldown": "Phantom Glide Cooldown",
+  "effect.lunacy.vampireborn_cooldown": "Vampireborn Cooldown",
+  "effect.lunacy.warder_cooldown": "Warder Cooldown",
+  "effect.lunacy.angelborn_cooldown": "Angelborn Cooldown",
 
   "painting.lunacy.catto.title": "Catto",
   "painting.lunacy.catto.author": "CoffeDino",
@@ -107,10 +120,7 @@
   "painting.lunacy.pretty.author": "CoffeDino",
 
   "item.lunacy.amethyst_rapier": "§dAmethyst Rapier§r",
-  "item.lunacy.viridyum_greatsword": "§6Viridyum Greatsword§r",
-  "item.lunacy.viridyum_greatsword.tooltip.chronobreak": "§3Chronobreak§r",
-  "item.lunacy.viridyum_greatsword.tooltip.ready": "§2This mysterious sword lets you rewind time!§r",
-  "item.lunacy.viridyum_greatsword.tooltip.cooldown": "§Right click to view the cooldown§r",
+  "item.lunacy.viridyum_greatsword": "§6Chronoblade§r",
   "item.lunacy.agnis_fury": "§9Agni's fury§r",
   "item.lunacy.soul_scythe": "§5Soul Scythe§r",
   "item.lunacy.obsidia": "Obsidia",
@@ -175,7 +185,7 @@
   "class.lunacy.assassin": "Assassin",
   "class.lunacy.guardian": "Guardian",
   "class.lunacy.spellblade": "Spellblade",
-  "class.lunacy.chronoblade": "Chronoblade",
+  "class.lunacy.heavy_knight": "Heavy knight",
   "class.lunacy.reaper": "Reaper",
   "class.lunacy.gunsmith": "Gunsmith",
 

@@ -1,0 +1,34 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "lunacy:moirai"
+      }
+    },
+    "has_elemental_core_purple": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "lunacy:elemental_core_purple"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_elemental_core_purple"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "lunacy:moirai",
+      "lunacy:moirai_alt2",
+      "lunacy:moirai_alt3"
+    ]
+  }
+}

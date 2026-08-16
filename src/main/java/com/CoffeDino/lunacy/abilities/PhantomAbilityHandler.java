@@ -1,12 +1,17 @@
 package com.CoffeDino.lunacy.abilities;
 
 import com.CoffeDino.lunacy.Lunacy;
+import com.CoffeDino.lunacy.effects.AbilityCooldown;
+import com.CoffeDino.lunacy.effects.ModEffects;
+import com.CoffeDino.lunacy.leveling.PlayerLevels;
+import com.CoffeDino.lunacy.races.races;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent;
 import net.neoforged.neoforge.event.tick.ServerTickEvent;
 
 import java.util.HashMap;
@@ -16,28 +21,84 @@ import java.util.UUID;
 @EventBusSubscriber(modid = Lunacy.MODID)
 public class PhantomAbilityHandler {
     private static final Map<UUID, PhantomAbilityInstance> ACTIVE_ABILITIES = new HashMap<>();
-    private static final Map<UUID, Long> COOLDOWNS = new HashMap<>();
-    private static final long COOLDOWN_DURATION = 3000;
-    private static final double LAUNCH_VELOCITY = 2.0;
+    private static final int COOLDOWN_TICKS = 60;
+    private static final double BASE_LAUNCH_VELOCITY = 2.0;
+    private static final double LAUNCH_GROWTH_PER_10_LEVELS = 0.10;
     private static final int LAUNCH_DURATION = 30;
     private static final float BASE_GLIDE_SPEED = 0.3f;
     private static final float BOOSTED_GLIDE_SPEED = 0.6f;
     private static final float BASE_DESCENT_SPEED = -0.05f;
+    private static final int MID_AIR_JUMP_UNLOCK_LEVEL = 25;
+    private static final double MID_AIR_JUMP_VELOCITY = 1.1;
+    private static final int MID_AIR_JUMP_COOLDOWN_TICKS = 40;
+    private static final float AIRBORNE_ATTACK_DAMAGE_MULTIPLIER = 1.75f;
+
+    private static final Map<UUID, Long> lastMidAirJumpTick = new HashMap<>();
+
+    private static double getLaunchVelocity(int level) {
+        return BASE_LAUNCH_VELOCITY * (1.0 + (level / 10) * LAUNCH_GROWTH_PER_10_LEVELS);
+    }
 
     public static void activateAbility(Player player) {
         if (player.level().isClientSide()) return;
         UUID playerId = player.getUUID();
-        if (!canActivateAbility(player) || ACTIVE_ABILITIES.containsKey(playerId)) {
+
+        PhantomAbilityInstance existing = ACTIVE_ABILITIES.get(playerId);
+        if (existing != null) {
+            if (player instanceof ServerPlayer sp) {
+                tryMidAirJump(sp);
+            }
             return;
         }
-        ACTIVE_ABILITIES.put(playerId, new PhantomAbilityInstance((ServerPlayer) player));
-        startCooldown(player);
-        Lunacy.LOGGER.debug("Phantom ability activated for player: {}", player.getName().getString());
+        if (AbilityCooldown.isActive(player, ModEffects.PHANTOM_COOLDOWN)) {
+            return;
+        }
+        int level = (player instanceof ServerPlayer sp) ? PlayerLevels.getLevel(sp) : 1;
+        ACTIVE_ABILITIES.put(playerId, new PhantomAbilityInstance((ServerPlayer) player, level));
+        Lunacy.LOGGER.debug("Phantom ability activated for player: {} (level {})", player.getName().getString(), level);
+    }
+    public static boolean tryMidAirJump(ServerPlayer player) {
+        PhantomAbilityInstance instance = ACTIVE_ABILITIES.get(player.getUUID());
+        if (instance == null) return false;
+        if (instance.isLaunching()) return false;
+        if (player.onGround()) return false;
+
+        int level = PlayerLevels.getLevel(player);
+        if (level < MID_AIR_JUMP_UNLOCK_LEVEL) return false;
+
+        long currentTick = player.level().getGameTime();
+        Long lastJump = lastMidAirJumpTick.get(player.getUUID());
+        if (lastJump != null && currentTick - lastJump < MID_AIR_JUMP_COOLDOWN_TICKS) return false;
+
+        instance.startMidAirJumpBoost(MID_AIR_JUMP_VELOCITY);
+        player.hurtMarked = true;
+        lastMidAirJumpTick.put(player.getUUID(), currentTick);
+        return true;
+    }
+    public static boolean isAirborneForAttackBonus(Player player) {
+        return isGliding(player) && !player.onGround();
     }
 
     @SubscribeEvent
     public static void onServerTick(ServerTickEvent.Post event) {
-        ACTIVE_ABILITIES.values().removeIf(ability -> ability.tick());
+        ACTIVE_ABILITIES.values().removeIf(ability -> {
+            boolean ended = ability.tick();
+            if (ended) {
+                AbilityCooldown.start(ability.getPlayer(), ModEffects.PHANTOM_COOLDOWN, COOLDOWN_TICKS);
+            }
+            return ended;
+        });
+    }
+    @SubscribeEvent
+    public static void onLivingHurt(LivingIncomingDamageEvent event) {
+        if (!(event.getSource().getEntity() instanceof ServerPlayer attacker)) return;
+        if (races.getPlayerRace(attacker) != races.Race.PHANTOM) return;
+        if (!isAirborneForAttackBonus(attacker)) return;
+
+        int level = PlayerLevels.getLevel(attacker);
+        if (level < MID_AIR_JUMP_UNLOCK_LEVEL) return;
+
+        event.setAmount(event.getAmount() * AIRBORNE_ATTACK_DAMAGE_MULTIPLIER);
     }
 
     public static boolean isGliding(Player player) {
@@ -48,31 +109,32 @@ public class PhantomAbilityHandler {
         ACTIVE_ABILITIES.remove(player.getUUID());
     }
 
-    public static boolean canActivateAbility(Player player) {
-        UUID playerId = player.getUUID();
-        Long lastUsed = COOLDOWNS.get(playerId);
-
-        if (lastUsed == null) {
-            return true;
-        }
-
-        return System.currentTimeMillis() - lastUsed >= COOLDOWN_DURATION;
-    }
-
-    public static void startCooldown(Player player) {
-        COOLDOWNS.put(player.getUUID(), System.currentTimeMillis());
-    }
-
     private static class PhantomAbilityInstance {
         private final ServerPlayer player;
+        private final double launchVelocity;
         private int ticksActive = 0;
         private boolean isLaunching = true;
+        private int midAirJumpBoostTicks = 0;
+        private double midAirJumpVelocity = 0;
 
-        public PhantomAbilityInstance(ServerPlayer player) {
+        public PhantomAbilityInstance(ServerPlayer player, int level) {
             this.player = player;
+            this.launchVelocity = getLaunchVelocity(level);
             Vec3 currentMotion = player.getDeltaMovement();
-            player.setDeltaMovement(currentMotion.x, LAUNCH_VELOCITY, currentMotion.z);
+            player.setDeltaMovement(currentMotion.x, launchVelocity, currentMotion.z);
             player.hurtMarked = true;
+        }
+
+        public ServerPlayer getPlayer() {
+            return player;
+        }
+
+        public boolean isLaunching() {
+            return isLaunching;
+        }
+        public void startMidAirJumpBoost(double velocity) {
+            this.midAirJumpBoostTicks = 15;
+            this.midAirJumpVelocity = velocity;
         }
 
         public boolean tick() {
@@ -139,6 +201,13 @@ public class PhantomAbilityHandler {
                     verticalSpeed = Math.max(verticalSpeed, -0.02);
                 }
             }
+
+            if (midAirJumpBoostTicks > 0) {
+                verticalSpeed = midAirJumpVelocity;
+                midAirJumpVelocity *= 0.92;
+                midAirJumpBoostTicks--;
+            }
+
             double motionX = horizontalLook.x * glideSpeed;
             double motionZ = horizontalLook.z * glideSpeed;
 

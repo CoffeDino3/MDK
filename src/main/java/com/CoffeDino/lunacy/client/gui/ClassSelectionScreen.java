@@ -1,5 +1,6 @@
 package com.CoffeDino.lunacy.client.gui;
 
+import com.CoffeDino.lunacy.client.KeyBindHandler;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.CoffeDino.lunacy.Lunacy;
 import com.CoffeDino.lunacy.client.gui.components.ColoredButton;
@@ -16,6 +17,7 @@ import net.minecraft.resources.ResourceLocation;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class ClassSelectionScreen extends Screen {
     private static final ResourceLocation BACKGROUND =
@@ -24,6 +26,7 @@ public class ClassSelectionScreen extends Screen {
     private int currentClassIndex = 0;
     private List<PlayerClasses.PlayerClass> classList;
     private Button selectButton;
+    private Button randomButton;
     private Button leftArrow;
     private Button rightArrow;
     private boolean hasExistingClass = false;
@@ -61,9 +64,25 @@ public class ClassSelectionScreen extends Screen {
                 0xE07020FF
         );
         addRenderableWidget(rightArrow);
+
         if (!hasExistingClass) {
+            int buttonGap = 6;
+            int randomWidth = 24;
+            int selectWidth = 120 - randomWidth - buttonGap;
+            int rowY = panelTop + panelHeight - 30;
+            int rowLeft = centerX - 60;
+
+            randomButton = new ColoredButton(
+                    rowLeft, rowY, randomWidth, 20,
+                    Component.literal("\uD83C\uDFB2"),
+                    b -> randomizeAndSelectClass(),
+                    0xA6A0308A,
+                    0xCC9933CC
+            );
+            addRenderableWidget(randomButton);
+
             selectButton = new ColoredButton(
-                    centerX - 60, panelTop + panelHeight - 30, 120, 20,
+                    rowLeft + randomWidth + buttonGap, rowY, selectWidth, 20,
                     Component.literal("Select Class"),
                     b -> selectClass(),
                     0xA60032A0,
@@ -92,6 +111,14 @@ public class ClassSelectionScreen extends Screen {
 
     private void switchClass(int direction) {
         currentClassIndex = (currentClassIndex + direction + classList.size()) % classList.size();
+    }
+
+    private void randomizeAndSelectClass() {
+        PlayerClasses.PlayerClass playerClass = classList.get(ThreadLocalRandom.current().nextInt(classList.size()));
+        Lunacy.LOGGER.debug("DEBUG: Random class button pressed!");
+        Lunacy.LOGGER.debug("DEBUG: Randomly selected class: " + playerClass.getId() + " - " + playerClass.getDisplayName());
+        NetworkHandler.sendToServer(new ClassSelectionPacket(playerClass.getId()));
+        Minecraft.getInstance().setScreen(null);
     }
 
     @Override
@@ -256,7 +283,7 @@ public class ClassSelectionScreen extends Screen {
             case ASSASSIN: return "Shadow incarnate, striking unseen and gone before blood hits ground.";
             case GUARDIAN: return "Unshaken bulwark of resolve, turning enemy fury into wasted effort.";
             case SPELLBLADE: return "A conduit of elements, fusing magic and motion into destruction.";
-            case CHRONOBLADE: return "Moves between heartbeats, twisting time itself to undo your strike.";
+            case HEAVY_KNIGHT: return "Slow and deadly, each swing crushes through defenses.";
             case REAPER: return "Silent bringer of endings, harvesting souls with cold, patient grace.";
             case GUNSMITH: return "Master of firearms, delivering precision and power with every shot.";
             default: return "A specialized combat style with unique techniques and abilities.";
@@ -288,5 +315,13 @@ public class ClassSelectionScreen extends Screen {
     @Override
     public boolean isPauseScreen() {
         return false;
+    }
+    @Override
+    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+        if (KeyBindHandler.CLASS_SELECTION_KEY.matches(keyCode, scanCode)) {
+            this.onClose();
+            return true;
+        }
+        return super.keyPressed(keyCode, scanCode, modifiers);
     }
 }

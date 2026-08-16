@@ -10,9 +10,11 @@ import org.jetbrains.annotations.Nullable;
 
 public class SculkStorageMenuProvider implements MenuProvider {
     private final Player player;
+    private final int rowCount;
 
-    public SculkStorageMenuProvider(Player player) {
+    public SculkStorageMenuProvider(Player player, int rowCount) {
         this.player = player;
+        this.rowCount = rowCount;
     }
 
     @Override
@@ -23,6 +25,6 @@ public class SculkStorageMenuProvider implements MenuProvider {
     @Nullable
     @Override
     public AbstractContainerMenu createMenu(int windowId, @NotNull Inventory playerInventory, @NotNull Player player) {
-        return new SculkStorageMenu(windowId, playerInventory, this.player);
+        return new SculkStorageMenu(windowId, playerInventory, this.player, rowCount);
     }
 }

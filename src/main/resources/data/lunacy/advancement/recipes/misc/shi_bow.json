@@ -1,0 +1,33 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "lunacy:shi_bow"
+      }
+    },
+    "has_maple_branch": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "lunacy:maple_branch"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_maple_branch"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "lunacy:shi_bow",
+      "lunacy:shi_bow_alt2"
+    ]
+  }
+}

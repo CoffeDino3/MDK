@@ -1,0 +1,33 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "lunacy:boront_axe"
+      }
+    },
+    "has_boront_ore": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "lunacy:boront_ore"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_boront_ore"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "lunacy:boront_axe",
+      "lunacy:boront_axe_alt2"
+    ]
+  }
+}

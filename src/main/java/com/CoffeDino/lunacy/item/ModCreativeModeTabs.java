@@ -20,10 +20,10 @@ public class ModCreativeModeTabs {
                     .icon(() -> new ItemStack(ModItems.CUMMINGTONITE.get()))
                     .title(Component.translatable("creativetab.lunacy.cummingtonite_items"))
                     .displayItems((parameters, output) -> {
+                        output.accept(ModItems.RACE_RESET_SCROLL.get());
+                        output.accept(ModItems.CLASS_CHANGE_SCROLL.get());
                         output.accept(ModItems.CUMMINGTONITE.get());
                         output.accept(ModItems.CUMMINGTONITE_INGOT.get());
-                        output.accept(ModItems.STACK_STAR.get());
-                        output.accept(ModItems.STORAGE_GEM.get());
                         output.accept(ModItems.MAPLE_BOAT.get());
                         output.accept(ModItems.MAPLE_CHEST_BOAT.get());
                         output.accept(ModItems.MAPLE_BRANCH.get());
@@ -55,12 +55,9 @@ public class ModCreativeModeTabs {
 
     public static final DeferredHolder<CreativeModeTab, CreativeModeTab> SPECIAL_TOOLS_TAB = CREATIVE_MODE_TABS.register("special_tools_tab",
             () -> CreativeModeTab.builder()
-                    .icon(() -> new ItemStack(ModItems.THE_WAND.get()))
+                    .icon(() -> new ItemStack(ModItems.BULLET.get()))
                     .title(Component.translatable("creativetab.lunacy.special_tools"))
                     .displayItems((parameters, output) -> {
-                        output.accept(ModItems.THE_WAND.get());
-                        output.accept(ModItems.SPECIAL_WAND.get());
-                        output.accept(ModItems.RACE_RESET_SCROLL.get());
                         output.accept(ModItems.LAMENT_BULLET.get());
                         output.accept(ModItems.LAMENT_GUN.get());
                         output.accept(ModItems.VIRIDYUM_GREATSWORD.get());

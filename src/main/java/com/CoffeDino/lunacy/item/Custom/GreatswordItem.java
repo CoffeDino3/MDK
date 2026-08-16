@@ -53,7 +53,7 @@ public class GreatswordItem extends SwordItem {
     @Override
     public boolean hurtEnemy(ItemStack stack, LivingEntity target, LivingEntity attacker) {
         if (attacker instanceof Player player
-                && PlayerClasses.getPlayerClass(player) == PlayerClasses.PlayerClass.CHRONOBLADE) {
+                && PlayerClasses.getPlayerClass(player) == PlayerClasses.PlayerClass.HEAVY_KNIGHT) {
             applyChronoRhythm(player, target);
         }
         return true;

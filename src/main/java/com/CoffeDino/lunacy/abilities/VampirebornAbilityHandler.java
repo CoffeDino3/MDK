@@ -1,10 +1,12 @@
 package com.CoffeDino.lunacy.abilities;
 
 import com.CoffeDino.lunacy.Lunacy;
+import com.CoffeDino.lunacy.effects.AbilityCooldown;
+import com.CoffeDino.lunacy.effects.ModEffects;
+import com.CoffeDino.lunacy.leveling.PlayerLevels;
 import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -23,12 +25,9 @@ import java.util.UUID;
 @EventBusSubscriber(modid = Lunacy.MODID)
 public class VampirebornAbilityHandler {
     private static final Map<UUID, VampirebornAbilityInstance> ACTIVE_ABILITIES = new HashMap<>();
-    private static final Map<UUID, Long> COOLDOWNS = new HashMap<>();
-    private static final long COOLDOWN_DURATION = 1000;
-
+    private static final int COOLDOWN_TICKS = 20;
     private static final DustParticleOptions RED_DUST = new DustParticleOptions(
             new Vector3f(0.8f, 0.0f, 0.0f), 1.0f);
-
     private static final float BASE_DAMAGE_MULTIPLIER = 1.25f;
     private static final float BASE_DAMAGE_FLOOR = 9.5f;
     private static final float DAMAGE_PER_EXTRA_PARTICLE_MULTIPLIER = 0.3f;
@@ -36,6 +35,12 @@ public class VampirebornAbilityHandler {
     private static final float SELF_DAMAGE_PER_PARTICLE = 0.5f;
     private static final int MAX_RANGE = 50;
     private static final float AUTO_FIRE_HEALTH_THRESHOLD = 2.0f;
+    private static int getStartingStacksPerPress(int level) {
+        return 1 + (level / 10);
+    }
+    private static float getDamageRatioMultiplier(int level) {
+        return 1.0f + (level / 10) * 0.02f;
+    }
 
     public static void startHoldingAbility(Player player) {
         if (player.level().isClientSide()) return;
@@ -44,7 +49,8 @@ public class VampirebornAbilityHandler {
             ACTIVE_ABILITIES.remove(playerId);
         }
 
-        VampirebornAbilityInstance ability = new VampirebornAbilityInstance((ServerPlayer) player);
+        int level = (player instanceof ServerPlayer sp) ? PlayerLevels.getLevel(sp) : 1;
+        VampirebornAbilityInstance ability = new VampirebornAbilityInstance((ServerPlayer) player, level);
         ACTIVE_ABILITIES.put(playerId, ability);
 
         Lunacy.LOGGER.debug("Vampireborn hold started for player: {}", player.getName().getString());
@@ -52,16 +58,21 @@ public class VampirebornAbilityHandler {
 
     public static void fireSingleShot(Player player) {
         if (player.level().isClientSide()) return;
-        if (!canActivateAbility(player)) return;
+        if (AbilityCooldown.isActive(player, ModEffects.VAMPIREBORN_COOLDOWN)) return;
         UUID playerId = player.getUUID();
         if (ACTIVE_ABILITIES.containsKey(playerId)) {
             ACTIVE_ABILITIES.remove(playerId);
         }
 
-        VampirebornAbilityInstance ability = new VampirebornAbilityInstance((ServerPlayer) player);
-        ability.addParticle();
+        int level = (player instanceof ServerPlayer sp) ? PlayerLevels.getLevel(sp) : 1;
+        VampirebornAbilityInstance ability = new VampirebornAbilityInstance((ServerPlayer) player, level);
+
+        int startingStacks = getStartingStacksPerPress(level);
+        for (int i = 0; i < startingStacks; i++) {
+            ability.addParticle();
+        }
         ability.fireProjectile();
-        startCooldown(player);
+        AbilityCooldown.start(player, ModEffects.VAMPIREBORN_COOLDOWN, COOLDOWN_TICKS);
     }
 
     public static void releaseHeldAbility(Player player) {
@@ -71,7 +82,7 @@ public class VampirebornAbilityHandler {
         if (ability != null && ability.getParticleCount() > 0) {
             ability.fireProjectile();
             ACTIVE_ABILITIES.remove(playerId);
-            startCooldown(player);
+            AbilityCooldown.start(player, ModEffects.VAMPIREBORN_COOLDOWN, COOLDOWN_TICKS);
 
         } else {
             ACTIVE_ABILITIES.remove(playerId);
@@ -87,7 +98,7 @@ public class VampirebornAbilityHandler {
             VampirebornAbilityInstance ability = entry.getValue();
             if (ability.shouldAutoFire()) {
                 ability.fireProjectile();
-                startCooldown(ability.getPlayer());
+                AbilityCooldown.start(ability.getPlayer(), ModEffects.VAMPIREBORN_COOLDOWN, COOLDOWN_TICKS);
                 return true;
             }
             return false;
@@ -98,24 +109,16 @@ public class VampirebornAbilityHandler {
         return ACTIVE_ABILITIES.containsKey(player.getUUID());
     }
 
-    public static boolean canActivateAbility(Player player) {
-        UUID playerId = player.getUUID();
-        Long lastUsed = COOLDOWNS.get(playerId);
-        return lastUsed == null || System.currentTimeMillis() - lastUsed >= COOLDOWN_DURATION;
-    }
-
-    public static void startCooldown(Player player) {
-        COOLDOWNS.put(player.getUUID(), System.currentTimeMillis());
-    }
-
     private static class VampirebornAbilityInstance {
         private final ServerPlayer player;
+        private final float damageRatioMultiplier;
         private int particleCount = 0;
         private long lastParticleAddTime = 0;
         private static final long PARTICLE_ADD_INTERVAL = 500;
 
-        public VampirebornAbilityInstance(ServerPlayer player) {
+        public VampirebornAbilityInstance(ServerPlayer player, int level) {
             this.player = player;
+            this.damageRatioMultiplier = getDamageRatioMultiplier(level);
             this.lastParticleAddTime = System.currentTimeMillis();
         }
 
@@ -143,7 +146,7 @@ public class VampirebornAbilityHandler {
             float baseDamage = Math.max(BASE_DAMAGE_FLOOR, mainHandDamage * BASE_DAMAGE_MULTIPLIER);
             float perParticleDamage = Math.max(DAMAGE_PER_EXTRA_PARTICLE_FLOOR, mainHandDamage * DAMAGE_PER_EXTRA_PARTICLE_MULTIPLIER);
 
-            float totalDamage = baseDamage + (Math.max(0, particleCount - 1) * perParticleDamage);
+            float totalDamage = (baseDamage + (Math.max(0, particleCount - 1) * perParticleDamage)) * damageRatioMultiplier;
             createProjectile(totalDamage);
 
             Lunacy.LOGGER.debug("Vampireborn fired with {} particles, damage: {}",
@@ -253,7 +256,7 @@ public class VampirebornAbilityHandler {
             return player.getHealth() <= AUTO_FIRE_HEALTH_THRESHOLD && particleCount > 0;
         }
 
-        public Player getPlayer() {
+        public ServerPlayer getPlayer() {
             return player;
         }
 

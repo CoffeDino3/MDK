@@ -1,6 +1,9 @@
 package com.CoffeDino.lunacy.abilities;
 
 import com.CoffeDino.lunacy.Lunacy;
+import com.CoffeDino.lunacy.effects.AbilityCooldown;
+import com.CoffeDino.lunacy.effects.ModEffects;
+import com.CoffeDino.lunacy.leveling.PlayerLevels;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -21,23 +24,33 @@ import java.util.*;
 @EventBusSubscriber(modid = Lunacy.MODID)
 public class LoverAbilityHandler {
     private static final Map<UUID, LoverAbilityInstance> ACTIVE_ABILITIES = new HashMap<>();
-    private static final int ABILITY_DURATION = 400;
+    private static final int BASE_ABILITY_DURATION = 400;
+    private static final float DURATION_GROWTH_PER_10_LEVELS = 0.10f;
     private static final float CIRCLE_RADIUS = 1.0f;
-    private static final long COOLDOWN_DURATION = 14000;
+    private static final int COOLDOWN_TICKS = 280;
+    private static final float DAMAGE_RATIO_GROWTH_PER_LEVEL = 0.02f;
 
-    private static final Map<UUID, Long> COOLDOWNS = new HashMap<>();
+    private static int getDuration(int level) {
+        float multiplier = 1.0f + (level / 10) * DURATION_GROWTH_PER_10_LEVELS;
+        return Math.round(BASE_ABILITY_DURATION * multiplier);
+    }
+
+    private static float getDamageRatio(int level) {
+        return 1.0f + level * DAMAGE_RATIO_GROWTH_PER_LEVEL;
+    }
 
     public static void activateAbility(Player player) {
         if (player.level().isClientSide()) return;
 
         UUID playerId = player.getUUID();
 
-        if (ACTIVE_ABILITIES.containsKey(playerId) || !canActivateAbility(player)) {
+        if (ACTIVE_ABILITIES.containsKey(playerId) || AbilityCooldown.isActive(player, ModEffects.LOVER_COOLDOWN)) {
             return;
         }
 
-        ACTIVE_ABILITIES.put(playerId, new LoverAbilityInstance(player));
-        Lunacy.LOGGER.debug("Lover ability activated for player: {}", player.getName().getString());
+        int level = (player instanceof ServerPlayer sp) ? PlayerLevels.getLevel(sp) : 1;
+        ACTIVE_ABILITIES.put(playerId, new LoverAbilityInstance(player, level));
+        Lunacy.LOGGER.debug("Lover ability activated for player: {} (level {})", player.getName().getString(), level);
     }
 
     @SubscribeEvent
@@ -50,12 +63,12 @@ public class LoverAbilityHandler {
             if (ability.tick()) {
                 UUID playerId = entry.getKey();
                 iterator.remove();
-                startCooldown(ability.getPlayer());
+                AbilityCooldown.start(ability.getPlayer(), ModEffects.LOVER_COOLDOWN, COOLDOWN_TICKS);
                 Lunacy.LOGGER.debug("Lover ability removed for player {} - tick() returned true", playerId);
             } else if (!ability.isValid()) {
                 UUID playerId = entry.getKey();
                 iterator.remove();
-                startCooldown(ability.getPlayer());
+                AbilityCooldown.start(ability.getPlayer(), ModEffects.LOVER_COOLDOWN, COOLDOWN_TICKS);
                 Lunacy.LOGGER.debug("Lover ability removed for player {} - invalid", playerId);
             }
         }
@@ -66,16 +79,17 @@ public class LoverAbilityHandler {
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public static void onLivingHurt(LivingIncomingDamageEvent event) {
         if (event.getEntity() instanceof ServerPlayer player) {
-            if (isAbilityActive(player)) {
+            LoverAbilityInstance ability = ACTIVE_ABILITIES.get(player.getUUID());
+            if (ability != null) {
                 DamageSource source = event.getSource();
                 float damageAmount = event.getAmount();
-                redirectDamageToRandomEntity(player, damageAmount, source);
+                redirectDamageToRandomEntity(player, damageAmount, source, ability.damageRatio);
                 event.setCanceled(true);
             }
         }
     }
 
-    private static void redirectDamageToRandomEntity(ServerPlayer player, float damageAmount, DamageSource originalSource) {
+    private static void redirectDamageToRandomEntity(ServerPlayer player, float damageAmount, DamageSource originalSource, float damageRatio) {
         ServerLevel level = (ServerLevel) player.level();
         Vec3 playerPos = player.position();
         AABB searchArea30 = new AABB(
@@ -117,7 +131,7 @@ public class LoverAbilityHandler {
         }
 
         if (target != null) {
-            target.hurt(player.damageSources().magic(), damageAmount);
+            target.hurt(player.damageSources().magic(), damageAmount * damageRatio);
 
             level.sendParticles(ParticleTypes.ANGRY_VILLAGER,
                     target.getX(), target.getY() + 1, target.getZ(),
@@ -125,7 +139,7 @@ public class LoverAbilityHandler {
 
             spawnDamageTransferParticles(player.position(), target.position(), level);
 
-            
+
         } else {
             Lunacy.LOGGER.debug("No valid target found for damage redirection - damage absorbed");
 
@@ -138,7 +152,6 @@ public class LoverAbilityHandler {
     private static void spawnDamageTransferParticles(Vec3 start, Vec3 end, ServerLevel level) {
         int particles = 20;
         Vec3 direction = end.subtract(start);
-        double distance = direction.length();
         Vec3 step = direction.scale(1.0 / particles);
 
         for (int i = 0; i < particles; i++) {
@@ -164,10 +177,14 @@ public class LoverAbilityHandler {
 
     private static class LoverAbilityInstance {
         private final ServerPlayer player;
+        private final int abilityDuration;
+        private final float damageRatio;
         private int ticksActive = 0;
 
-        public LoverAbilityInstance(Player player) {
+        public LoverAbilityInstance(Player player, int level) {
             this.player = (ServerPlayer) player;
+            this.abilityDuration = getDuration(level);
+            this.damageRatio = getDamageRatio(level);
         }
 
         public boolean tick() {
@@ -176,7 +193,7 @@ public class LoverAbilityHandler {
             }
 
             ticksActive++;
-            if (ticksActive > ABILITY_DURATION) {
+            if (ticksActive > abilityDuration) {
                 return true;
             }
 
@@ -207,23 +224,8 @@ public class LoverAbilityHandler {
             return player != null && player.isAlive() && !player.isRemoved();
         }
 
-        public Player getPlayer() {
+        public ServerPlayer getPlayer() {
             return player;
         }
-    }
-
-    public static boolean canActivateAbility(Player player) {
-        UUID playerId = player.getUUID();
-        Long lastUsed = COOLDOWNS.get(playerId);
-
-        if (lastUsed == null) {
-            return true;
-        }
-
-        return System.currentTimeMillis() - lastUsed >= COOLDOWN_DURATION;
-    }
-
-    public static void startCooldown(Player player) {
-        COOLDOWNS.put(player.getUUID(), System.currentTimeMillis());
     }
 }

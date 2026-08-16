@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "lunacy:lament_gun"
+      }
+    },
+    "has_mourning_butterfly": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "lunacy:mourning_butterfly"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_mourning_butterfly"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "lunacy:lament_gun"
+    ]
+  }
+}

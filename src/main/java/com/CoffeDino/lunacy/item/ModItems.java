@@ -18,7 +18,7 @@ public class ModItems {
     public static final DeferredHolder<Item, Item> CUMMINGTONITE_INGOT = ITEMS.register("cummingtonite_ingot",
             () -> new Item(new Item.Properties()));
 
-    public static final DeferredHolder<Item, Item> STORAGE_GEM = ITEMS.register("storage_gem",
+    /*public static final DeferredHolder<Item, Item> STORAGE_GEM = ITEMS.register("storage_gem",
             () -> new Item(new Item.Properties()));
     public static final DeferredHolder<Item, Item> STACK_STAR = ITEMS.register("stack_star",
             () -> new Item(new Item.Properties()));
@@ -27,6 +27,8 @@ public class ModItems {
             () -> new WandItem(new Item.Properties().durability(200)));
     public static final DeferredHolder<Item, SpecialWandItem> SPECIAL_WAND = ITEMS.register("special_wand",
             () -> new SpecialWandItem(new Item.Properties().durability(10)));
+            (
+     */
     public static final DeferredHolder<Item, RaceResetScrollItem> RACE_RESET_SCROLL = ITEMS.register("race_reset_scroll",
             () -> new RaceResetScrollItem(new Item.Properties().stacksTo(1)));
     public static final DeferredHolder<Item, LamentGunItem> LAMENT_GUN = ITEMS.register("lament_gun",
@@ -260,6 +262,8 @@ public class ModItems {
             () -> new Item(new Item.Properties().stacksTo(1)));
     public static final DeferredHolder<Item, Item> MOURNING_BUTTERFLY = ITEMS.register("mourning_butterfly",
             () -> new Item(new Item.Properties().stacksTo(64)));
+    public static final DeferredHolder<Item, ClassChangeScrollItem> CLASS_CHANGE_SCROLL = ITEMS.register("class_change_scroll",
+            () -> new ClassChangeScrollItem(new Item.Properties().stacksTo(1)));
 
 
 

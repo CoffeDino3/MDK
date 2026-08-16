@@ -16,6 +16,11 @@ public class ModBiomeModifiers {
             net.neoforged.neoforge.registries.NeoForgeRegistries.Keys.BIOME_MODIFIERS,
             ResourceLocation.fromNamespaceAndPath(Lunacy.MODID, "add_maple"));
 
+    public static final ResourceKey<BiomeModifier> ADD_CUMMINGTONITE_ORE_KEY = registerKey("add_cummingtonite_ore");
+    public static final ResourceKey<BiomeModifier> ADD_SPRIGOT_ORE_KEY = registerKey("add_sprigot_ore");
+    public static final ResourceKey<BiomeModifier> ADD_VIRIDYUM_ORE_KEY = registerKey("add_viridyum_ore");
+    public static final ResourceKey<BiomeModifier> ADD_BORONT_ORE_KEY = registerKey("add_boront_ore");
+
     public static void bootstrap(BootstrapContext<BiomeModifier> context) {
         var biomes = context.lookup(Registries.BIOME);
         var placedFeatures = context.lookup(Registries.PLACED_FEATURE);
@@ -25,5 +30,35 @@ public class ModBiomeModifiers {
                 HolderSet.direct(placedFeatures.getOrThrow(ModPlacedFeatures.MAPLE_PLACED_KEY)),
                 GenerationStep.Decoration.VEGETAL_DECORATION
         ));
+
+        context.register(ADD_CUMMINGTONITE_ORE_KEY, new net.neoforged.neoforge.common.world.BiomeModifiers.AddFeaturesBiomeModifier(
+                biomes.getOrThrow(BiomeTags.IS_OVERWORLD),
+                HolderSet.direct(placedFeatures.getOrThrow(ModPlacedFeatures.CUMMINGTONITE_ORE_PLACED_KEY)),
+                GenerationStep.Decoration.UNDERGROUND_ORES
+        ));
+
+        context.register(ADD_SPRIGOT_ORE_KEY, new net.neoforged.neoforge.common.world.BiomeModifiers.AddFeaturesBiomeModifier(
+                biomes.getOrThrow(BiomeTags.IS_OVERWORLD),
+                HolderSet.direct(placedFeatures.getOrThrow(ModPlacedFeatures.SPRIGOT_ORE_PLACED_KEY)),
+                GenerationStep.Decoration.UNDERGROUND_ORES
+        ));
+
+        context.register(ADD_VIRIDYUM_ORE_KEY, new net.neoforged.neoforge.common.world.BiomeModifiers.AddFeaturesBiomeModifier(
+                biomes.getOrThrow(BiomeTags.IS_OVERWORLD),
+                HolderSet.direct(placedFeatures.getOrThrow(ModPlacedFeatures.VIRIDYUM_ORE_PLACED_KEY)),
+                GenerationStep.Decoration.UNDERGROUND_ORES
+        ));
+
+        context.register(ADD_BORONT_ORE_KEY, new net.neoforged.neoforge.common.world.BiomeModifiers.AddFeaturesBiomeModifier(
+                biomes.getOrThrow(BiomeTags.IS_OVERWORLD),
+                HolderSet.direct(placedFeatures.getOrThrow(ModPlacedFeatures.BORONT_ORE_PLACED_KEY)),
+                GenerationStep.Decoration.UNDERGROUND_ORES
+        ));
+    }
+
+    private static ResourceKey<BiomeModifier> registerKey(String name) {
+        return ResourceKey.create(
+                net.neoforged.neoforge.registries.NeoForgeRegistries.Keys.BIOME_MODIFIERS,
+                ResourceLocation.fromNamespaceAndPath(Lunacy.MODID, name));
     }
 }

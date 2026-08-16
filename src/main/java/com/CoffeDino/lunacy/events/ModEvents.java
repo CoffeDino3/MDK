@@ -8,6 +8,7 @@ import com.CoffeDino.lunacy.domain.FireDomainManager;
 import com.CoffeDino.lunacy.entity.FloatingRapierEntity;
 import com.CoffeDino.lunacy.item.Custom.*;
 import com.CoffeDino.lunacy.item.ModItems;
+import com.CoffeDino.lunacy.leveling.PlayerLevels;
 import com.CoffeDino.lunacy.network.NetworkHandler;
 import com.CoffeDino.lunacy.races.races;
 import com.CoffeDino.lunacy.renderer.GruckRenderer;
@@ -96,6 +97,7 @@ public class ModEvents {
                 reapplyPersistedCooldown(serverPlayer, ModAttachments.PERUN_COOLDOWN_END, PerunItem.class);
                 reapplyPersistedCooldown(serverPlayer, ModAttachments.AMPHITRITE_COOLDOWN_END, AmphitriteItem.class);
                 reapplyPersistedCooldown(serverPlayer, ModAttachments.FIRE_SPEAR_COOLDOWN_END, com.CoffeDino.lunacy.item.Custom.FireSpearItem.class);
+                syncLevelXp(serverPlayer);
 
                 Lunacy.LOGGER.debug("DEBUG: ===== SERVER PLAYER LOGIN END =====");
             }
@@ -172,7 +174,13 @@ public class ModEvents {
                 if (playerClass != null) {
                     NetworkHandler.syncClassToClient(serverPlayer, playerClass);
                 }
+                syncLevelXp(serverPlayer);
             }
+        }
+
+        private static void syncLevelXp(ServerPlayer serverPlayer) {
+            int level = PlayerLevels.getLevel(serverPlayer);
+            NetworkHandler.syncLevelXpToClient(serverPlayer, level, PlayerLevels.getXp(serverPlayer), PlayerLevels.getXpToNextLevel(level));
         }
     }
 
@@ -219,7 +227,6 @@ public class ModEvents {
             hasCheckedRace = false;
 
             if (player == Minecraft.getInstance().player) {
-
                 Minecraft.getInstance().execute(() -> {
                     try {
                         Thread.sleep(1000);
@@ -287,6 +294,19 @@ public class ModEvents {
 
             if (hasGreatsword && ViridyumGreatswordItem.tryChronobreak(player)) {
                 event.setCanceled(true);
+            }
+        }
+    }
+    @SubscribeEvent
+    public static void onEntityKilledForXp(LivingDeathEvent event) {
+        LivingEntity killed = event.getEntity();
+        if (killed.level().isClientSide()) return;
+
+        LivingEntity killerEntity = killed.getKillCredit();
+        if (killerEntity instanceof ServerPlayer killer) {
+            int xpGain = Math.round(killed.getMaxHealth() / 4.0f);
+            if (xpGain > 0) {
+                PlayerLevels.addXp(killer, xpGain);
             }
         }
     }

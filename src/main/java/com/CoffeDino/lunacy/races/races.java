@@ -1,10 +1,12 @@
 package com.CoffeDino.lunacy.races;
 
+import com.CoffeDino.lunacy.Config;
 import com.CoffeDino.lunacy.Lunacy;
 import com.CoffeDino.lunacy.abilities.BelieverAbilityHandler;
 import com.CoffeDino.lunacy.abilities.GatekeeperAbilityHandler;
 import com.CoffeDino.lunacy.capability.ModAttachments;
 import com.CoffeDino.lunacy.effects.ModEffects;
+import com.CoffeDino.lunacy.leveling.PlayerLevels;
 import com.CoffeDino.lunacy.network.NetworkHandler;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
@@ -24,20 +26,12 @@ import java.util.UUID;
 public class races {
     private static Race clientRace = null;
     private static final ResourceLocation HEALTH_MODIFIER_ID = ResourceLocation.fromNamespaceAndPath(Lunacy.MODID, "race_health_modifier");
+    private static final ResourceLocation HEALTH_LEVEL_MODIFIER_ID = ResourceLocation.fromNamespaceAndPath(Lunacy.MODID, "race_health_level_modifier");
+    private static final ResourceLocation ARMOR_LEVEL_MODIFIER_ID = ResourceLocation.fromNamespaceAndPath(Lunacy.MODID, "race_armor_level_modifier");
+    private static final ResourceLocation TOUGHNESS_LEVEL_MODIFIER_ID = ResourceLocation.fromNamespaceAndPath(Lunacy.MODID, "race_toughness_level_modifier");
+    private static final ResourceLocation ATTACK_DAMAGE_LEVEL_MODIFIER_ID = ResourceLocation.fromNamespaceAndPath(Lunacy.MODID, "race_attack_damage_level_modifier");
     private static final ResourceLocation HEIGHT_MODIFIER_ID = ResourceLocation.fromNamespaceAndPath(Lunacy.MODID, "race_height");
     private static final ResourceLocation WIDTH_MODIFIER_ID = ResourceLocation.fromNamespaceAndPath(Lunacy.MODID, "race_width");
-
-    private static float sculkHealthBonus = 20.0f;
-    private static float warderHealthBonus = 10.0f;
-    private static float enderHealthBonus = 0.0f;
-    private static float phantomHealthBonus = 5.0f;
-    private static float loverHealthBonus = -4.0f;
-    private static float believerHealthBonus = 5.0f;
-    private static float angelbornHealthBonus = 0.0f;
-    private static float vampirebornHealthBonus = -5.0f;
-    private static float etherealHealthBonus = 10.0f;
-    private static float celestialHealthBonus = 5.0f;
-    private static float gatekeeperHealthBonus = 10.0f;
 
     public enum Race {
         SCULK("sculk", "Sculk", 1.8f, 0.6f),
@@ -86,6 +80,10 @@ public class races {
             GatekeeperAbilityHandler.deactivateAbility(player);
         }
         if (!player.level().isClientSide() && player instanceof ServerPlayer serverPlayer) {
+            if (currentRace != null && currentRace != race) {
+                PlayerLevels.resetLevel(serverPlayer);
+            }
+
             RaceDataManager dataManager = RaceDataManager.get(serverPlayer);
             dataManager.setPlayerRace(player.getUUID(), race != null ? race.getId() : "");
             syncRaceToClient(serverPlayer, race);
@@ -168,41 +166,39 @@ public class races {
             clearRaceEffects(player);
         }
     }
+    public static void onLevelChanged(ServerPlayer player) {
+        Race race = getPlayerRace(player);
+        if (race != null) {
+            applyRaceEffects(player, race);
+        }
+    }
 
     public static float getHealthBonus(Race race) {
-        return switch (race) {
-            case SCULK -> sculkHealthBonus;
-            case WARDER -> warderHealthBonus;
-            case ENDER -> enderHealthBonus;
-            case PHANTOM -> phantomHealthBonus;
-            case LOVER -> loverHealthBonus;
-            case BELIEVER -> believerHealthBonus;
-            case ANGELBORN -> angelbornHealthBonus;
-            case ETHEREAL -> etherealHealthBonus;
-            case CELESTIAL -> celestialHealthBonus;
-            case VAMPIREBORN -> vampirebornHealthBonus;
-            case GATEKEEPER -> gatekeeperHealthBonus;
-        };
+        return Config.healthBonus(race);
     }
 
     public static void applyRaceEffects(Player player, Race race) {
-        float previousHealthBonus = getCurrentHealthModifierAmount(player);
-
         clearRaceEffects(player);
+
+        int level = (player instanceof ServerPlayer serverPlayer) ? PlayerLevels.getLevel(serverPlayer) : 1;
+        int amplifierBonus = RaceLevelScaling.genericAmplifierBonus(level);
+
         switch (race) {
-            case ENDER -> applyEnderTraits(player);
-            case SCULK -> applySculkTraits(player);
-            case WARDER -> applyWarderTraits(player);
-            case PHANTOM -> applyPhantomTraits(player);
-            case LOVER -> applyLoverTraits(player);
-            case BELIEVER -> applyBelieverTraits(player);
-            case CELESTIAL -> applyCelestialTraits(player);
-            case ETHEREAL -> applyEtherealTraits(player);
-            case ANGELBORN -> applyAngelbornTraits(player);
-            case VAMPIREBORN -> applyVampirebornTraits(player);
-            case GATEKEEPER -> applyGatekeeperTraits(player);
+            case ENDER -> applyEnderTraits(player, amplifierBonus);
+            case SCULK -> applySculkTraits(player, amplifierBonus);
+            case WARDER -> applyWarderTraits(player, amplifierBonus);
+            case PHANTOM -> applyPhantomTraits(player, amplifierBonus);
+            case LOVER -> applyLoverTraits(player, amplifierBonus);
+            case BELIEVER -> applyBelieverTraits(player, amplifierBonus);
+            case CELESTIAL -> applyCelestialTraits(player, amplifierBonus);
+            case ETHEREAL -> applyEtherealTraits(player, amplifierBonus);
+            case ANGELBORN -> applyAngelbornTraits(player, amplifierBonus);
+            case VAMPIREBORN -> applyVampirebornTraits(player, amplifierBonus);
+            case GATEKEEPER -> applyGatekeeperTraits(player, amplifierBonus);
         }
-        applyHealthBonus(player, race, previousHealthBonus);
+
+        applyLevel25PermaBuff(player, race, level);
+        applyHealthAndArmorBonus(player, race, level);
         applySizeModifiers(player, race);
     }
 
@@ -219,63 +215,111 @@ public class races {
             player.removeEffect(ModEffects.BLOOD_SURGE);
             player.removeEffect(ModEffects.ETHER);
             player.removeEffect(MobEffects.SATURATION);
+            player.removeEffect(MobEffects.DIG_SPEED);
+            player.removeEffect(MobEffects.MOVEMENT_SPEED);
+            player.removeEffect(MobEffects.FIRE_RESISTANCE);
+            player.removeEffect(MobEffects.WATER_BREATHING);
+            player.removeEffect(MobEffects.ABSORPTION);
         }
-
-        clearHealthModifier(player);
         clearSizeModifiers(player);
 
         Lunacy.LOGGER.debug("DEBUG: Clearing race effects for " + player.getName().getString());
     }
-    private static float getCurrentHealthModifierAmount(Player player) {
+    private static void applyHealthAndArmorBonus(Player player, Race race, int level) {
+        if (!(player instanceof ServerPlayer)) return;
+
         AttributeInstance healthAttribute = player.getAttribute(Attributes.MAX_HEALTH);
-        if (healthAttribute == null) return 0f;
-        AttributeModifier existing = healthAttribute.getModifier(HEALTH_MODIFIER_ID);
-        return existing != null ? (float) existing.amount() : 0f;
-    }
+        if (healthAttribute != null) {
+            float previousTotalBonus = 0f;
+            AttributeModifier existingBase = healthAttribute.getModifier(HEALTH_MODIFIER_ID);
+            AttributeModifier existingLevel = healthAttribute.getModifier(HEALTH_LEVEL_MODIFIER_ID);
+            if (existingBase != null) previousTotalBonus += (float) existingBase.amount();
+            if (existingLevel != null) previousTotalBonus += (float) existingLevel.amount();
 
-    private static void applyHealthBonus(Player player, Race race, float previousBonus) {
-        if (player instanceof ServerPlayer) {
-            AttributeInstance healthAttribute = player.getAttribute(Attributes.MAX_HEALTH);
-            if (healthAttribute != null) {
-                healthAttribute.removeModifier(HEALTH_MODIFIER_ID);
-                float healthBonus = getHealthBonus(race);
-                AttributeModifier healthModifier = new AttributeModifier(
-                        HEALTH_MODIFIER_ID,
-                        healthBonus,
-                        AttributeModifier.Operation.ADD_VALUE
-                );
-                healthAttribute.addTransientModifier(healthModifier);
-                float delta = healthBonus - previousBonus;
-                if (delta != 0f) {
-                    float newHealth = Mth.clamp(player.getHealth() + delta, 0f, player.getMaxHealth());
-                    player.setHealth(newHealth);
-                } else if (player.getHealth() > player.getMaxHealth()) {
-                    player.setHealth(player.getMaxHealth());
-                }
+            healthAttribute.removeModifier(HEALTH_MODIFIER_ID);
+            healthAttribute.removeModifier(HEALTH_LEVEL_MODIFIER_ID);
 
-                Lunacy.LOGGER.debug("DEBUG: Applied " + healthBonus + " health bonus to " + player.getName().getString() + ". New max health: " + player.getMaxHealth());
+            float baseBonus = getHealthBonus(race);
+            float levelBonus = RaceLevelScaling.levelHealthBonus(race, level);
+
+            healthAttribute.addPermanentModifier(new AttributeModifier(
+                    HEALTH_MODIFIER_ID, baseBonus, AttributeModifier.Operation.ADD_VALUE));
+            if (levelBonus != 0f) {
+                healthAttribute.addPermanentModifier(new AttributeModifier(
+                        HEALTH_LEVEL_MODIFIER_ID, levelBonus, AttributeModifier.Operation.ADD_VALUE));
+            }
+
+            float newTotalBonus = baseBonus + levelBonus;
+            float delta = newTotalBonus - previousTotalBonus;
+            if (delta != 0f) {
+                float newHealth = Mth.clamp(player.getHealth() + delta, 0f, player.getMaxHealth());
+                player.setHealth(newHealth);
+            } else if (player.getHealth() > player.getMaxHealth()) {
+                player.setHealth(player.getMaxHealth());
+            }
+
+            Lunacy.LOGGER.debug("DEBUG: Applied {} base + {} level health bonus to {}. New max health: {}",
+                    baseBonus, levelBonus, player.getName().getString(), player.getMaxHealth());
+        }
+
+        AttributeInstance armorAttribute = player.getAttribute(Attributes.ARMOR);
+        if (armorAttribute != null) {
+            armorAttribute.removeModifier(ARMOR_LEVEL_MODIFIER_ID);
+            float armorBonus = RaceLevelScaling.levelArmorBonus(race, level);
+            if (armorBonus != 0f) {
+                armorAttribute.addPermanentModifier(new AttributeModifier(
+                        ARMOR_LEVEL_MODIFIER_ID, armorBonus, AttributeModifier.Operation.ADD_VALUE));
+            }
+        }
+
+        AttributeInstance toughnessAttribute = player.getAttribute(Attributes.ARMOR_TOUGHNESS);
+        if (toughnessAttribute != null) {
+            toughnessAttribute.removeModifier(TOUGHNESS_LEVEL_MODIFIER_ID);
+            float toughnessBonus = RaceLevelScaling.levelToughnessBonus(race, level);
+            if (toughnessBonus != 0f) {
+                toughnessAttribute.addPermanentModifier(new AttributeModifier(
+                        TOUGHNESS_LEVEL_MODIFIER_ID, toughnessBonus, AttributeModifier.Operation.ADD_VALUE));
+            }
+        }
+        AttributeInstance attackDamageAttribute = player.getAttribute(Attributes.ATTACK_DAMAGE);
+        if (attackDamageAttribute != null) {
+            attackDamageAttribute.removeModifier(ATTACK_DAMAGE_LEVEL_MODIFIER_ID);
+            float attackBonus = RaceLevelScaling.levelAttackDamageBonus(race, level);
+            if (attackBonus != 0f) {
+                attackDamageAttribute.addPermanentModifier(new AttributeModifier(
+                        ATTACK_DAMAGE_LEVEL_MODIFIER_ID, attackBonus, AttributeModifier.Operation.ADD_VALUE));
             }
         }
     }
+    private static void applyLevel25PermaBuff(Player player, Race race, int level) {
+        if (!(player instanceof ServerPlayer) || !RaceLevelScaling.hasReachedLevel25(level)) return;
 
-    private static void clearHealthModifier(Player player) {
-        AttributeInstance healthAttribute = player.getAttribute(Attributes.MAX_HEALTH);
-        if (healthAttribute != null) {
-            healthAttribute.removeModifier(HEALTH_MODIFIER_ID);
-            if (player.getHealth() > player.getMaxHealth()) {
-                player.setHealth(player.getMaxHealth());
-            }
+        switch (race) {
+            case SCULK -> player.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, -1, 1, true, false));
+            case WARDER -> player.addEffect(new MobEffectInstance(MobEffects.FIRE_RESISTANCE, -1, 0, true, false));
+            case ENDER -> player.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, -1, 0, true, false));
+            case PHANTOM -> player.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, -1, 1, true, false));
+            case LOVER -> player.addEffect(new MobEffectInstance(MobEffects.ABSORPTION, -1, 0, true, false));
+            case BELIEVER -> player.addEffect(new MobEffectInstance(MobEffects.REGENERATION, -1, 1, true, false));
+            case ANGELBORN -> player.addEffect(new MobEffectInstance(MobEffects.HERO_OF_THE_VILLAGE, -1, 1, true, false));
+            case VAMPIREBORN -> player.addEffect(new MobEffectInstance(MobEffects.REGENERATION, -1, 0, true, false));
+            case ETHEREAL -> player.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, -1, 0, true, false));
+            case CELESTIAL -> player.addEffect(new MobEffectInstance(MobEffects.DAMAGE_BOOST, -1, 0, true, false));
+            case GATEKEEPER -> player.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, -1, 0, true, false));
         }
     }
 
     private static void applySizeModifiers(Player player, Race race) {
         if (player instanceof ServerPlayer serverPlayer) {
-            player.getData(ModAttachments.RACE_SIZE).setRaceSize(race.getHeight(), race.getWidth());
+            float height = Config.height(race);
+            float width = Config.width(race);
+
+            player.getData(ModAttachments.RACE_SIZE).setRaceSize(height, width);
 
             Lunacy.LOGGER.debug("DEBUG: Applied size modifiers for " + race.getDisplayName() +
-                    " - Height: " + race.getHeight() + ", Width: " + race.getWidth());
+                    " - Height: " + height + ", Width: " + width);
             player.refreshDimensions();
-            NetworkHandler.syncSizeToClient(serverPlayer, race.getHeight(), race.getWidth());
+            NetworkHandler.syncSizeToClient(serverPlayer, height, width);
             serverPlayer.server.execute(() -> {
                 player.refreshDimensions();
             });
@@ -288,69 +332,69 @@ public class races {
         Lunacy.LOGGER.debug("DEBUG: Cleared size modifiers for " + player.getName().getString());
     }
 
-    private static void applyGatekeeperTraits(Player player) {
+    private static void applyGatekeeperTraits(Player player, int amplifierBonus) {
         if (player instanceof ServerPlayer) {
-            player.addEffect(new MobEffectInstance(MobEffects.SATURATION, -1, 0, true, false));
+            player.addEffect(new MobEffectInstance(MobEffects.SATURATION, -1, amplifierBonus, true, false));
         }
     }
 
-    private static void applyAngelbornTraits(Player player) {
+    private static void applyAngelbornTraits(Player player, int amplifierBonus) {
         if (player instanceof ServerPlayer) {
-            player.addEffect(new MobEffectInstance(MobEffects.REGENERATION, -1, 0, true, false));
+            player.addEffect(new MobEffectInstance(MobEffects.REGENERATION, -1, amplifierBonus, true, false));
         }
     }
 
-    private static void applyEtherealTraits(Player player) {
+    private static void applyEtherealTraits(Player player, int amplifierBonus) {
         if (player instanceof ServerPlayer) {
-            player.addEffect(new MobEffectInstance(ModEffects.ETHER, -1, 0, true, false, true));
+            player.addEffect(new MobEffectInstance(ModEffects.ETHER, -1, amplifierBonus, true, false, true));
         }
     }
 
-    private static void applyVampirebornTraits(Player player) {
+    private static void applyVampirebornTraits(Player player, int amplifierBonus) {
         if (player instanceof ServerPlayer) {
-            player.addEffect(new MobEffectInstance(ModEffects.BLOOD_SURGE, -1, 0, true, false, true));
+            player.addEffect(new MobEffectInstance(ModEffects.BLOOD_SURGE, -1, amplifierBonus, true, false, true));
         }
     }
 
-    private static void applyCelestialTraits(Player player) {
+    private static void applyCelestialTraits(Player player, int amplifierBonus) {
         if (player instanceof ServerPlayer) {
             player.addEffect(new MobEffectInstance(MobEffects.INVISIBILITY, -1, 0, true, false));
         }
     }
 
-    private static void applyLoverTraits(Player player) {
+    private static void applyLoverTraits(Player player, int amplifierBonus) {
         if (player instanceof ServerPlayer) {
-            player.addEffect(new MobEffectInstance(MobEffects.HERO_OF_THE_VILLAGE, -1, 0, true, false));
+            player.addEffect(new MobEffectInstance(MobEffects.HERO_OF_THE_VILLAGE, -1, amplifierBonus, true, false));
         }
     }
 
-    private static void applyBelieverTraits(Player player) {
+    private static void applyBelieverTraits(Player player, int amplifierBonus) {
         if (player instanceof ServerPlayer) {
-            player.addEffect(new MobEffectInstance(MobEffects.LUCK, -1, 0, true, false));
+            player.addEffect(new MobEffectInstance(MobEffects.LUCK, -1, amplifierBonus, true, false));
         }
     }
 
-    private static void applyEnderTraits(Player player) {
+    private static void applyEnderTraits(Player player, int amplifierBonus) {
         if (player instanceof ServerPlayer) {
             player.addEffect(new MobEffectInstance(MobEffects.NIGHT_VISION, -1, 0, true, false));
         }
     }
 
-    private static void applySculkTraits(Player player) {
+    private static void applySculkTraits(Player player, int amplifierBonus) {
         if (player instanceof ServerPlayer) {
-            player.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, -1, 0, true, false));
+            player.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, -1, amplifierBonus, true, false));
         }
     }
 
-    private static void applyWarderTraits(Player player) {
+    private static void applyWarderTraits(Player player, int amplifierBonus) {
         if (player instanceof ServerPlayer) {
-            player.addEffect(new MobEffectInstance(MobEffects.DAMAGE_BOOST, -1, 0, true, false));
+            player.addEffect(new MobEffectInstance(MobEffects.DAMAGE_BOOST, -1, amplifierBonus, true, false));
         }
     }
 
-    private static void applyPhantomTraits(Player player) {
+    private static void applyPhantomTraits(Player player, int amplifierBonus) {
         if (player instanceof ServerPlayer) {
-            player.addEffect(new MobEffectInstance(MobEffects.JUMP, -1, 0, true, false));
+            player.addEffect(new MobEffectInstance(MobEffects.JUMP, -1, amplifierBonus, true, false));
         }
     }
 
@@ -362,6 +406,7 @@ public class races {
 
         Race race = getPlayerRace(player);
         if (race != Race.VAMPIREBORN) return;
+        if (player.isCreative() || player.isSpectator()) return;
         if (isExposedToSunlight(player)) {
             if (!isWearingHelmet(player)) {
                 UUID playerId = player.getUUID();

@@ -2,6 +2,8 @@ package com.CoffeDino.lunacy.network;
 
 import com.CoffeDino.lunacy.Lunacy;
 import com.CoffeDino.lunacy.capability.ModAttachments;
+import com.CoffeDino.lunacy.capability.SculkStorage;
+import com.CoffeDino.lunacy.leveling.PlayerLevels;
 import com.CoffeDino.lunacy.menu.SculkStorageMenuProvider;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
@@ -20,9 +22,15 @@ public record OpenSculkStoragePacket() implements CustomPacketPayload {
     public static void handle(OpenSculkStoragePacket packet, IPayloadContext context) {
         context.enqueueWork(() -> {
             if (context.player() instanceof ServerPlayer player) {
-                if (!player.getData(ModAttachments.SCULK_STORAGE).isOnCooldown()) {
-                    player.openMenu(new SculkStorageMenuProvider(player));
-                }
+                SculkStorage storage = player.getData(ModAttachments.SCULK_STORAGE);
+                int level = PlayerLevels.getLevel(player);
+                storage.syncRowsToLevel(level);
+                int rows = storage.getRows();
+
+                player.openMenu(new SculkStorageMenuProvider(player, rows), buf -> buf.writeVarInt(rows));
+
+                Lunacy.LOGGER.debug("Opened Sculk storage for {} at level {} ({} rows)",
+                        player.getName().getString(), level, rows);
             }
         });
     }

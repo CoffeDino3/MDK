@@ -1,5 +1,6 @@
 package com.CoffeDino.lunacy.entity.abilities;
 
+import com.CoffeDino.lunacy.abilities.GatekeeperAbilityHandler;
 import com.CoffeDino.lunacy.entity.ModEntities;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
@@ -14,8 +15,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.ItemAttributeModifiers;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
-import net.minecraft.core.component.DataComponents;
-import net.minecraft.world.item.component.ItemAttributeModifiers;
 import net.minecraft.world.item.component.ItemAttributeModifiers.Entry;
 
 import java.util.ArrayList;
@@ -98,9 +97,11 @@ public class GatekeeperPortalEntity extends Entity {
 
         Vec3 spawnPos = position().add(0, 0.5, 0);
         Vec3 direction = targetPoint.subtract(spawnPos).normalize();
+        float levelMultiplier = GatekeeperAbilityHandler.getThrownWeaponDamageMultiplier(owner);
+        float finalDamage = (float) getWeaponDamage(weapon) * levelMultiplier;
 
         GatekeeperProjectileEntity projectile = new GatekeeperProjectileEntity(
-                serverLevel, owner, weapon, (float) getWeaponDamage(weapon)
+                serverLevel, owner, weapon, finalDamage
         );
         projectile.setPos(spawnPos.x, spawnPos.y, spawnPos.z);
         projectile.setDeltaMovement(direction.scale(1.5));

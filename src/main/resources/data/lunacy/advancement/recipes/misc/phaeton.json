@@ -1,0 +1,34 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "lunacy:phaeton"
+      }
+    },
+    "has_elemental_core_orange": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "lunacy:elemental_core_orange"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_elemental_core_orange"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "lunacy:phaeton",
+      "lunacy:phaeton_alt2",
+      "lunacy:phaeton_alt3"
+    ]
+  }
+}

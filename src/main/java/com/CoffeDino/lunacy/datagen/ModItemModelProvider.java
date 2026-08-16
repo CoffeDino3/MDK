@@ -15,11 +15,6 @@ public class ModItemModelProvider extends ItemModelProvider {
     protected void registerModels(){
         basicItem(ModItems.CUMMINGTONITE.get());
         basicItem(ModItems.CUMMINGTONITE_INGOT.get());
-
-        basicItem(ModItems.SPECIAL_WAND.get());
-        basicItem(ModItems.THE_WAND.get());
-        basicItem(ModItems.STACK_STAR.get());
-        basicItem(ModItems.STORAGE_GEM.get());
         basicItem(ModItems.RACE_RESET_SCROLL.get());
         basicItem(ModItems.LAMENT_GUN.get());
         basicItem(ModItems.LAMENT_BULLET.get());

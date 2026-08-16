@@ -1,0 +1,33 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "lunacy:agnis_fury"
+      }
+    },
+    "has_lava_goo": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "lunacy:lava_goo"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_lava_goo"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "lunacy:agnis_fury",
+      "lunacy:agnis_fury_alt2"
+    ]
+  }
+}

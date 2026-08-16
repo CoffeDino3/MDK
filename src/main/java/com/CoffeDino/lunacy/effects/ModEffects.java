@@ -45,6 +45,22 @@ public class ModEffects {
             EFFECTS.register("soaked", SoakedEffect::new);
     public static final DeferredHolder<MobEffect, FallVulnerableEffect> FALL_VULNERABLE =
             EFFECTS.register("fall_vulnerable", FallVulnerableEffect::new);
+    public static final DeferredHolder<MobEffect, CooldownEffect> BELIEVER_COOLDOWN =
+            EFFECTS.register("believer_cooldown", CooldownEffect::new);
+    public static final DeferredHolder<MobEffect, CooldownEffect> CELESTIAL_COOLDOWN =
+            EFFECTS.register("celestial_cooldown", CooldownEffect::new);
+    public static final DeferredHolder<MobEffect, CooldownEffect> ETHEREAL_COOLDOWN =
+            EFFECTS.register("ethereal_cooldown", CooldownEffect::new);
+    public static final DeferredHolder<MobEffect, CooldownEffect> LOVER_COOLDOWN =
+            EFFECTS.register("lover_cooldown", CooldownEffect::new);
+    public static final DeferredHolder<MobEffect, CooldownEffect> PHANTOM_COOLDOWN =
+            EFFECTS.register("phantom_cooldown", CooldownEffect::new);
+    public static final DeferredHolder<MobEffect, CooldownEffect> VAMPIREBORN_COOLDOWN =
+            EFFECTS.register("vampireborn_cooldown", CooldownEffect::new);
+    public static final DeferredHolder<MobEffect, CooldownEffect> WARDER_COOLDOWN =
+            EFFECTS.register("warder_cooldown", CooldownEffect::new);
+    public static final DeferredHolder<MobEffect, CooldownEffect> ANGELBORN_COOLDOWN =
+            EFFECTS.register("angelborn_cooldown", CooldownEffect::new);
 
     public static Holder<MobEffect> getMourningFuneralHolder() {
         return MOURNING_FUNERAL;

@@ -1,13 +1,16 @@
 package com.CoffeDino.lunacy.menu;
 
 import com.CoffeDino.lunacy.capability.ModAttachments;
+import com.CoffeDino.lunacy.leveling.ClientPlayerLevelData;
+import com.CoffeDino.lunacy.leveling.PlayerLevels;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.inventory.Slot;
 
 public class SculkStorageSlot extends Slot {
     private final Player player;
-    private final int slotIndex;
+    private int slotIndex;
 
     public SculkStorageSlot(Player player, int index, int x, int y) {
         super(new SculkStorageContainer(player), index, x, y);
@@ -15,18 +18,55 @@ public class SculkStorageSlot extends Slot {
         this.slotIndex = index;
     }
 
+    public void setSlotIndex(int newIndex) {
+        this.slotIndex = newIndex;
+    }
+
+    public int getSlotIndex() {
+        return slotIndex;
+    }
+
+    public boolean isActive() {
+        return slotIndex >= 0;
+    }
+
     @Override
     public boolean mayPlace(ItemStack stack) {
-        return true;
+        return isActive();
+    }
+    @Override
+    public int getMaxStackSize(ItemStack stack) {
+        if (!isActive()) return stack.getMaxStackSize();
+        int level = getOwnerLevel();
+        return player.getData(ModAttachments.SCULK_STORAGE).getEffectiveMaxStackSize(stack, level);
+    }
+
+    @Override
+    public int getMaxStackSize() {
+        return getMaxStackSize(ItemStack.EMPTY);
+    }
+
+    private int getOwnerLevel() {
+        if (player instanceof ServerPlayer serverPlayer) {
+            return PlayerLevels.getLevel(serverPlayer);
+        }
+        return ClientPlayerLevelData.getLevel();
     }
 
     @Override
     public ItemStack getItem() {
+        if (!isActive()) return ItemStack.EMPTY;
         return player.getData(ModAttachments.SCULK_STORAGE).getItem(slotIndex);
     }
 
     @Override
+    public boolean hasItem() {
+        return isActive() && !getItem().isEmpty();
+    }
+
+    @Override
     public void set(ItemStack stack) {
+        if (!isActive()) return;
         player.getData(ModAttachments.SCULK_STORAGE).setItem(slotIndex, stack);
         this.setChanged();
     }
@@ -40,6 +80,7 @@ public class SculkStorageSlot extends Slot {
 
     @Override
     public ItemStack remove(int amount) {
+        if (!isActive()) return ItemStack.EMPTY;
         ItemStack current = getItem();
         if (current.isEmpty()) return ItemStack.EMPTY;
 

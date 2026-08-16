@@ -35,6 +35,11 @@ public class NetworkHandler {
                 DeactivateWarderAbilityPacket::handle
         );
         registrar.playToServer(
+                AdjustWarderRingSizePacket.TYPE,
+                AdjustWarderRingSizePacket.STREAM_CODEC,
+                AdjustWarderRingSizePacket::handle
+        );
+        registrar.playToServer(
                 ActivateLoverAbilityPacket.TYPE,
                 ActivateLoverAbilityPacket.STREAM_CODEC,
                 ActivateLoverAbilityPacket::handle
@@ -53,6 +58,11 @@ public class NetworkHandler {
                 ActivatePhantomAbilityPacket.TYPE,
                 ActivatePhantomAbilityPacket.STREAM_CODEC,
                 ActivatePhantomAbilityPacket::handle
+        );
+        registrar.playToServer(
+                TryPhantomMidAirJumpPacket.TYPE,
+                TryPhantomMidAirJumpPacket.STREAM_CODEC,
+                TryPhantomMidAirJumpPacket::handle
         );
         registrar.playToServer(
                 BelieverAbilityPacket.TYPE,
@@ -125,6 +135,11 @@ public class NetworkHandler {
                 DeactivateGatekeeperAbilityPacket::handle
         );
         registrar.playToServer(
+                DeactivateEtherealAbilityPacket.TYPE,
+                DeactivateEtherealAbilityPacket.STREAM_CODEC,
+                DeactivateEtherealAbilityPacket::handle
+        );
+        registrar.playToServer(
                 ElementSelectionPacket.TYPE,
                 ElementSelectionPacket.STREAM_CODEC,
                 ElementSelectionPacket::handle
@@ -133,6 +148,11 @@ public class NetworkHandler {
                 RequestElementSelectionPacket.TYPE,
                 RequestElementSelectionPacket.STREAM_CODEC,
                 RequestElementSelectionPacket::handle
+        );
+        registrar.playToServer(
+                ScrollSculkStoragePacket.TYPE,
+                ScrollSculkStoragePacket.STREAM_CODEC,
+                ScrollSculkStoragePacket::handle
         );
 
         // PLAY_TO_CLIENT packets
@@ -155,6 +175,11 @@ public class NetworkHandler {
                 SyncClassPacket.TYPE,
                 SyncClassPacket.STREAM_CODEC,
                 SyncClassPacket::handle
+        );
+        registrar.playToClient(
+                SyncLevelXpPacket.TYPE,
+                SyncLevelXpPacket.STREAM_CODEC,
+                SyncLevelXpPacket::handle
         );
         registrar.playToClient(
                 SyncChronobreakCooldownPacket.TYPE,
@@ -197,6 +222,14 @@ public class NetworkHandler {
         PacketDistributor.sendToServer(new BelieverAbilityPacket(isShiftDown));
     }
 
+    public static void adjustWarderRingSize(boolean scrollUp) {
+        PacketDistributor.sendToServer(new AdjustWarderRingSizePacket(scrollUp));
+    }
+
+    public static void tryPhantomMidAirJump() {
+        PacketDistributor.sendToServer(new TryPhantomMidAirJumpPacket());
+    }
+
     public static void syncClassToClient(ServerPlayer player, PlayerClasses.PlayerClass playerClass) {
         String classId = playerClass != null ? playerClass.getId() : "";
         PacketDistributor.sendToPlayer(player, new SyncClassPacket(classId));
@@ -217,5 +250,11 @@ public class NetworkHandler {
     }
     public static void syncPhaetonStateToClient(ServerPlayer player, long riseEnd, long launchEnd, boolean diving) {
         PacketDistributor.sendToPlayer(player, new SyncPhaetonStatePacket(riseEnd, launchEnd, diving));
+    }
+    public static void syncLevelXpToClient(ServerPlayer player, int level, int xp, int xpToNextLevel) {
+        PacketDistributor.sendToPlayer(player, new SyncLevelXpPacket(level, xp, xpToNextLevel));
+    }
+    public static void scrollSculkStorage(int scrollRows) {
+        PacketDistributor.sendToServer(new ScrollSculkStoragePacket(scrollRows));
     }
 }

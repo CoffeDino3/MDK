@@ -2,6 +2,7 @@ package com.CoffeDino.lunacy.classes;
 
 import com.CoffeDino.lunacy.Lunacy;
 import com.CoffeDino.lunacy.LunacyGameRules;
+import com.CoffeDino.lunacy.leveling.PlayerLevels;
 import com.CoffeDino.lunacy.network.NetworkHandler;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
@@ -19,7 +20,7 @@ public class PlayerClasses {
         ASSASSIN("assassin", "Assassin"),
         GUARDIAN("guardian", "Guardian"),
         SPELLBLADE("spellblade", "Spellblade"),
-        CHRONOBLADE("chronoblade", "Chronoblade"),
+        HEAVY_KNIGHT("heavy_knight", "Heavy knight"),
         REAPER("reaper", "Reaper"),
         GUNSMITH("gunsmith", "Gunsmith");
 
@@ -50,8 +51,13 @@ public class PlayerClasses {
 
         if (!player.level().isClientSide() && player instanceof ServerPlayer serverPlayer) {
             ClassDataManager dataManager = ClassDataManager.get(serverPlayer);
+            PlayerClass currentClass = getPlayerClass(player);
             dataManager.setPlayerClass(player.getUUID(), playerClass != null ? playerClass.getId() : "");
             syncClassToClient(serverPlayer, playerClass);
+
+            if (currentClass != null && currentClass != playerClass) {
+                PlayerLevels.resetLevel(serverPlayer);
+            }
 
             if (playerClass == PlayerClass.SPELLBLADE && dataManager.getPlayerElement(player.getUUID()) == null) {
                 handleSpellbladeElementAssignment(serverPlayer, dataManager);

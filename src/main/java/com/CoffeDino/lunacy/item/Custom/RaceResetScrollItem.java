@@ -31,7 +31,6 @@ public class RaceResetScrollItem extends Item {
             if (!player.getAbilities().instabuild) {
                 itemStack.shrink(1);
             }
-            player.sendSystemMessage(net.minecraft.network.chat.Component.literal("Your race has been reset! Choose a new one."));
         }
 
         return InteractionResultHolder.sidedSuccess(itemStack, level.isClientSide());

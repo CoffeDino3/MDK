@@ -1,6 +1,6 @@
 package com.CoffeDino.lunacy.entity.abilities;
 
-import com.CoffeDino.lunacy.Lunacy;
+import com.CoffeDino.lunacy.abilities.AngelbornAbilityHandler;
 import com.CoffeDino.lunacy.entity.ModEntities;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
@@ -254,7 +254,12 @@ public class AngelbornAbilityEntity extends Entity {
             return BEAM_DAMAGE_FLOOR;
         }
         float mainHandDamage = (float) owner.getAttributeValue(Attributes.ATTACK_DAMAGE);
-        return Math.max(BEAM_DAMAGE_FLOOR, mainHandDamage * BEAM_DAMAGE_MULTIPLIER);
+        float baseDamage = Math.max(BEAM_DAMAGE_FLOOR, mainHandDamage * BEAM_DAMAGE_MULTIPLIER);
+        float damage = baseDamage * AngelbornAbilityHandler.getDamageRatioMultiplier(owner);
+        if (AngelbornAbilityHandler.isEmpowered(owner)) {
+            damage *= AngelbornAbilityHandler.EMPOWERED_DAMAGE_MULTIPLIER;
+        }
+        return damage;
     }
 
 

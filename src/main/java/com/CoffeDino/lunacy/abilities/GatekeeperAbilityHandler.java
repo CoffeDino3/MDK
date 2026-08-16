@@ -2,6 +2,7 @@ package com.CoffeDino.lunacy.abilities;
 
 import com.CoffeDino.lunacy.Lunacy;
 import com.CoffeDino.lunacy.entity.abilities.GatekeeperPortalEntity;
+import com.CoffeDino.lunacy.leveling.PlayerLevels;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
@@ -20,15 +21,37 @@ import java.util.*;
 
 @EventBusSubscriber(modid = Lunacy.MODID)
 public class GatekeeperAbilityHandler {
-    private static final int MAX_PORTALS = 30;
-    private static final int PORTAL_SPAWN_INTERVAL = 50;
+    private static final int BASE_MAX_PORTALS = 30;
+    private static final int BASE_PORTAL_SPAWN_INTERVAL = 50;
     private static final double DISTANCE_BEHIND = 2.5;
     private static final double GRID_SPACING = 1.2;
     private static final int GRID_COLS = 5;
     private static final int GRID_ROWS = 10;
-    private static final double HUNGER_PER_PORTAL_PER_SECOND = 0.1;
+    private static final double HUNGER_PER_PORTAL_PER_SECOND = 0.5;
     private static final ResourceLocation MOVEMENT_MODIFIER_ID =
             ResourceLocation.fromNamespaceAndPath(Lunacy.MODID, "gatekeeper_immobilize");
+    private static final float THROWN_WEAPON_MULTIPLIER_PER_10_LEVELS = 0.5f;
+
+    public static float getThrownWeaponDamageMultiplier(Player player) {
+        int level = (player instanceof ServerPlayer sp) ? PlayerLevels.getLevel(sp) : 1;
+        return 1.0f + (level / 10) * THROWN_WEAPON_MULTIPLIER_PER_10_LEVELS;
+    }
+    private static final int MAX_PORTALS_PER_10_LEVELS = 2;
+    private static final int ABSOLUTE_MAX_PORTALS = 60;
+    private static final int INTERVAL_REDUCTION_PER_10_LEVELS = 5;
+    private static final int MIN_PORTAL_SPAWN_INTERVAL = 15;
+
+    private static int getMaxPortals(Player player) {
+        int level = (player instanceof ServerPlayer sp) ? PlayerLevels.getLevel(sp) : 1;
+        int extra = (level / 10) * MAX_PORTALS_PER_10_LEVELS;
+        return Math.min(ABSOLUTE_MAX_PORTALS, BASE_MAX_PORTALS + extra);
+    }
+
+    private static int getPortalSpawnInterval(Player player) {
+        int level = (player instanceof ServerPlayer sp) ? PlayerLevels.getLevel(sp) : 1;
+        int reduction = (level / 10) * INTERVAL_REDUCTION_PER_10_LEVELS;
+        return Math.max(MIN_PORTAL_SPAWN_INTERVAL, BASE_PORTAL_SPAWN_INTERVAL - reduction);
+    }
 
     private static final Map<UUID, GatekeeperAbilityData> ACTIVE_PLAYERS = new HashMap<>();
 
@@ -102,9 +125,13 @@ public class GatekeeperAbilityHandler {
             int nextIndex = data.nextPortalIndex();
             List<GatekeeperPortalEntity> portals = data.portals();
             portals.removeIf(GatekeeperPortalEntity::isRemoved);
-            if (hungerTimer >= PORTAL_SPAWN_INTERVAL) {
+
+            int spawnInterval = getPortalSpawnInterval(player);
+            int maxPortals = getMaxPortals(player);
+
+            if (hungerTimer >= spawnInterval) {
                 hungerTimer = 0;
-                if (portals.size() < MAX_PORTALS) {
+                if (portals.size() < maxPortals) {
                     Vec3 pos = calculatePortalPosition(player, nextIndex, portals);
                     GatekeeperPortalEntity portal = new GatekeeperPortalEntity(player.serverLevel(), player, pos);
                     player.serverLevel().addFreshEntity(portal);
@@ -134,6 +161,9 @@ public class GatekeeperAbilityHandler {
         }
     }
 
+    private static final double MIN_SIDE_SEPARATION = 3.0;
+    private static final double MIN_VERTICAL_SEPARATION = 3.0;
+
     private static Vec3 calculatePortalPosition(ServerPlayer player, int index, List<GatekeeperPortalEntity> existing) {
         Vec3 look = player.getLookAngle();
         Vec3 back = new Vec3(-look.x, 0, -look.z).normalize();
@@ -150,10 +180,17 @@ public class GatekeeperAbilityHandler {
                     .add(back.scale(backOffset))
                     .add(right.scale(sideOffset))
                     .add(0, heightOffset, 0);
+
+            final double candidateSideOffset = sideOffset;
             boolean tooClose = existing.stream().anyMatch(p -> {
                 Vec3 diff = p.position().subtract(candidate);
                 double lateralDist = Math.sqrt(diff.x * diff.x + diff.y * diff.y + diff.z * diff.z);
-                return lateralDist < 4.0;
+                if (lateralDist < 4.0) return true;
+                Vec3 toExisting = p.position().subtract(torsoPos);
+                double existingSideOffset = toExisting.dot(right);
+                if (Math.abs(existingSideOffset - candidateSideOffset) < MIN_SIDE_SEPARATION) return true;
+
+                return Math.abs(p.position().y - candidate.y) < MIN_VERTICAL_SEPARATION;
             });
 
             if (!tooClose) return candidate;

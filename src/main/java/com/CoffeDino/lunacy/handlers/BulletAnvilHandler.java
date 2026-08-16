@@ -3,7 +3,9 @@ package com.CoffeDino.lunacy.handlers;
 import com.CoffeDino.lunacy.classes.PlayerClasses;
 import com.CoffeDino.lunacy.item.BulletEnhancement;
 import com.CoffeDino.lunacy.item.Custom.BulletItem;
+import com.CoffeDino.lunacy.leveling.PlayerLevels;
 import com.CoffeDino.lunacy.network.ModDataComponents;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -18,6 +20,10 @@ import java.util.List;
 public class BulletAnvilHandler {
 
     private static final int BULLETS_PER_MATERIAL = 4;
+    private static final int MIN_ENHANCEMENTS = 1;
+    private static final int MAX_ENHANCEMENTS = 5;
+    private static final int LEVEL_PER_ENHANCEMENT = 10;
+    private static final int MAX_ENHANCEMENT_LEVEL = 40;
 
     @SubscribeEvent
     public static void onAnvilUpdate(AnvilUpdateEvent event) {
@@ -25,6 +31,10 @@ public class BulletAnvilHandler {
         ItemStack right = event.getRight();
 
         if (!(left.getItem() instanceof BulletItem)) return;
+
+        Player player = event.getPlayer();
+        if (PlayerClasses.getPlayerClass(player) != PlayerClasses.PlayerClass.GUNSMITH) return;
+        if (!(player instanceof ServerPlayer serverPlayer)) return;
 
         BulletEnhancement newTag = resolveEnhancement(right);
         if (newTag == null) return;
@@ -34,11 +44,10 @@ public class BulletAnvilHandler {
 
         if (current.contains(newTag)) return;
 
-        Player player = event.getPlayer();
-        int maxTags = PlayerClasses.getPlayerClass(player) == PlayerClasses.PlayerClass.GUNSMITH ? 2 : 1;
+        int maxEnhancements = getMaxEnhancements(PlayerLevels.getLevel(serverPlayer));
 
         List<BulletEnhancement> updatedTags = new ArrayList<>(current);
-        if (updatedTags.size() >= maxTags) {
+        if (updatedTags.size() >= maxEnhancements) {
             updatedTags.remove(0);
         }
         updatedTags.add(newTag);
@@ -49,6 +58,10 @@ public class BulletAnvilHandler {
         event.setOutput(output);
         event.setCost(newTag.getAnvilCost());
         event.setMaterialCost(requiredMaterial);
+    }
+    private static int getMaxEnhancements(int level) {
+        int scaled = MIN_ENHANCEMENTS + Math.min(level, MAX_ENHANCEMENT_LEVEL) / LEVEL_PER_ENHANCEMENT;
+        return Math.min(MAX_ENHANCEMENTS, scaled);
     }
 
     private static BulletEnhancement resolveEnhancement(ItemStack right) {

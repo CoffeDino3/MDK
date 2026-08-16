@@ -1,0 +1,34 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "lunacy:erinyes"
+      }
+    },
+    "has_elemental_core_red": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "lunacy:elemental_core_red"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_elemental_core_red"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "lunacy:erinyes",
+      "lunacy:erinyes_alt2",
+      "lunacy:erinyes_alt3"
+    ]
+  }
+}

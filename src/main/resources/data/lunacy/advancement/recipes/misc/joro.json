@@ -1,0 +1,34 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "lunacy:joro"
+      }
+    },
+    "has_elemental_core_brown": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "lunacy:elemental_core_brown"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_elemental_core_brown"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "lunacy:joro",
+      "lunacy:joro_alt2",
+      "lunacy:joro_alt3"
+    ]
+  }
+}

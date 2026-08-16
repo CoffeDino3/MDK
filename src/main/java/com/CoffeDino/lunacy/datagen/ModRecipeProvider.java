@@ -37,42 +37,6 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
                 .requires(ModBlocks.CUMMINGTONITE_INGOT_BLOCK.get())
                 .unlockedBy(getHasName(ModBlocks.CUMMINGTONITE_INGOT_BLOCK.get()), has(ModBlocks.CUMMINGTONITE_INGOT_BLOCK.get())).save(pRecipeOutput);
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModItems.THE_WAND.get())
-                .pattern("AAC")
-                .pattern("ASA")
-                .pattern("NAA")
-                .define('C', ModItems.CUMMINGTONITE_INGOT.get())
-                .define('S', Items.STICK)
-                .define('A', Items.GOLD_INGOT)
-                .define('N', Items.NETHERITE_INGOT)
-                .unlockedBy(getHasName(ModItems.CUMMINGTONITE_INGOT.get()), has(ModItems.CUMMINGTONITE_INGOT.get())).save(pRecipeOutput);
-
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModItems.SPECIAL_WAND.get())
-                .pattern("NNC")
-                .pattern("NSN")
-                .pattern("ANN")
-                .define('C', ModItems.CUMMINGTONITE_INGOT.get())
-                .define('S', Items.STICK)
-                .define('A', Items.GOLD_INGOT)
-                .define('N', Items.NETHERITE_INGOT)
-                .unlockedBy(getHasName(ModItems.CUMMINGTONITE_INGOT.get()), has(ModItems.CUMMINGTONITE_INGOT.get())).save(pRecipeOutput);
-
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModItems.STORAGE_GEM.get())
-                .pattern(" C ")
-                .pattern("NSA")
-                .pattern("   ")
-                .define('C', ModItems.CUMMINGTONITE_INGOT.get())
-                .define('S', Items.DIAMOND)
-                .define('A', Items.GOLD_INGOT)
-                .define('N', Items.EMERALD)
-                .unlockedBy(getHasName(ModItems.CUMMINGTONITE_INGOT.get()), has(ModItems.CUMMINGTONITE_INGOT.get())).save(pRecipeOutput);
-        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ModItems.STACK_STAR.get())
-                .requires(Items.NETHER_STAR)
-                .requires(ModItems.CUMMINGTONITE_INGOT.get())
-                .unlockedBy(getHasName(ModItems.CUMMINGTONITE_INGOT.get()), has(ModItems.CUMMINGTONITE_INGOT.get()))
-                .save(pRecipeOutput);
-
-
         oreSmelting(pRecipeOutput, CUMMINGTONITE_SMELTABLES, RecipeCategory.MISC, ModItems.CUMMINGTONITE_INGOT.get(), 0.40f, 250, "cummingtonite_ingot");
         oreBlasting(pRecipeOutput, CUMMINGTONITE_SMELTABLES, RecipeCategory.MISC, ModItems.CUMMINGTONITE_INGOT.get(), 0.60f, 150, "cummingtonite_ingot");
     }

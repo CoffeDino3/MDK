@@ -1,0 +1,33 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "lunacy:soul_scythe"
+      }
+    },
+    "has_withered_rib": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "lunacy:withered_rib"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_withered_rib"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "lunacy:soul_scythe",
+      "lunacy:soul_scythe_alt2"
+    ]
+  }
+}

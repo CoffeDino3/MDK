@@ -1,0 +1,34 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "lunacy:amphitrite"
+      }
+    },
+    "has_elemental_core_blue": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "lunacy:elemental_core_blue"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_elemental_core_blue"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "lunacy:amphitrite",
+      "lunacy:amphitrite_alt2",
+      "lunacy:amphitrite_alt3"
+    ]
+  }
+}

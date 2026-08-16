@@ -1,17 +1,16 @@
 package com.CoffeDino.lunacy.abilities;
 
 import com.CoffeDino.lunacy.Lunacy;
+import com.CoffeDino.lunacy.effects.AbilityCooldown;
+import com.CoffeDino.lunacy.effects.ModEffects;
+import com.CoffeDino.lunacy.leveling.PlayerLevels;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
@@ -27,19 +26,40 @@ public class WarderAbilityHandler {
     private static final int ABILITY_DURATION = 100;
     private static final float DAMAGE_MULTIPLIER = 1.5f;
     private static final float DAMAGE_FLOOR = 8.0f;
-    private static final float CIRCLE_RADIUS = 2.0f;
+    private static final float BASE_CIRCLE_RADIUS = 2.0f;
     private static final float CIRCLE_DISTANCE = 2.5f;
+    private static final int COOLDOWN_TICKS = 60;
+    private static final int RESIZE_UNLOCK_LEVEL = 15;
+    private static final float MIN_RADIUS = 0.5f;
+    private static final float MAX_RADIUS_GROWTH_PER_5_LEVELS = 0.5f;
+    private static final float SCROLL_STEP = 0.25f;
 
     public static void activateAbility(Player player) {
         if (player.level().isClientSide()) return;
 
         UUID playerId = player.getUUID();
-        if (ACTIVE_ABILITIES.containsKey(playerId)) {
+        if (ACTIVE_ABILITIES.containsKey(playerId) || AbilityCooldown.isActive(player, ModEffects.WARDER_COOLDOWN)) {
             return;
         }
 
-        ACTIVE_ABILITIES.put(playerId, new WarderAbilityInstance(player));
+        int level = (player instanceof ServerPlayer sp) ? PlayerLevels.getLevel(sp) : 1;
+        ACTIVE_ABILITIES.put(playerId, new WarderAbilityInstance(player, level));
         Lunacy.LOGGER.debug("Warder ability activated for player: {}", player.getName().getString());
+    }
+
+    private static float getMaxRadius(int level) {
+        if (level < RESIZE_UNLOCK_LEVEL) return BASE_CIRCLE_RADIUS;
+        int tiers = ((level - RESIZE_UNLOCK_LEVEL) / 5) + 1;
+        return BASE_CIRCLE_RADIUS + tiers * MAX_RADIUS_GROWTH_PER_5_LEVELS;
+    }
+    public static void adjustRingSize(ServerPlayer player, boolean scrollUp) {
+        WarderAbilityInstance ability = ACTIVE_ABILITIES.get(player.getUUID());
+        if (ability == null) return;
+        if (ability.level < RESIZE_UNLOCK_LEVEL) return;
+
+        float maxRadius = getMaxRadius(ability.level);
+        float newRadius = ability.currentRadius + (scrollUp ? SCROLL_STEP : -SCROLL_STEP);
+        ability.currentRadius = Math.max(MIN_RADIUS, Math.min(maxRadius, newRadius));
     }
 
     @SubscribeEvent
@@ -51,6 +71,7 @@ public class WarderAbilityHandler {
 
             if (ability.tick() || !ability.isValid()) {
                 iterator.remove();
+                AbilityCooldown.start(ability.getPlayer(), ModEffects.WARDER_COOLDOWN, COOLDOWN_TICKS);
                 Lunacy.LOGGER.debug("Warder ability ended for player: {}", ability.getPlayer().getName().getString());
             }
         }
@@ -66,11 +87,15 @@ public class WarderAbilityHandler {
 
     private static class WarderAbilityInstance {
         private final ServerPlayer player;
+        private final int level;
+        private float currentRadius;
         private int ticksActive = 0;
         private final Set<BlockPos> brokenBlocks = new HashSet<>();
 
-        public WarderAbilityInstance(Player player) {
+        public WarderAbilityInstance(Player player, int level) {
             this.player = (ServerPlayer) player;
+            this.level = level;
+            this.currentRadius = BASE_CIRCLE_RADIUS;
         }
 
         public boolean tick() {
@@ -114,8 +139,8 @@ public class WarderAbilityHandler {
 
             for (int i = 0; i < particles; i++) {
                 double angle = 2 * Math.PI * i / particles;
-                double xOffset = CIRCLE_RADIUS * Math.cos(angle);
-                double yOffset = CIRCLE_RADIUS * Math.sin(angle);
+                double xOffset = currentRadius * Math.cos(angle);
+                double yOffset = currentRadius * Math.sin(angle);
 
                 Vec3 particlePos = center.add(
                         right.x * xOffset + actualUp.x * yOffset,
@@ -126,7 +151,7 @@ public class WarderAbilityHandler {
                         particlePos.x, particlePos.y, particlePos.z, 1, 0, 0, 0, 0.05);
 
                 if (i % 2 == 0) {
-                    double innerRadius = CIRCLE_RADIUS * 0.7;
+                    double innerRadius = currentRadius * 0.7;
                     double innerX = innerRadius * Math.cos(angle);
                     double innerY = innerRadius * Math.sin(angle);
 
@@ -148,8 +173,8 @@ public class WarderAbilityHandler {
             if (right.length() < 0.1) right = new Vec3(1, 0, 0);
             Vec3 actualUp = right.cross(lookVec).normalize();
 
-            Vec3 min = center.subtract(right.scale(CIRCLE_RADIUS)).subtract(actualUp.scale(CIRCLE_RADIUS));
-            Vec3 max = center.add(right.scale(CIRCLE_RADIUS)).add(actualUp.scale(CIRCLE_RADIUS));
+            Vec3 min = center.subtract(right.scale(currentRadius)).subtract(actualUp.scale(currentRadius));
+            Vec3 max = center.add(right.scale(currentRadius)).add(actualUp.scale(currentRadius));
 
             Vec3 thicknessVec = lookVec.scale(0.5);
             AABB damageArea = new AABB(
@@ -167,7 +192,7 @@ public class WarderAbilityHandler {
                     Vec3 toEntity = entity.position().subtract(center);
                     double distanceInPlane = toEntity.subtract(lookVec.scale(toEntity.dot(lookVec))).length();
 
-                    if (distanceInPlane <= CIRCLE_RADIUS) {
+                    if (distanceInPlane <= currentRadius) {
                         float mainHandDamage = (float) player.getAttributeValue(Attributes.ATTACK_DAMAGE);
                         float ringDamage = Math.max(DAMAGE_FLOOR, mainHandDamage * DAMAGE_MULTIPLIER);
 
@@ -185,11 +210,11 @@ public class WarderAbilityHandler {
             Vec3 right = lookVec.cross(up).normalize();
             if (right.length() < 0.1) right = new Vec3(1, 0, 0);
             Vec3 actualUp = right.cross(lookVec).normalize();
-            int gridSize = (int) (CIRCLE_RADIUS * 2) + 1;
+            int gridSize = (int) (currentRadius * 2) + 1;
             for (int u = -gridSize; u <= gridSize; u++) {
                 for (int v = -gridSize; v <= gridSize; v++) {
                     double distance = Math.sqrt(u * u + v * v);
-                    if (distance <= CIRCLE_RADIUS) {
+                    if (distance <= currentRadius) {
                         Vec3 blockOffset = right.scale(u).add(actualUp.scale(v));
                         BlockPos pos = new BlockPos(
                                 (int) Math.floor(center.x + blockOffset.x),
@@ -263,26 +288,8 @@ public class WarderAbilityHandler {
             return player != null && player.isAlive() && !player.isRemoved();
         }
 
-        public Player getPlayer() {
+        public ServerPlayer getPlayer() {
             return player;
         }
-    }
-
-    private static final Map<UUID, Long> COOLDOWNS = new HashMap<>();
-    private static final long COOLDOWN_DURATION = 3000;
-
-    public static boolean canActivateAbility(Player player) {
-        UUID playerId = player.getUUID();
-        Long lastUsed = COOLDOWNS.get(playerId);
-
-        if (lastUsed == null) {
-            return true;
-        }
-
-        return System.currentTimeMillis() - lastUsed >= COOLDOWN_DURATION;
-    }
-
-    public static void startCooldown(Player player) {
-        COOLDOWNS.put(player.getUUID(), System.currentTimeMillis());
     }
 }

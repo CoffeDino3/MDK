@@ -17,6 +17,6 @@ public class ModDataComponents {
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<List<BulletEnhancement>>> BULLET_ENHANCEMENTS =
             DATA_COMPONENTS.register("bullet_enhancements", () -> DataComponentType.<List<BulletEnhancement>>builder()
                     .persistent(BulletEnhancement.CODEC.listOf())
-                    .networkSynchronized(BulletEnhancement.STREAM_CODEC.apply(ByteBufCodecs.list(2)))
+                    .networkSynchronized(BulletEnhancement.STREAM_CODEC.apply(ByteBufCodecs.list(5)))
                     .build());
 }

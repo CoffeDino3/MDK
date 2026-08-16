@@ -1,0 +1,34 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "lunacy:helios"
+      }
+    },
+    "has_elemental_core_yellow": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "lunacy:elemental_core_yellow"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_elemental_core_yellow"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "lunacy:helios",
+      "lunacy:helios_alt2",
+      "lunacy:helios_alt3"
+    ]
+  }
+}

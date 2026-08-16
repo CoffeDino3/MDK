@@ -1,5 +1,6 @@
 package com.CoffeDino.lunacy.abilities;
 
+import com.CoffeDino.lunacy.leveling.PlayerLevels;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
@@ -12,15 +13,22 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 
 public class EnderTeleportHandler {
-    private static final int MAX_TELEPORT_DISTANCE = 25;
+    private static final int BASE_MAX_TELEPORT_DISTANCE = 25;
+    private static final float DISTANCE_GROWTH_PER_10_LEVELS = 0.20f;
     private static final int COOLDOWN_TICKS = 60;
+
+    private static int getMaxDistance(int level) {
+        float multiplier = 1.0f + (level / 10) * DISTANCE_GROWTH_PER_10_LEVELS;
+        return Math.round(BASE_MAX_TELEPORT_DISTANCE * multiplier);
+    }
 
     public static void teleportPlayer(ServerPlayer player) {
         if (player.getCooldowns().isOnCooldown(player.getUseItem().getItem())) {
             return;
         }
 
-        Vec3 teleportPos = calculateTeleportPosition(player);
+        int level = PlayerLevels.getLevel(player);
+        Vec3 teleportPos = calculateTeleportPosition(player, level);
 
         if (teleportPos != null) {
             player.level().playSound(null, player.getX(), player.getY(), player.getZ(),
@@ -30,15 +38,17 @@ public class EnderTeleportHandler {
                     SoundEvents.ENDERMAN_TELEPORT, SoundSource.PLAYERS, 1.0F, 1.0F);
 
             player.getCooldowns().addCooldown(player.getUseItem().getItem(), COOLDOWN_TICKS);
+            EnderAbilityHandler.grantPostTeleportBuff(player);
         }
     }
 
-    private static Vec3 calculateTeleportPosition(Player player) {
+    private static Vec3 calculateTeleportPosition(Player player, int level) {
+        int maxDistance = getMaxDistance(level);
         Vec3 eyePosition = player.getEyePosition();
         Vec3 viewVector = player.getViewVector(1.0F);
-        Vec3 reachVector = eyePosition.add(viewVector.x * MAX_TELEPORT_DISTANCE,
-                viewVector.y * MAX_TELEPORT_DISTANCE,
-                viewVector.z * MAX_TELEPORT_DISTANCE);
+        Vec3 reachVector = eyePosition.add(viewVector.x * maxDistance,
+                viewVector.y * maxDistance,
+                viewVector.z * maxDistance);
         BlockHitResult hitResult = player.level().clip(new ClipContext(
                 eyePosition,
                 reachVector,

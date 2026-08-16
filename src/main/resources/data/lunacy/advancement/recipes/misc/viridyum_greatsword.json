@@ -1,0 +1,35 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "lunacy:viridyum_greatsword"
+      }
+    },
+    "has_viridyum_ingot": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "lunacy:viridyum_ingot"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_viridyum_ingot"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "lunacy:viridyum_greatsword",
+      "lunacy:viridyum_greatsword_alt2",
+      "lunacy:viridyum_greatsword_alt3",
+      "lunacy:viridyum_greatsword_alt4"
+    ]
+  }
+}

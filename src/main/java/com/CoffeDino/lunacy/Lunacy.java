@@ -1,6 +1,8 @@
 package com.CoffeDino.lunacy;
 
 import com.CoffeDino.lunacy.capability.ModAttachments;
+import com.CoffeDino.lunacy.commands.LevelCommand;
+import com.CoffeDino.lunacy.menu.SculkStorageMenu;
 import com.CoffeDino.lunacy.particle.PerunFlashParticle;
 import com.CoffeDino.lunacy.worldgen.feature.ModFeatures;
 import net.minecraft.client.renderer.entity.player.PlayerRenderer;
@@ -16,7 +18,10 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.DispenserBlock;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
+import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
 import org.slf4j.Logger;
+import net.minecraft.client.gui.screens.MenuScreens;
+import com.CoffeDino.lunacy.client.gui.SculkStorageScreen;
 
 import com.mojang.logging.LogUtils;
 
@@ -80,8 +85,7 @@ public class Lunacy {
         modEventBus.addListener(this::commonSetup);
         modEventBus.addListener(this::addCreative);
         modEventBus.addListener(this::registerPayloads);
-
-        modContainer.registerConfig(ModConfig.Type.COMMON, Config.SPEC);
+        modContainer.registerConfig(ModConfig.Type.SERVER, Config.SPEC);
 
         NeoForge.EVENT_BUS.register(this);
     }
@@ -133,8 +137,6 @@ public class Lunacy {
         if (event.getTabKey() == CreativeModeTabs.INGREDIENTS) {
             event.accept(ModItems.CUMMINGTONITE.get());
             event.accept(ModItems.CUMMINGTONITE_INGOT.get());
-            event.accept(ModItems.STACK_STAR.get());
-            event.accept(ModItems.STORAGE_GEM.get());
         }
 
         //if(event.getTabKey() == CreativeModeTabs.TOOLS_AND_UTILITIES){
@@ -194,6 +196,7 @@ public class Lunacy {
     public void onServerStarting(ServerStartingEvent event) {
         RaceCommand.register(event.getServer().getCommands().getDispatcher());
         ClassCommand.register(event.getServer().getCommands().getDispatcher());
+        LevelCommand.register(event.getServer().getCommands().getDispatcher());
     }
 
     @EventBusSubscriber(modid = MODID, value = Dist.CLIENT)

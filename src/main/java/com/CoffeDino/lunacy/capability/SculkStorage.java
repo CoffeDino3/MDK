@@ -12,10 +12,14 @@ import org.slf4j.LoggerFactory;
 public class SculkStorage implements ISculkStorage {
     private static final Logger LOGGER = LoggerFactory.getLogger(SculkStorage.class);
     private static final int DEFAULT_ROWS = 3;
-
+    private static final int MAX_ROWS = 12;
+    private static final int ROWS_UNLOCK_INTERVAL = 10;
+    private static final int UNIVERSAL_STACK_UNLOCK_LEVEL = 25;
+    private static final int UNIVERSAL_STACK_SIZE = 256;
     private ItemStack[] items = new ItemStack[9 * DEFAULT_ROWS];
     private int rows = DEFAULT_ROWS;
     private long cooldownEndTime = 0;
+    private int lastSyncedLevel = 0;
 
     public SculkStorage() {
         for (int i = 0; i < items.length; i++) {
@@ -49,7 +53,7 @@ public class SculkStorage implements ISculkStorage {
 
     @Override
     public void setRows(int rows) {
-        this.rows = Math.max(1, Math.min(6, rows));
+        this.rows = Math.max(1, Math.min(MAX_ROWS, rows));
         resizeStorage();
     }
 
@@ -57,20 +61,21 @@ public class SculkStorage implements ISculkStorage {
     public int getRows() {
         return rows;
     }
-
-    @Override
-    public void startCooldown() {
-        this.cooldownEndTime = System.currentTimeMillis() + 500;
+    public void syncRowsToLevel(int level) {
+        this.lastSyncedLevel = level;
+        int bonusRows = level / ROWS_UNLOCK_INTERVAL;
+        int targetRows = Math.min(MAX_ROWS, DEFAULT_ROWS + bonusRows);
+        if (targetRows > this.rows) {
+            setRows(targetRows);
+            LOGGER.info("SculkStorage grew to {} rows at level {}", targetRows, level);
+        }
     }
 
-    @Override
-    public boolean isOnCooldown() {
-        return System.currentTimeMillis() < cooldownEndTime;
-    }
-
-    @Override
-    public long getCooldownEndTime() {
-        return cooldownEndTime;
+    public int getEffectiveMaxStackSize(ItemStack stack, int level) {
+        if (level >= UNIVERSAL_STACK_UNLOCK_LEVEL) {
+            return UNIVERSAL_STACK_SIZE;
+        }
+        return stack.getMaxStackSize();
     }
 
     @Override
@@ -95,9 +100,25 @@ public class SculkStorage implements ISculkStorage {
     }
 
     @Override
+    public void startCooldown() {
+        this.cooldownEndTime = System.currentTimeMillis() + 500;
+    }
+
+    @Override
+    public boolean isOnCooldown() {
+        return System.currentTimeMillis() < cooldownEndTime;
+    }
+
+    @Override
+    public long getCooldownEndTime() {
+        return cooldownEndTime;
+    }
+
+    @Override
     public void saveData(CompoundTag tag, HolderLookup.Provider provider) {
         tag.putInt("Rows", rows);
         tag.putLong("CooldownEnd", cooldownEndTime);
+        tag.putInt("LastSyncedLevel", lastSyncedLevel);
 
         ListTag list = new ListTag();
         int itemCount = 0;
@@ -129,7 +150,9 @@ public class SculkStorage implements ISculkStorage {
     public void loadData(CompoundTag tag, HolderLookup.Provider provider) {
         this.rows = tag.getInt("Rows");
         if (this.rows < 1) this.rows = DEFAULT_ROWS;
+        this.rows = Math.min(MAX_ROWS, this.rows);
         this.cooldownEndTime = tag.getLong("CooldownEnd");
+        this.lastSyncedLevel = tag.getInt("LastSyncedLevel");
 
         LOGGER.info("LOAD: Loading storage with {} rows, cooldown: {}", rows, cooldownEndTime);
         resizeStorage();

@@ -66,8 +66,6 @@ public class ViridyumGreatswordItem extends GreatswordItem {
 
         if (!level.isClientSide && player instanceof ServerPlayer serverPlayer) {
             if (!hasChronobladeClass(serverPlayer)) {
-                serverPlayer.displayClientMessage(Component.literal("You are not a Chronoblade! The greatsword rejects you.")
-                        .withStyle(ChatFormatting.RED), true);
                 return InteractionResultHolder.fail(stack);
             }
 
@@ -107,7 +105,7 @@ public class ViridyumGreatswordItem extends GreatswordItem {
     }
 
     private boolean hasChronobladeClass(Player player) {
-        return PlayerClasses.getPlayerClass(player) == PlayerClasses.PlayerClass.CHRONOBLADE;
+        return PlayerClasses.getPlayerClass(player) == PlayerClasses.PlayerClass.HEAVY_KNIGHT;
     }
 
     private void saveChronoData(ServerPlayer player, long currentTime) {
