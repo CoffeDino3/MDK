@@ -1,17 +1,15 @@
 {
   "type": "minecraft:crafting_shaped",
+  "category": "misc",
   "pattern": [
-    " A ",
-    "ABA",
-    " A "
+    "SES",
+    "EPE",
+    "SES"
   ],
   "key": {
-    "A": {
-      "item": "lunacy:soul"
-    },
-    "B": {
-      "item": "minecraft:book"
-    }
+    "S": { "item": "lunacy:soul" },
+    "E": { "item": "lunacy:elemental_core" },
+    "P": { "item": "minecraft:paper" }
   },
   "result": {
     "id": "lunacy:race_reset_scroll",

@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "HPC",
+    "PIP",
+    "BPL"
+  ],
+  "key": {
+    "H": { "item": "minecraft:iron_helmet" },
+    "C": { "item": "minecraft:iron_chestplate" },
+    "B": { "item": "minecraft:iron_boots" },
+    "L": { "item": "minecraft:iron_leggings" },
+    "P": { "item": "minecraft:paper" },
+    "I": { "item": "lunacy:internal_core" }
+  },
+  "result": {
+    "id": "lunacy:class_change_scroll",
+    "count": 1
+  }
+}

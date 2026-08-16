@@ -9,6 +9,14 @@ public class LunacyGameRules {
                     GameRules.Category.PLAYER,
                     GameRules.BooleanValue.create(false)
             );
+
+    public static final GameRules.Key<GameRules.BooleanValue> DISABLE_WEAPON_RESTRICTIONS =
+            GameRules.register(
+                    "lunacyDisableWeaponRestrictions",
+                    GameRules.Category.PLAYER,
+                    GameRules.BooleanValue.create(false)
+            );
+
     public static void init() {
     }
 }

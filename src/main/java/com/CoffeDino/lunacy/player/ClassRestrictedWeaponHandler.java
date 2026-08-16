@@ -1,6 +1,7 @@
 package com.CoffeDino.lunacy.player;
 
 import com.CoffeDino.lunacy.Lunacy;
+import com.CoffeDino.lunacy.LunacyGameRules;
 import com.CoffeDino.lunacy.classes.ClassDataManager;
 import com.CoffeDino.lunacy.classes.PlayerClasses;
 import com.CoffeDino.lunacy.classes.PlayerClasses.PlayerClass;
@@ -105,6 +106,7 @@ public class ClassRestrictedWeaponHandler {
         if (player.level().isClientSide()) return;
         if (REQUIREMENTS.isEmpty()) return;
         if (!(player instanceof ServerPlayer serverPlayer)) return;
+        if (player.level().getGameRules().getBoolean(LunacyGameRules.DISABLE_WEAPON_RESTRICTIONS)) return;
 
         PlayerClass currentClass = PlayerClasses.getPlayerClass(player);
         int currentLevel = PlayerLevels.getLevel(serverPlayer);
